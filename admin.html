@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>말풍선 관리 - 이벤터스</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .admin-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .admin-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .balloon-edit-section {
+            margin-bottom: 40px;
+        }
+
+        .balloon-edit-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 24px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .balloon-edit-card h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .balloon-preview {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .preview-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .preview-balloon {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px 24px;
+            border-radius: 24px;
+            max-width: 400px;
+        }
+
+        .preview-balloon.purple {
+            background: #795cde;
+            color: white;
+        }
+
+        .preview-balloon.white {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .preview-icon {
+            font-size: 36px;
+            font-weight: 900;
+        }
+
+        .preview-text {
+            font-size: 20px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6A5ACD;
+        }
+
+        .form-group input[type="text"] {
+            max-width: 500px;
+        }
+
+        .form-group input[type="text"].icon-input {
+            max-width: 200px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 6px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .btn-primary {
+            background: #6A5ACD;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a4abd;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-success {
+            background: #27AE60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #6A5ACD;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #5a4abd;
+        }
+
+        .save-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27AE60;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .save-message.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <a href="index.html" class="back-link">
+            <span class="material-icons" style="font-size: 20px;">arrow_back</span>
+            메인 페이지로 돌아가기
+        </a>
+
+        <div class="admin-header">
+            <h1>말풍선 관리</h1>
+            <p>핸드폰 화면 좌측에 표시되는 말풍선의 텍스트와 아이콘을 수정할 수 있습니다.</p>
+        </div>
+
+        <!-- 이벤트 참여하기 말풍선 -->
+        <div class="balloon-edit-section">
+            <div class="balloon-edit-card">
+                <h2>
+                    <span class="material-icons" style="color: #795cde;">chat_bubble</span>
+                    이벤트 참여하기 말풍선
+                </h2>
+
+                <div class="balloon-preview">
+                    <div class="preview-label">미리보기</div>
+                    <div class="preview-balloon purple" id="preview-event-participation">
+                        <div class="preview-icon" id="preview-icon-event-participation">🎉</div>
+                        <div class="preview-text" id="preview-text-event-participation">이벤트 참여하기</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="event-icon">아이콘 (이모지 또는 텍스트)</label>
+                    <input type="text" id="event-icon" class="icon-input" placeholder="🎉" maxlength="2">
+                    <small>이모지 1개 또는 텍스트 1-2자 입력</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="event-text">텍스트</label>
+                    <input type="text" id="event-text" placeholder="이벤트 참여하기" maxlength="50">
+                    <small>최대 50자까지 입력 가능</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="event-type">말풍선 색상</label>
+                    <select id="event-type">
+                        <option value="purple">보라색</option>
+                        <option value="white">흰색</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 출석체크 말풍선 -->
+        <div class="balloon-edit-section">
+            <div class="balloon-edit-card">
+                <h2>
+                    <span class="material-icons" style="color: #27AE60;">check_circle</span>
+                    출석체크 말풍선
+                </h2>
+
+                <div class="balloon-preview">
+                    <div class="preview-label">미리보기</div>
+                    <div class="preview-balloon white" id="preview-attendance-check">
+                        <div class="preview-icon" id="preview-icon-attendance-check">✓</div>
+                        <div class="preview-text" id="preview-text-attendance-check">출석체크</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="attendance-icon">아이콘 (이모지 또는 텍스트)</label>
+                    <input type="text" id="attendance-icon" class="icon-input" placeholder="✓" maxlength="2">
+                    <small>이모지 1개 또는 텍스트 1-2자 입력</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="attendance-text">텍스트</label>
+                    <input type="text" id="attendance-text" placeholder="출석체크" maxlength="50">
+                    <small>최대 50자까지 입력 가능</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="attendance-type">말풍선 색상</label>
+                    <select id="attendance-type">
+                        <option value="white">흰색</option>
+                        <option value="purple">보라색</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-success" onclick="saveBalloons()">
+                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">save</span>
+                저장하기
+            </button>
+            <button class="btn btn-secondary" onclick="resetBalloons()">
+                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">refresh</span>
+                초기화
+            </button>
+        </div>
+    </div>
+
+    <div class="save-message" id="save-message">
+        <span class="material-icons">check_circle</span>
+        저장되었습니다!
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

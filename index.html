@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4A90E2">
+    <title>솔루션 체험 페이지 - 이벤터스</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 배경 -->
+    <div class="background-image"></div>
+    
+    <!-- 상단 헤더 -->
+    <div class="top-header">
+        <div class="header-left">
+            <div class="logo-container">
+                <a href="/" class="logo-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">
+                        <path d="M31 31H0V0h31v31zM1.888 29.112h27.224V1.888H1.888v27.225z" fill="#fff" />
+                        <path d="M21.393 7.969H9.217v3.522h12.176V7.969z" fill="#FFC200" />
+                        <path d="M17.296 17.261H9.217V13.74h8.75l-.671 3.522zM21.666 19.499H9.217v3.522h12.449V19.5z" fill="#fff" />
+                    </svg>
+                </a>
+            </div>
+            <div class="header-title">솔루션 체험 페이지</div>
+        </div>
+        <div class="header-right" id="header-right" style="display: none;">
+            <div class="header-button" id="header-button">
+                <div class="header-button-text">종료 후 솔루션 세팅하기</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 레이아웃: 왼쪽 핸드폰 + 오른쪽 말풍선 -->
+    <div class="main-layout">
+        <!-- 왼쪽: iPhone 14 Pro 프레임 -->
+        <div class="device-container">
+            <div class="device device-iphone-14-pro">
+                <div class="device-frame">
+                    <div class="device-screen">
+                        <!-- 참가자 정보 입력 화면 (숨김) -->
+                        <div id="registration-screen" class="phone-screen-inner">
+                            <div class="phone-header">
+                                <h2>체험을 시작할 정보를 입력해주세요</h2>
+                            </div>
+
+                            <form id="registration-form" class="form">
+                                <!-- 이름 -->
+                                <div class="form-group">
+                                    <label for="name-input">이름 <span class="required">2자 이상</span></label>
+                                    <input 
+                                        type="text" 
+                                        id="name-input" 
+                                        placeholder="이름을 입력하세요"
+                                        minlength="2"
+                                        required
+                                    >
+                                    <span class="error-message" id="name-error"></span>
+                                </div>
+
+                                <!-- 이메일 -->
+                                <div class="form-group">
+                                    <label for="email-input">이메일</label>
+                                    <input 
+                                        type="email" 
+                                        id="email-input" 
+                                        placeholder="이메일을 입력하세요"
+                                        required
+                                    >
+                                    <span class="error-message" id="email-error"></span>
+                                </div>
+
+                                <!-- 연락처 -->
+                                <div class="form-group">
+                                    <label for="contact-input">연락처</label>
+                                    <input 
+                                        type="tel" 
+                                        id="contact-input" 
+                                        placeholder="연락처를 입력하세요"
+                                        maxlength="13"
+                                        required
+                                    >
+                                    <span class="error-message" id="contact-error"></span>
+                                </div>
+
+                                <!-- 약관동의 -->
+                                <div class="form-group">
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="age-consent" required>
+                                            <span>[필수] 만 14세 이상입니다.</span>
+                                        </label>
+                                        <span class="error-message" id="age-error"></span>
+                                    </div>
+
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="privacy-consent" required>
+                                            <span>[필수] 개인정보 수집에 동의합니다. <a href="#" class="link">보기</a></span>
+                                        </label>
+                                        <span class="error-message" id="privacy-error"></span>
+                                    </div>
+
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="signup-consent" required>
+                                            <span>[필수] 개인정보 수집에 동의합니다.(회원가입) <a href="#" class="link">보기</a></span>
+                                        </label>
+                                        <span class="error-message" id="signup-error"></span>
+                                    </div>
+
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="marketing-consent">
+                                            <span>[선택] 마케팅 정보 수신에 동의합니다. <a href="#" class="link">보기</a></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="submit" id="submit-btn" class="btn-primary" disabled>신청하기</button>
+                            </form>
+
+                            <div class="login-link">
+                                이미 이벤터스 회원이신가요? <a href="#" id="login-link">로그인 ></a>
+                            </div>
+                        </div>
+
+                        <!-- 솔루션 체험 메인 화면 -->
+                        <div id="demo-screen" class="phone-screen-inner active">
+                            <!-- 상단 네비게이션 -->
+                            <div class="app-header">
+                                <button class="menu-btn"><span class="material-icons">menu</span></button>
+                                <h1 class="app-title">참가자 화면</h1>
+                                <button class="profile-btn"><span class="material-icons">person</span></button>
+                            </div>
+
+                            <!-- 콘텐츠 영역 -->
+                            <div class="app-content">
+                                <!-- 섹션: 오프라인 솔루션 -->
+                                <div class="content-section">
+                                    <div class="section-header">
+                                        <span class="section-icon">⭐</span>
+                                        <span class="section-title">오프라인 솔루션</span>
+                                        <span class="section-toggle"><span class="material-icons">keyboard_arrow_up</span></span>
+                                    </div>
+                                    <div class="section-buttons">
+                                        <button class="section-btn btn-info" data-feature="info">
+                                            <span class="btn-icon"><span class="material-icons">info</span></span>
+                                            <span class="btn-text">행사정보</span>
+                                        </button>
+                                        <button class="section-btn btn-qna" data-feature="qna">
+                                            <span class="btn-icon"><span class="material-icons">help_outline</span></span>
+                                            <span class="btn-text">질의응답</span>
+                                        </button>
+                                        <button class="section-btn btn-survey" data-feature="survey">
+                                            <span class="btn-icon"><span class="material-icons">assignment</span></span>
+                                            <span class="btn-text">설문조사</span>
+                                        </button>
+                                        <button class="section-btn btn-lottery" data-feature="lottery">
+                                            <span class="btn-icon"><span class="material-icons">card_giftcard</span></span>
+                                            <span class="btn-text">경품추첨</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 공지사항 화면 -->
+                        <div id="notice-screen" class="phone-screen-inner">
+                            <div class="detail-header">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">공지사항</h1>
+                            </div>
+                            <div class="notice-list">
+                                <div class="notice-item" data-notice-id="1">
+                                    <div class="notice-item-header">
+                                        <span class="notice-icon">📢</span>
+                                        <div class="notice-content">
+                                            <h3 class="notice-title">EVENCON에 오신 여러분! 환영합니다.</h3>
+                                            <p class="notice-date">2023-03-10 pm 15:26:28</p>
+                                            <p class="notice-preview">EVENCON(이벤콘)에 오신 여러분 환영합니...</p>
+                                        </div>
+                                        <button class="notice-toggle">
+                                            <span class="material-icons">keyboard_arrow_down</span>
+                                        </button>
+                                    </div>
+                                    <div class="notice-item-body">
+                                        <div class="notice-detail">
+                                            <p><strong>EVENCON(이벤콘)에 오신 여러분 환영합니다 😊</strong></p>
+                                            <p>프로그램 안내, 이벤트 안내, 행사장 정보, 주차안내 등 지속적으로 업데이트 되는 소식은 공지사항에서 확인해주시기 바랍니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="notice-item" data-notice-id="2">
+                                    <div class="notice-item-header">
+                                        <span class="notice-icon">📍</span>
+                                        <div class="notice-content">
+                                            <h3 class="notice-title">☆(오프라인) 행사장 안내</h3>
+                                            <p class="notice-date">2023-03-10 오후 15:28:02</p>
+                                            <p class="notice-preview">(펼쳐주세요)</p>
+                                        </div>
+                                        <button class="notice-toggle">
+                                            <span class="material-icons">keyboard_arrow_down</span>
+                                        </button>
+                                    </div>
+                                    <div class="notice-item-body">
+                                        <div class="notice-detail">
+                                            <div class="notice-map" style="width: 100%; height: 200px; background: linear-gradient(135deg, #87CEEB 0%, #98D8C8 100%); border-radius: 8px; margin-top: 12px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="notice-item" data-notice-id="3">
+                                    <div class="notice-item-header">
+                                        <span class="notice-icon">📍</span>
+                                        <div class="notice-content">
+                                            <h3 class="notice-title">☆(온라인) 웨비나 시청 안내</h3>
+                                            <p class="notice-date">2023-03-10 오후 16:14:54</p>
+                                        </div>
+                                        <button class="notice-toggle">
+                                            <span class="material-icons">keyboard_arrow_down</span>
+                                        </button>
+                                    </div>
+                                    <div class="notice-item-body">
+                                        <div class="notice-detail">
+                                            <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">이벤터스 웨비나, 이렇게 시청하세요!</h4>
+                                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                                <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                                    <span class="material-icons" style="position: absolute; left: 0; top: 2px; font-size: 18px; color: #27AE60;">check</span>
+                                                    <span>Please click the [Watch] button and play (▶).</span>
+                                                </li>
+                                                <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                                    <span class="material-icons" style="position: absolute; left: 0; top: 2px; font-size: 18px; color: #27AE60;">check</span>
+                                                    <span>The Eventus webinar is optimized for 'Chrome browser'.</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 행사정보 화면 -->
+                        <div id="info-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #5c3fbf;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">행사정보</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <h2 style="margin-bottom: 20px; font-size: 20px; font-weight: 600;">행사 소개</h2>
+                                    <p style="line-height: 1.8; color: #666; margin-bottom: 24px;">이벤터스 솔루션 체험 행사에 오신 것을 환영합니다.<br>다양한 기능을 체험해보시고, 행사를 즐겨보세요!</p>
+                                    <h3 style="margin-bottom: 12px; font-size: 16px; font-weight: 600;">SNS</h3>
+                                    <p style="color: #666;">공식 SNS 계정을 팔로우해주세요!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 질의응답 화면 -->
+                        <div id="qna-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #00c9b7;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">질의응답</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">질문을 남기고 답변을 받을 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">help_outline</span>
+                                        <p style="color: #999;">질문이 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 설문조사 화면 -->
+                        <div id="survey-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #ffb800;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">설문조사</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">진행 중인 설문조사에 참여할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">assignment</span>
+                                        <p style="color: #999;">진행 중인 설문조사가 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 파일공유 화면 -->
+                        <div id="files-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--purple);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">파일공유</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">공유된 파일을 확인할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">cloud_upload</span>
+                                        <p style="color: #999;">공유된 파일이 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 프로그램 화면 -->
+                        <div id="program-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--red);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">프로그램</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                                        <div style="padding: 16px; background: #F8F9FA; border-radius: 8px;">
+                                            <div style="font-weight: 600; margin-bottom: 8px; color: #E74C3C;">10:00 - 10:30</div>
+                                            <h3 style="font-size: 18px; margin-bottom: 4px;">개회식</h3>
+                                            <p style="color: #666; font-size: 14px;">행사 개회 및 인사말</p>
+                                        </div>
+                                        <div style="padding: 16px; background: #F8F9FA; border-radius: 8px;">
+                                            <div style="font-weight: 600; margin-bottom: 8px; color: #E74C3C;">10:30 - 11:30</div>
+                                            <h3 style="font-size: 18px; margin-bottom: 4px;">기조강연</h3>
+                                            <p style="color: #666; font-size: 14px;">이벤터스 솔루션 소개</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 기조강연 화면 -->
+                        <div id="speaker-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--red);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">기조강연</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">기조강연 연사 프로필을 확인할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">mic</span>
+                                        <p style="color: #999;">연사 정보가 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 패널토의 화면 -->
+                        <div id="panel-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--red);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">패널토의</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">패널토의 세션 정보를 확인할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">rocket_launch</span>
+                                        <p style="color: #999;">패널토의 정보가 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 현장투표 화면 -->
+                        <div id="vote-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--teal);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">현장투표</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">진행 중인 투표에 참여할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">how_to_vote</span>
+                                        <p style="color: #999;">진행 중인 투표가 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 경품추첨 화면 -->
+                        <div id="lottery-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #ff5e7e;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">경품추첨</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">경품추첨 이벤트에 참여할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">card_giftcard</span>
+                                        <p style="color: #999;">진행 중인 경품추첨이 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 모의투자 화면 -->
+                        <div id="competition-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--teal);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">모의투자</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">모의투자 게임에 참여할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">how_to_vote</span>
+                                        <p style="color: #999;">진행 중인 모의투자가 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 웨비나 화면 -->
+                        <div id="webinar-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--blue);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">웨비나</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">웨비나를 시청할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">play_circle</span>
+                                        <p style="color: #999;">진행 중인 웨비나가 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 채팅 화면 -->
+                        <div id="chat-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--blue);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">채팅</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">실시간 채팅에 참여할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">chat_bubble_outline</span>
+                                        <p style="color: #999;">채팅이 시작되지 않았습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 출석체크 화면 -->
+                        <div id="attendance-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--blue);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">출석체크</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">출석체크를 진행할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">playlist_add_check</span>
+                                        <p style="color: #999;">출석체크가 활성화되지 않았습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 오른쪽: 말풍선 영역 -->
+        <div class="balloon-container" id="balloon-container">
+            <div class="balloon-wrapper">
+                <!-- 메인 화면용 말풍선 1: 흰색 배경 -->
+                <div class="balloon" id="balloon-main-1">
+                    <div class="balloon-content balloon-white pull">
+                        <div class="balloon-text">🙋‍♀️
+공지사항, 연사 정보 등 행사와 관련된 안내를 확인하실 수 있어요. 경품추첨, 퀴즈와 같은 이벤트에도 참여해보시기 바랍니다.</div>
+                    </div>
+                </div>
+
+                <!-- 메인 화면용 말풍선 2: 보라색 배경 -->
+                <div class="balloon" id="balloon-main-2">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+체험을 원하는 기능들을 클릭해보세요!</div>
+                    </div>
+                </div>
+
+                <!-- 각 화면별 말풍선 (보라색 배경) -->
+                <div class="balloon" id="balloon-notice" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+호스트는 행사와 관련된 각종 공지사항을 게시하고 수정할 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-info" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+행사 소개, 연사 프로필, SNS, 파일 등을 한 곳에서 업로드 할 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-qna" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+질문을 남기고 답변을 받을 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-survey" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+설문조사에 참여하고 결과를 확인할 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-files" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+행사와 관련된 여러 파일들(발표자료, 소개서, 브로셔 등)을 업로드할 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-program" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+행사 프로그램 일정을 관리할 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-speaker" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+연사 프로필과 소개를 작성할 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-panel" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+패널토의 세션 정보를 관리할 수 있어요.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-vote" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+패션 세션에서 가장 인상 깊었던 발표자는 누구인가요? Best Speaker에게 투표해보세요!</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-lottery" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+경품 추첨을 시작하겠습니다. 설문조사에 참여해 주시면 행운의 번호를 받으실 수 있습니다.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-competition" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+행사와 데이터를 주제로 경연대회를 진행하겠습니다. 발표자들의 반짝이는 아이디어에 투자해보세요!</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-webinar" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+온라인 참가자분들은 웨비나 시청버튼을 클릭해 주시기 바랍니다.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-chat" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+궁금한 사항은 질문을 남겨주세요. 실시간 Q&A를 진행하겠습니다.</div>
+                    </div>
+                </div>
+
+                <div class="balloon" id="balloon-attendance" style="display: none;">
+                    <div class="balloon-content balloon-purple">
+                        <div class="balloon-text">👈
+온라인 참가자의 출석 확인을 위해출석 체크를 완료해 주시기 바랍니다.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

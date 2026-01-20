@@ -1,0 +1,842 @@
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #4A90E2;
+    --primary-hover: #357ABD;
+    --text-color: #333333;
+    --text-light: #666666;
+    --border-color: #E0E0E0;
+    --error-color: #E74C3C;
+    --success-color: #27AE60;
+    --bg-color: #F5F5F5;
+    --white: #FFFFFF;
+    --purple: #795cde;
+    --red: #E74C3C;
+    --teal: #20B2AA;
+    --blue: #4A90E2;
+    --gray-900: #111827;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text-color);
+    background: var(--white);
+    position: relative;
+}
+
+/* 배경 이미지 */
+.background-image {
+    position: fixed;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect fill="%23f9fafb" width="1920" height="1080"/></svg>');
+    background-size: cover;
+    background-position: center;
+}
+
+/* 상단 헤더 */
+.top-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 72px;
+    padding: 16px 23px 16px 41px;
+    background: #6A5ACD;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container {
+    margin-top: 5px;
+    margin-right: 16px;
+    margin-bottom: 4px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.logo-link {
+    display: block;
+}
+
+.header-title {
+    width: 120px;
+    height: 20px;
+    margin: 10px 0;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header-right {
+    display: flex;
+}
+
+.header-button {
+    background: rgba(255, 255, 255, 0.2);
+    height: 40px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background 0.2s ease;
+}
+
+.header-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.header-button-text {
+    height: 16px;
+    font-size: 12px;
+    line-height: 1.23;
+    color: var(--white);
+}
+
+/* 메인 레이아웃 */
+.main-layout {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    margin-top: 32px;
+    width: 100%;
+    padding: 30px 0 0 0;
+    padding-bottom: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 40px;
+    min-height: calc(100vh - 72px);
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: visible;
+}
+
+/* 핸드폰 디바이스 (왼쪽) */
+.device-container {
+    margin-left: 150px;
+    margin-right: 0;
+    margin-top: -20px;
+    min-height: 600px;
+    width: 405px;
+    flex-shrink: 0;
+    transform: scale(0.898);
+    transform-origin: top left;
+    position: relative;
+}
+
+/* 말풍선 영역 (핸드폰 우측) */
+.balloon-container {
+    padding-left: 0;
+    padding-right: 0;
+    width: auto;
+    display: flex;
+    justify-content: flex-start;
+    flex: 1;
+    margin-top: 200px;
+    transform: scale(0.9);
+    transform-origin: top left;
+}
+
+.balloon-wrapper {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+}
+
+.balloon {
+    opacity: 1;
+    animation: none;
+}
+
+.balloon-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding: 35px 43px 30px 40px;
+    gap: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    position: relative;
+}
+
+.balloon-purple {
+    background: #6A5ACD;
+}
+
+.balloon-white {
+    background: var(--white);
+}
+
+.balloon-icon {
+    width: auto;
+    height: auto;
+    font-size: 36px;
+    font-weight: 900;
+    text-align: left;
+    display: block;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.balloon-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.balloon-text {
+    width: auto;
+    margin-top: 0;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.5;
+    white-space: pre-line;
+    word-wrap: break-word;
+    max-width: 500px;
+}
+
+.balloon-purple .balloon-text {
+    color: var(--white);
+}
+
+.balloon-white .balloon-text {
+    color: var(--text-color);
+}
+
+/* 말풍선 꼬리 효과 */
+.pull {
+    position: relative;
+}
+
+.pull::after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    right: -21px;
+    border-left: 50px solid var(--white);
+    border-top: 50px solid transparent;
+}
+
+
+.device {
+    position: relative;
+    transform: scale(1);
+    z-index: 1;
+}
+
+.device *,
+.device ::after,
+.device ::before,
+.device::after,
+.device::before {
+    box-sizing: border-box;
+    display: block;
+}
+
+/* iPhone 14 Pro 스타일 */
+.device-iphone-14-pro {
+    height: 868px;
+    width: 428px;
+}
+
+.device-iphone-14-pro .device-frame {
+    background: #010101;
+    border: 1px solid #1b1721;
+    border-radius: 68px;
+    box-shadow: inset 0 0 4px 2px #c0b7cd, inset 0 0 0 6px #342c3f;
+    height: 868px;
+    padding: 19px;
+    width: 428px;
+    position: relative;
+}
+
+.device-iphone-14-pro .device-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 28px;
+    background: #010101;
+    border-radius: 0 0 18px 18px;
+    z-index: 10;
+}
+
+.device-iphone-14-pro .device-screen {
+    background-color: #000;
+    background-position: center center;
+    background-size: cover;
+    object-fit: cover;
+    position: relative;
+    border-radius: 49px;
+    height: 830px;
+    width: 390px;
+    overflow: hidden;
+}
+
+.device-iphone-14-pro .device-stripe::after,
+.device-iphone-14-pro .device-stripe::before {
+    border: solid rgba(1, 1, 1, 0.25);
+    border-width: 0 7px;
+    content: "";
+    height: 7px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 9;
+}
+
+.device-iphone-14-pro .device-stripe::after {
+    top: 85px;
+}
+
+.device-iphone-14-pro .device-stripe::before {
+    bottom: 85px;
+}
+
+.device-iphone-14-pro .device-header {
+    background: #010101;
+    border-radius: 20px;
+    height: 35px;
+    left: 50%;
+    margin-left: -60px;
+    position: absolute;
+    top: 29px;
+    width: 120px;
+    z-index: 10;
+}
+
+.device-iphone-14-pro .device-sensors::after,
+.device-iphone-14-pro .device-sensors::before {
+    content: "";
+    position: absolute;
+}
+
+.device-iphone-14-pro .device-sensors::after {
+    background: #010101;
+    border-radius: 17px;
+    height: 33px;
+    left: 50%;
+    margin-left: -60px;
+    top: 30px;
+    width: 74px;
+    z-index: 10;
+}
+
+.device-iphone-14-pro .device-sensors::before {
+    background: radial-gradient(farthest-corner at 20% 20%, #6074bf 0, transparent 40%), radial-gradient(farthest-corner at 80% 80%, #513785 0, #24555e 20%, transparent 50%);
+    border-radius: 50%;
+    box-shadow: 0 0 1px 1px rgba(255, 255, 255, 0.05);
+    height: 9px;
+    left: 50%;
+    margin-left: 36px;
+    top: 42px;
+    width: 9px;
+    z-index: 10;
+}
+
+.device-iphone-14-pro .device-btns {
+    background: #1b1721;
+    border-radius: 2px;
+    height: 32px;
+    left: -2px;
+    position: absolute;
+    top: 115px;
+    width: 3px;
+}
+
+.device-iphone-14-pro .device-btns::after,
+.device-iphone-14-pro .device-btns::before {
+    background: #1b1721;
+    border-radius: 2px;
+    content: "";
+    height: 62px;
+    left: 0;
+    position: absolute;
+    width: 3px;
+}
+
+.device-iphone-14-pro .device-btns::after {
+    top: 60px;
+}
+
+.device-iphone-14-pro .device-btns::before {
+    top: 140px;
+}
+
+.device-iphone-14-pro .device-power {
+    background: #1b1721;
+    border-radius: 2px;
+    height: 100px;
+    position: absolute;
+    right: -2px;
+    top: 200px;
+    width: 3px;
+}
+
+/* 핸드폰 화면 내부 */
+.phone-screen-inner {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background: var(--white);
+    flex-direction: column;
+}
+
+.phone-screen-inner.active {
+    display: flex;
+}
+
+/* 앱 헤더 (상단 네비게이션) */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #6A5ACD;
+    border-bottom: none;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.menu-btn, .profile-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--white);
+}
+
+.menu-btn .material-icons, .profile-btn .material-icons {
+    font-size: 24px;
+    color: var(--white);
+}
+
+.app-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    flex: 1;
+    text-align: center;
+    margin: 0 8px;
+}
+
+/* 상세 화면 헤더 */
+.detail-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--purple);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: white;
+    margin-right: 8px;
+}
+
+.back-btn .material-icons {
+    font-size: 28px;
+}
+
+.detail-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    flex: 1;
+}
+
+/* 앱 콘텐츠 영역 */
+.app-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: var(--white);
+}
+
+/* 섹션 스타일 */
+.content-section {
+    background: var(--white);
+    border-radius: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--white);
+    border-bottom: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.content-section.selected .section-header {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.section-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: var(--text-color);
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+    line-height: 1;
+}
+
+.section-title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.section-toggle {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--text-color);
+    flex-shrink: 0;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.section-toggle .material-icons {
+    font-size: 20px;
+}
+
+.content-section.collapsed .section-toggle {
+    transform: rotate(180deg);
+}
+
+/* 섹션 버튼 그룹 */
+.section-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 6px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.content-section.collapsed .section-buttons {
+    display: none;
+}
+
+.section-btn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    box-sizing: border-box;
+    min-width: 0;
+    height: 96px;
+    padding: 12px 0px;
+    gap: 8px;
+}
+
+.section-btn:active {
+    transform: scale(0.95);
+}
+
+.btn-icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: auto;
+    height: auto;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-icon .material-icons {
+    font-size: 31px;
+}
+
+.btn-text {
+    flex: 0 0 auto;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    text-align: center;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 버튼별 색상 */
+.section-btn.btn-info {
+    background: #5c3fbf;
+}
+
+.section-btn.btn-info:hover {
+    background: #4d32a8;
+}
+
+.section-btn.btn-qna {
+    background: #00c9b7;
+}
+
+.section-btn.btn-qna:hover {
+    background: #00b5a4;
+}
+
+.section-btn.btn-survey {
+    background: #ffb800;
+}
+
+.section-btn.btn-survey:hover {
+    background: #e6a600;
+}
+
+.section-btn.btn-lottery {
+    background: #ff5e7e;
+}
+
+.section-btn.btn-lottery:hover {
+    background: #e64d6b;
+}
+
+/* 공지사항 리스트 */
+.notice-list {
+    padding: 16px;
+    background: var(--white);
+}
+
+.notice-item {
+    background: transparent;
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: none;
+    overflow: visible;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.notice-item:last-child {
+    border-bottom: none;
+}
+
+.notice-item-header {
+    display: flex;
+    align-items: flex-start;
+    padding: 16px 20px;
+    cursor: pointer;
+    background: transparent;
+    gap: 16px;
+}
+
+.notice-item-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.notice-icon {
+    font-size: 32px;
+    margin-right: 0;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.notice-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notice-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+}
+
+.notice-date {
+    font-size: 12px;
+    color: var(--text-light);
+    margin: 0 0 4px 0;
+}
+
+.notice-preview {
+    font-size: 13px;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.notice-toggle {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--text-color);
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.notice-toggle .material-icons {
+    font-size: 20px;
+}
+
+.notice-item-body {
+    display: none;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.notice-item.expanded .notice-item-body {
+    display: block;
+}
+
+.notice-item.expanded .notice-toggle .material-icons {
+    transform: rotate(180deg);
+}
+
+.notice-detail {
+    padding: 0;
+}
+
+.notice-detail p {
+    font-size: 14px;
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn-a {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.animation-3 {
+    animation: fadeIn-a 1s ease-in-out forwards;
+    animation-delay: 0.3s;
+}
+
+.animation-9 {
+    animation: fadeIn-a 1s ease-in-out forwards;
+    animation-delay: 0.9s;
+}
+
+.animation-15 {
+    animation: fadeIn-a 1s ease-in-out forwards;
+    animation-delay: 1.5s;
+}
+
+/* 반응형 */
+@media (max-width: 1279px) {
+    .balloon-container {
+        padding-left: 50px;
+        padding-right: 30px;
+    }
+    
+    .device-container {
+        margin-right: 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .balloon-container {
+        width: 100%;
+        padding: 20px;
+    }
+    
+    .device-container {
+        margin-right: 0;
+        margin-top: 40px;
+    }
+}
