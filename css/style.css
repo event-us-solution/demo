@@ -754,6 +754,7 @@ body {
     font-weight: 600;
     color: #5c3fbf;
     background: #efe9ff;
+    overflow: hidden;
 }
 
 .qna-avatar-lg {
@@ -770,6 +771,13 @@ body {
 .qna-avatar.is-yellow {
     background: #ffe58a;
     color: #5c3fbf;
+}
+
+.qna-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .qna-speaker-name {
