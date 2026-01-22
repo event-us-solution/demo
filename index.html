@@ -307,23 +307,138 @@
 
                         <!-- 질의응답 화면 -->
                         <div id="qna-screen" class="phone-screen-inner">
-                            <div class="detail-header" style="background: #00c9b7;">
+                            <div class="detail-header" style="background: #5c3fbf;">
                                 <button class="back-btn" onclick="goBack()">
                                     <span class="material-icons">chevron_left</span>
                                 </button>
                                 <h1 class="detail-title">질의응답</h1>
+                                <button class="qna-header-action" type="button">
+                                    세션 이동
+                                    <span class="material-icons">chevron_right</span>
+                                </button>
                             </div>
                             <div class="app-content">
-                                <div class="qna-embed is-loading">
-                                    <div class="qna-embed-loading">접속 준비 중...</div>
-                                    <iframe
-                                        src="about:blank"
-                                        data-init-src="http://event-us.kr/s/119557"
-                                        data-target-src="https://event-us.kr/sc/108295"
-                                        title="질의응답"
-                                        frameborder="0"
-                                        allow="clipboard-write; fullscreen"
-                                        allowfullscreen></iframe>
+                                <div class="qna-content">
+                                    <div class="qna-tabs">
+                                        <button class="qna-tab-button" type="button" data-tab="qna-tab-guide">안내</button>
+                                        <button class="qna-tab-button" type="button" data-tab="qna-tab-speakers">연사</button>
+                                        <button class="qna-tab-button is-active" type="button" data-tab="qna-tab-questions">질문</button>
+                                    </div>
+
+                                    <div class="qna-tab-panel" id="qna-tab-guide">
+                                        <p class="qna-guide-text">많은 참여 부탁드립니다.</p>
+                                    </div>
+
+                                    <div class="qna-tab-panel" id="qna-tab-speakers">
+                                        <div class="qna-speaker-list">
+                                            <div class="qna-speaker-card">
+                                                <div class="qna-speaker-row">
+                                                    <div class="qna-speaker-info">
+                                                        <div class="qna-avatar qna-avatar-lg is-yellow">J</div>
+                                                        <div>
+                                                            <div class="qna-speaker-name">James</div>
+                                                            <div class="qna-speaker-role">Event-us / Leader</div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="qna-speaker-action" type="button">질문하기</button>
+                                                </div>
+                                                <p class="qna-speaker-desc">안녕하세요 경영, 마케팅에 관심이 있는 James 입니다. 질문 많이 해주세요.</p>
+                                            </div>
+
+                                            <div class="qna-speaker-card">
+                                                <div class="qna-speaker-row">
+                                                    <div class="qna-speaker-info">
+                                                        <div class="qna-avatar qna-avatar-lg is-yellow">L</div>
+                                                        <div>
+                                                            <div class="qna-speaker-name">Lucy</div>
+                                                            <div class="qna-speaker-role">Event-us / Marketer</div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="qna-speaker-action" type="button">질문하기</button>
+                                                </div>
+                                                <p class="qna-speaker-desc">안녕하세요 마케팅 매니저 Lucy입니다.</p>
+                                            </div>
+
+                                            <div class="qna-speaker-card">
+                                                <div class="qna-speaker-row">
+                                                    <div class="qna-speaker-info">
+                                                        <div class="qna-avatar qna-avatar-lg is-yellow">J</div>
+                                                        <div>
+                                                            <div class="qna-speaker-name">June</div>
+                                                            <div class="qna-speaker-role">Event-us / Sales</div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="qna-speaker-action" type="button">질문하기</button>
+                                                </div>
+                                                <p class="qna-speaker-desc">세일즈를 담당하고 있습니다. 질문 많이 해주세요.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="qna-tab-panel is-active" id="qna-tab-questions">
+                                        <div class="qna-speaker-pills">
+                                            <div class="qna-speaker-pill is-active">
+                                                <div class="qna-avatar qna-avatar-lg is-purple">전체</div>
+                                                <div class="qna-speaker-pill-name">질문</div>
+                                            </div>
+                                            <div class="qna-speaker-pill">
+                                                <div class="qna-avatar qna-avatar-lg is-yellow">J</div>
+                                                <div class="qna-speaker-pill-name">James</div>
+                                                <div class="qna-speaker-pill-role">Event-us<br>Leader</div>
+                                            </div>
+                                            <div class="qna-speaker-pill">
+                                                <div class="qna-avatar qna-avatar-lg is-yellow">L</div>
+                                                <div class="qna-speaker-pill-name">Lucy</div>
+                                                <div class="qna-speaker-pill-role">Event-us<br>Marketer</div>
+                                            </div>
+                                            <div class="qna-speaker-pill">
+                                                <div class="qna-avatar qna-avatar-lg is-yellow">J</div>
+                                                <div class="qna-speaker-pill-name">June</div>
+                                                <div class="qna-speaker-pill-role">Event-us<br>Sales</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="qna-filter-bar">
+                                            <div class="qna-filter-tabs">
+                                                <button class="qna-filter-tab is-active" type="button">전체</button>
+                                                <button class="qna-filter-tab" type="button">답변 완료</button>
+                                                <button class="qna-filter-tab" type="button">내질문</button>
+                                            </div>
+                                            <select class="qna-sort" aria-label="정렬">
+                                                <option>최신순</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="qna-question-list">
+                                            <div class="qna-question-item">
+                                                <div class="qna-question-header">
+                                                    <span class="qna-question-author">Peter</span>
+                                                    <span class="qna-question-target">→ James</span>
+                                                    <span class="qna-question-time">16:37</span>
+                                                </div>
+                                                <p class="qna-question-body">James님께서 생각하시기에 행사를 성공적으로 준비하는데 있어 가장 중요하다고 여기시는 부분은 무엇인가요?</p>
+                                                <div class="qna-question-actions">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span>0</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="qna-question-item">
+                                                <div class="qna-question-header">
+                                                    <span class="qna-question-author">Chris</span>
+                                                    <span class="qna-question-target">→ 전체</span>
+                                                    <span class="qna-question-time">16:36</span>
+                                                </div>
+                                                <p class="qna-question-body">안녕하세요. 행사를 준비할 때 이벤트 플랫폼인 이벤터스가 필수적인 이유에 대해 알고 싶습니다.</p>
+                                                <div class="qna-question-actions">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span>0</span>
+                                                </div>
+                                            </div>
+
+                                            <button class="qna-fab" type="button">질문하기</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

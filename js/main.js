@@ -392,68 +392,26 @@ function handleFeatureClick(feature, modal) {
     if (screenId) {
         ScreenManager.show(screenId);
     }
-    if (feature === 'qna') {
-        initQnaEmbed();
-    }
     if (screenContent) {
         ScreenManager.updateScreen(screenContent);
     }
 }
 
-function initQnaEmbed() {
-    const embed = document.querySelector('.qna-embed');
-    const iframe = embed ? embed.querySelector('iframe') : null;
-    if (!embed || !iframe) return;
+function initQnaTabs() {
+    const buttons = document.querySelectorAll('.qna-tab-button');
+    const panels = document.querySelectorAll('.qna-tab-panel');
+    if (!buttons.length || !panels.length) return;
 
-    const initSrc = iframe.getAttribute('data-init-src');
-    const targetSrc = iframe.getAttribute('data-target-src');
-    const sessionKey = 'qnaSessionReady';
-
-    let sessionReady = false;
-    try {
-        sessionReady = sessionStorage.getItem(sessionKey) === 'true';
-    } catch (e) {
-        sessionReady = false;
-    }
-
-    const clearLoadHandler = () => {
-        if (iframe._qnaLoadHandler) {
-            iframe.removeEventListener('load', iframe._qnaLoadHandler);
-            iframe._qnaLoadHandler = null;
-        }
-    };
-
-    const showTarget = () => {
-        if (targetSrc && iframe.getAttribute('src') !== targetSrc) {
-            iframe.setAttribute('src', targetSrc);
-        }
-        embed.classList.remove('is-loading');
-    };
-
-    embed.classList.add('is-loading');
-
-    if (sessionReady) {
-        clearLoadHandler();
-        showTarget();
-        return;
-    }
-
-    const onLoad = () => {
-        clearLoadHandler();
-        try {
-            sessionStorage.setItem(sessionKey, 'true');
-        } catch (e) {
-            // ignore storage errors
-        }
-        showTarget();
-    };
-
-    clearLoadHandler();
-    iframe._qnaLoadHandler = onLoad;
-    iframe.addEventListener('load', onLoad, { once: true });
-    if (initSrc && iframe.getAttribute('src') !== initSrc) {
-        iframe.setAttribute('src', initSrc);
-    }
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const target = button.getAttribute('data-tab');
+            buttons.forEach(btn => btn.classList.remove('is-active'));
+            button.classList.add('is-active');
+            panels.forEach(panel => {
+                panel.classList.toggle('is-active', panel.id === target);
+            });
+        });
+    });
 }
 
 // 섹션 접기/펼치기 기능
@@ -593,6 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFormValidation();
     initFeatureCards();
     initSectionToggle();
+    initQnaTabs();
     initIconSelector();
     initIconEdit();
     initNoticeToggle(); // 공지사항 토글 기능 초기화

@@ -641,37 +641,306 @@ body {
 }
 
 /* 질의응답 상세 화면 */
-.qna-embed {
-    margin: -16px;
-    height: calc(100vh - 56px);
-    background: var(--white);
-    position: relative;
+.qna-header-action {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
 }
 
-.qna-embed iframe {
-    width: 100%;
-    height: 100%;
+.qna-header-action .material-icons {
+    font-size: 18px;
+}
+
+.qna-content {
+    margin: -16px;
+    min-height: calc(100vh - 56px);
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+}
+
+.qna-tabs {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e6e6e6;
+    background: #fff;
+}
+
+.qna-tab-button {
+    flex: 1;
+    padding: 12px 0;
+    background: transparent;
     border: none;
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    position: relative;
+    cursor: pointer;
+}
+
+.qna-tab-button.is-active {
+    color: #5c3fbf;
+    font-weight: 600;
+}
+
+.qna-tab-button.is-active::after {
+    content: "";
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    bottom: -1px;
+    height: 2px;
+    background: #5c3fbf;
+    border-radius: 2px;
+}
+
+.qna-tab-panel {
+    display: none;
+    padding: 16px;
+}
+
+.qna-tab-panel.is-active {
     display: block;
 }
 
-.qna-embed-loading {
-    position: absolute;
-    inset: 0;
-    display: none;
+.qna-guide-text {
+    font-size: 14px;
+    color: #333;
+    margin-top: 4px;
+}
+
+.qna-speaker-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.qna-speaker-card {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #ededed;
+}
+
+.qna-speaker-card:last-child {
+    border-bottom: none;
+}
+
+.qna-speaker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.qna-speaker-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.qna-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #5c3fbf;
+    background: #efe9ff;
+}
+
+.qna-avatar-lg {
+    width: 44px;
+    height: 44px;
+    font-size: 12px;
+}
+
+.qna-avatar.is-purple {
+    background: #efe9ff;
+    color: #5c3fbf;
+}
+
+.qna-avatar.is-yellow {
+    background: #ffe58a;
+    color: #5c3fbf;
+}
+
+.qna-speaker-name {
     font-size: 14px;
+    font-weight: 600;
+    color: #222;
+}
+
+.qna-speaker-role {
+    font-size: 12px;
+    color: #9a9a9a;
+    margin-top: 2px;
+}
+
+.qna-speaker-desc {
+    margin-top: 8px;
+    font-size: 13px;
     color: #666;
-    background: var(--white);
+    line-height: 1.5;
 }
 
-.qna-embed.is-loading iframe {
-    display: none;
+.qna-speaker-action {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #555;
+    cursor: pointer;
 }
 
-.qna-embed.is-loading .qna-embed-loading {
+.qna-speaker-pills {
     display: flex;
+    gap: 16px;
+    padding: 12px 16px 8px;
+    overflow-x: auto;
+    border-bottom: 1px solid #ededed;
+}
+
+.qna-speaker-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 66px;
+    text-align: center;
+    color: #444;
+}
+
+.qna-speaker-pill-name {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.qna-speaker-pill-role {
+    margin-top: 2px;
+    font-size: 11px;
+    color: #9a9a9a;
+    line-height: 1.2;
+}
+
+.qna-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-bottom: 1px solid #ededed;
+}
+
+.qna-filter-tabs {
+    display: flex;
+    gap: 16px;
+}
+
+.qna-filter-tab {
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    color: #8c8c8c;
+    padding: 6px 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.qna-filter-tab.is-active {
+    color: #5c3fbf;
+    font-weight: 600;
+}
+
+.qna-sort {
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #555;
+    background: #fff;
+}
+
+.qna-question-list {
+    padding: 0 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.qna-question-item {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #ededed;
+}
+
+.qna-question-item:last-child {
+    border-bottom: none;
+}
+
+.qna-question-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #777;
+}
+
+.qna-question-author {
+    font-weight: 600;
+    color: #222;
+}
+
+.qna-question-target {
+    color: #5c3fbf;
+    font-weight: 600;
+}
+
+.qna-question-time {
+    margin-left: auto;
+    font-size: 12px;
+    color: #b0b0b0;
+}
+
+.qna-question-body {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.qna-question-actions {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #999;
+}
+
+.qna-question-actions .material-icons {
+    font-size: 16px;
+}
+
+.qna-fab {
+    align-self: flex-end;
+    margin-top: 8px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 12px;
+    background: #5c3fbf;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 6px 12px rgba(92, 63, 191, 0.2);
+    position: sticky;
+    bottom: 16px;
 }
 
 /* 앱 콘텐츠 영역 */
