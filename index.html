@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,GRAD@24,400,0" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=20260121-1">
 </head>
 <body>
@@ -30,9 +31,9 @@
             <div class="header-title">솔루션 체험 페이지</div>
         </div>
         <div class="header-right" id="header-right" style="display: none;">
-            <div class="header-button" id="header-button">
-                <div class="header-button-text">종료 후 솔루션 세팅하기</div>
-            </div>
+            <a class="header-button" id="header-button" href="https://blog.event-us.kr/solutiontype/offline" target="_blank" rel="noopener noreferrer">
+                <div class="header-button-text">상담 신청하기</div>
+            </a>
         </div>
     </div>
 
@@ -133,10 +134,11 @@
                         <!-- 솔루션 체험 메인 화면 -->
                         <div id="demo-screen" class="phone-screen-inner active">
                             <!-- 상단 네비게이션 -->
-                            <div class="app-header">
-                                <button class="menu-btn"><span class="material-icons">menu</span></button>
-                                <h1 class="app-title">참가자 화면</h1>
-                                <button class="profile-btn"><span class="material-icons">person</span></button>
+                            <div class="detail-header main-detail-header has-status">
+                                <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
+                                <button class="main-profile-btn" type="button" aria-label="프로필">
+                                    <span class="material-icons">person</span>
+                                </button>
                             </div>
 
                             <!-- 콘텐츠 영역 -->
@@ -312,10 +314,6 @@
                                     <span class="material-icons">chevron_left</span>
                                 </button>
                                 <h1 class="detail-title">질의응답</h1>
-                                <button class="qna-header-action" type="button">
-                                    세션 이동
-                                    <span class="material-icons">chevron_right</span>
-                                </button>
                             </div>
                             <div class="app-content">
                                 <div class="qna-content">
@@ -385,50 +383,53 @@
                                     </div>
 
                                     <div class="qna-tab-panel is-active" id="qna-tab-questions">
+                                        <div class="qna-question-title">연사 3</div>
                                         <div class="qna-speaker-pills">
-                                            <div class="qna-speaker-pill is-active">
+                                            <button class="qna-speaker-pill is-active" type="button" data-speaker="all">
                                                 <div class="qna-avatar qna-avatar-lg is-purple">전체</div>
                                                 <div class="qna-speaker-pill-name">질문</div>
-                                            </div>
-                                            <div class="qna-speaker-pill">
+                                            </button>
+                                            <button class="qna-speaker-pill" type="button" data-speaker="James">
                                                 <div class="qna-avatar qna-avatar-lg is-yellow">
                                                     <img src="assets/qna/james.png" alt="James">
                                                 </div>
                                                 <div class="qna-speaker-pill-name">James</div>
                                                 <div class="qna-speaker-pill-role">Event-us<br>Leader</div>
-                                            </div>
-                                            <div class="qna-speaker-pill">
+                                            </button>
+                                            <button class="qna-speaker-pill" type="button" data-speaker="Lucy">
                                                 <div class="qna-avatar qna-avatar-lg is-yellow">
                                                     <img src="assets/qna/lucy.png" alt="Lucy">
                                                 </div>
                                                 <div class="qna-speaker-pill-name">Lucy</div>
                                                 <div class="qna-speaker-pill-role">Event-us<br>Marketer</div>
-                                            </div>
-                                            <div class="qna-speaker-pill">
+                                            </button>
+                                            <button class="qna-speaker-pill" type="button" data-speaker="June">
                                                 <div class="qna-avatar qna-avatar-lg is-yellow">
                                                     <img src="assets/qna/june.png" alt="June">
                                                 </div>
                                                 <div class="qna-speaker-pill-name">June</div>
                                                 <div class="qna-speaker-pill-role">Event-us<br>Sales</div>
-                                            </div>
+                                            </button>
                                         </div>
 
                                         <div class="qna-filter-bar">
                                             <div class="qna-filter-tabs">
                                                 <button class="qna-filter-tab is-active" type="button">전체</button>
                                                 <button class="qna-filter-tab" type="button">답변 완료</button>
-                                                <button class="qna-filter-tab" type="button">내질문</button>
+                                                <button class="qna-filter-tab" type="button">내 질문</button>
                                             </div>
                                             <select class="qna-sort" aria-label="정렬">
                                                 <option>최신순</option>
+                                                <option>좋아요순</option>
+                                                <option>등록순</option>
                                             </select>
                                         </div>
 
-                                        <div class="qna-question-list">
-                                            <div class="qna-question-item">
+                                        <div class="qna-question-list" id="qna-question-list">
+                                            <div class="qna-question-item" data-speaker="James" data-status="all">
                                                 <div class="qna-question-header">
                                                     <span class="qna-question-author">Peter</span>
-                                                    <span class="qna-question-target">→ James</span>
+                                                    <span class="qna-question-target">→ <span class="qna-target-badge is-james">James</span></span>
                                                     <span class="qna-question-time">16:37</span>
                                                 </div>
                                                 <p class="qna-question-body">James님께서 생각하시기에 행사를 성공적으로 준비하는데 있어 가장 중요하다고 여기시는 부분은 무엇인가요?</p>
@@ -438,10 +439,10 @@
                                                 </div>
                                             </div>
 
-                                            <div class="qna-question-item">
+                                            <div class="qna-question-item" data-speaker="전체" data-status="all">
                                                 <div class="qna-question-header">
                                                     <span class="qna-question-author">Chris</span>
-                                                    <span class="qna-question-target">→ 전체</span>
+                                                    <span class="qna-question-target">→ <span class="qna-target-badge is-all">전체</span></span>
                                                     <span class="qna-question-time">16:36</span>
                                                 </div>
                                                 <p class="qna-question-body">안녕하세요. 행사를 준비할 때 이벤트 플랫폼인 이벤터스가 필수적인 이유에 대해 알고 싶습니다.</p>
@@ -451,7 +452,65 @@
                                                 </div>
                                             </div>
 
+                                            <div class="qna-question-item" data-speaker="Lucy" data-status="answered">
+                                                <div class="qna-question-header">
+                                                    <span class="qna-question-author">익명</span>
+                                                    <span class="qna-question-target">→ <span class="qna-target-badge is-james">Lucy</span></span>
+                                                    <span class="qna-question-time">16:35</span>
+                                                </div>
+                                                <p class="qna-question-body">참가자 모객의 성공여부를 결정하는 핵심요인을 무엇이라고 생각하시나요?</p>
+                                                <div class="qna-question-actions">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span>0</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="qna-empty-state" id="qna-empty-state" hidden>
+                                                <p>작성된 질문이 없습니다.</p>
+                                                <p>질문을 작성해 주세요.</p>
+                                                <button class="qna-fab" type="button">질문하기</button>
+                                            </div>
+
                                             <button class="qna-fab" type="button">질문하기</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="qna-question-screen" class="phone-screen-inner">
+                            <div class="detail-header">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">질문하기</h1>
+                            </div>
+                            <div class="app-content">
+                                <div class="qna-form-content">
+                                    <div class="qna-form-select-wrapper">
+                                        <button class="qna-form-select" type="button" aria-expanded="false">
+                                            <div class="qna-form-select-left">
+                                                <div class="qna-avatar qna-avatar-sm is-purple qna-form-avatar">전체</div>
+                                                <img class="qna-form-avatar-img" src="assets/qna/james.png" alt="James">
+                                                <span class="qna-form-select-name">전체</span>
+                                            </div>
+                                            <span class="material-icons">expand_more</span>
+                                        </button>
+                                        <div class="qna-form-options" hidden>
+                                            <button class="qna-form-option is-active" type="button" data-label="전체">전체</button>
+                                            <button class="qna-form-option" type="button" data-label="James" data-avatar="assets/qna/james.png">James</button>
+                                            <button class="qna-form-option" type="button" data-label="Lucy" data-avatar="assets/qna/lucy.png">Lucy</button>
+                                            <button class="qna-form-option" type="button" data-label="June" data-avatar="assets/qna/june.png">June</button>
+                                        </div>
+                                    </div>
+                                    <div class="qna-form-field">
+                                        <input class="qna-form-input" id="qna-name-input" type="text" placeholder="(선택) 이름을 입력해 주세요.">
+                                    </div>
+                                    <div class="qna-form-field">
+                                        <textarea class="qna-form-textarea" id="qna-question-input" placeholder="질문을 입력해 주세요. 부적절한 내용이나 공격적인 질문은 허용되지 않습니다."></textarea>
+                                        <div class="qna-form-meta">
+                                            <span class="qna-form-count" id="qna-question-count">0 / 140</span>
+                                            <button class="qna-form-submit" id="qna-question-submit" type="button" disabled>작성하기</button>
                                         </div>
                                     </div>
                                 </div>
@@ -678,125 +737,46 @@
             </div>
         </div>
 
-        <!-- 오른쪽: 말풍선 영역 -->
-        <div class="balloon-container" id="balloon-container">
-            <div class="balloon-wrapper">
-                <!-- 메인 화면용 말풍선 1: 흰색 배경 -->
-                <div class="balloon" id="balloon-main-1">
-                    <div class="balloon-content balloon-white pull">
-                        <div class="balloon-text">🙋‍♀️
-공지사항, 연사 정보 등 행사와 관련된 안내를 확인하실 수 있어요. 경품추첨, 퀴즈와 같은 이벤트에도 참여해보시기 바랍니다.</div>
-                    </div>
-                </div>
-
-                <!-- 메인 화면용 말풍선 2: 보라색 배경 -->
-                <div class="balloon" id="balloon-main-2">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-체험을 원하는 기능들을 클릭해보세요!</div>
-                    </div>
-                </div>
-
-                <!-- 각 화면별 말풍선 (보라색 배경) -->
-                <div class="balloon" id="balloon-notice" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-호스트는 행사와 관련된 각종 공지사항을 게시하고 수정할 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-info" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-행사 소개, 연사 프로필, SNS, 파일 등을 한 곳에서 업로드 할 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-qna" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-질문을 남기고 답변을 받을 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-survey" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-설문조사에 참여하고 결과를 확인할 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-files" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-행사와 관련된 여러 파일들(발표자료, 소개서, 브로셔 등)을 업로드할 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-program" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-행사 프로그램 일정을 관리할 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-speaker" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-연사 프로필과 소개를 작성할 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-panel" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-패널토의 세션 정보를 관리할 수 있어요.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-vote" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-패션 세션에서 가장 인상 깊었던 발표자는 누구인가요? Best Speaker에게 투표해보세요!</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-lottery" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-경품 추첨을 시작하겠습니다. 설문조사에 참여해 주시면 행운의 번호를 받으실 수 있습니다.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-competition" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-행사와 데이터를 주제로 경연대회를 진행하겠습니다. 발표자들의 반짝이는 아이디어에 투자해보세요!</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-webinar" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-온라인 참가자분들은 웨비나 시청버튼을 클릭해 주시기 바랍니다.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-chat" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-궁금한 사항은 질문을 남겨주세요. 실시간 Q&A를 진행하겠습니다.</div>
-                    </div>
-                </div>
-
-                <div class="balloon" id="balloon-attendance" style="display: none;">
-                    <div class="balloon-content balloon-purple">
-                        <div class="balloon-text">👈
-온라인 참가자의 출석 확인을 위해출석 체크를 완료해 주시기 바랍니다.</div>
-                    </div>
+        <div class="info-gif" id="info-gif" data-src="assets/info/information.gif" data-duration-ms="2000" data-loops="2" data-overlay-delay="4000">
+            <img src="assets/info/information.gif" alt="행사정보 안내 GIF">
+            <div class="info-gif-overlay">
+                <div class="info-gif-text">
+                    <p class="info-gif-line">참가자에게 전달하고 싶은 모든 정보를 한번에 작성하세요.</p>
+                    <p class="info-gif-line">행사에 필요한 상세 안내부터 연사 정보, 관련 자료까지 한곳에 모을수 있습니다.</p>
+                    <p class="info-gif-line">텍스트, 파일 다운로드, 외부 링크 연결, 영상 시청까지 페이지 하나로 간편하게 해결할 수 있습니다.</p>
                 </div>
             </div>
         </div>
+
+    <div class="qna-video" id="qna-video" aria-label="질의응답 안내 영상">
+        <video class="qna-video-player" muted playsinline autoplay controls preload="metadata">
+            <source src="assets/qna/qna_demo.mp4" type="video/mp4">
+            브라우저가 동영상을 지원하지 않습니다.
+        </video>
+        <div class="qna-video-overlay">
+            <div class="qna-video-text">
+                <p class="qna-video-line">어떤 질문이 나올지 더 이상 불안해하지 마세요.</p>
+                <p class="qna-video-line">복잡한 마이크 전달 없이 참가자들의 궁금증을 한곳에 모을 수 있습니다.</p>
+                <p class="qna-video-line">운영진이 미리 질문을 확인하는 필터링 기능과 깨끗한 문장으로 다듬어주는 AI 서포트를 제공합니다.</p>
+                <p class="qna-video-line">스크린에 질문을 띄우는 것만으로도 현장감 넘치는 소통이 시작됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-video" id="main-video" aria-label="메인 안내 영상" data-overlay-delay="4000">
+        <video class="main-video-player" muted playsinline autoplay controls preload="metadata">
+            <source src="assets/main/main_setting.mp4" type="video/mp4">
+            브라우저가 동영상을 지원하지 않습니다.
+        </video>
+        <div class="main-video-overlay">
+            <div class="main-video-text">
+                <p class="main-video-line">주최자의 의도대로 설계하는 스마트 행사 운영 가이드</p>
+                <p class="main-video-line">올인원 기능 배치: 행사 정보, Q&amp;A, 설문 등 꼭 필요한 기능을 클릭 몇 번으로 배치하고 실시간으로 반영합니다.</p>
+                <p class="main-video-line">세션별 접근 설정: 각 세션의 공개 범위를 그룹별로 지정하여 유료 및 비공개 세션을 철저히 관리합니다.</p>
+            </div>
+        </div>
+    </div>
+
     </div>
 
     <script src="js/data.js"></script>

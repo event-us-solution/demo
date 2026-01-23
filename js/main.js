@@ -1,24 +1,38 @@
 // 페이지 및 말풍선 관리
 let currentPage = 0;
 
+const TEXT_LINE_INTERVAL_MS = 2000;
+const TEXT_HOLD_MS = 15000;
+
 // 화면 전환 관리
 const ScreenManager = {
     currentScreen: 'demo-screen',
     screenHistory: ['demo-screen'],
     
-    show(screenId) {
+    show(screenId, options = {}) {
         document.querySelectorAll('.phone-screen-inner').forEach(screen => {
             screen.classList.remove('active');
         });
         const targetScreen = document.getElementById(screenId);
         if (targetScreen) {
             targetScreen.classList.add('active');
-            this.screenHistory.push(screenId);
+            if (!options.skipHistory) {
+                this.screenHistory.push(screenId);
+            }
             this.currentScreen = screenId;
+        }
+
+        try {
+            localStorage.setItem('activeScreen', this.currentScreen);
+        } catch (e) {
+            // ignore storage errors
         }
         
         // 화면 전환 시 말풍선 업데이트
         this.updateBalloons();
+        updateInfoGifVisibility(this.currentScreen);
+        updateQnaVideoVisibility(this.currentScreen);
+        updateMainVideoVisibility(this.currentScreen);
     },
     
     // 화면별 말풍선 업데이트
@@ -27,9 +41,18 @@ const ScreenManager = {
         hideAllBalloons();
         
         // 현재 화면에 맞는 말풍선 표시
+        const balloonContainer = document.getElementById('balloon-container');
+        if (balloonContainer) {
+            balloonContainer.style.display = this.currentScreen === 'demo-screen' ? 'none' : 'flex';
+        }
+
         if (this.currentScreen === 'demo-screen') {
-            showMainBalloons();
+            return;
         } else {
+            const mainBalloon1 = document.getElementById('balloon-main-1');
+            const mainBalloon2 = document.getElementById('balloon-main-2');
+            if (mainBalloon1) mainBalloon1.style.display = 'none';
+            if (mainBalloon2) mainBalloon2.style.display = 'none';
             // 각 화면별 말풍선 ID 매핑
             const balloonMap = {
                 'info-screen': 'balloon-info',
@@ -50,10 +73,17 @@ const ScreenManager = {
     
     // 뒤로가기
     goBack() {
+        if (this.currentScreen === 'qna-question-screen') {
+            if (this.screenHistory.length > 0) {
+                this.screenHistory[this.screenHistory.length - 1] = 'qna-screen';
+            }
+            this.show('qna-screen', { skipHistory: true });
+            return;
+        }
         if (this.screenHistory.length > 1) {
             this.screenHistory.pop(); // 현재 화면 제거
             const previousScreen = this.screenHistory[this.screenHistory.length - 1];
-            this.show(previousScreen);
+            this.show(previousScreen, { skipHistory: true });
         }
     },
     
@@ -76,6 +106,357 @@ const ScreenManager = {
         }
     }
 };
+
+function updateInfoGifVisibility(screenId) {
+    const gifWrapper = document.getElementById('info-gif');
+    if (!gifWrapper) return;
+
+    const shouldShow = screenId === 'info-screen';
+    gifWrapper.classList.toggle('is-visible', shouldShow);
+    if (shouldShow) {
+        playInfoGif();
+        scheduleInfoGifOverlay();
+    } else if (gifWrapper.dataset.timerId) {
+        clearTimeout(parseInt(gifWrapper.dataset.timerId, 10));
+        gifWrapper.dataset.timerId = '';
+        if (gifWrapper.dataset.overlayTimerId) {
+            clearTimeout(parseInt(gifWrapper.dataset.overlayTimerId, 10));
+            gifWrapper.dataset.overlayTimerId = '';
+        }
+        gifWrapper.classList.remove('is-dimmed');
+    }
+}
+
+function updateQnaVideoVisibility(screenId) {
+    const videoWrapper = document.getElementById('qna-video');
+    if (!videoWrapper) return;
+
+    const shouldShow = screenId === 'qna-screen' || screenId === 'qna-question-screen';
+    videoWrapper.classList.toggle('is-visible', shouldShow);
+
+    const video = videoWrapper.querySelector('video');
+    if (!video) return;
+
+    if (shouldShow) {
+        if (!updateQnaVideoVisibility.wasActive) {
+            video.currentTime = 0;
+            scheduleQnaVideoOverlay();
+        }
+        updateQnaVideoVisibility.wasActive = true;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    } else if (updateQnaVideoVisibility.wasActive) {
+        video.pause();
+        video.currentTime = 0;
+        updateQnaVideoVisibility.wasActive = false;
+        resetQnaVideoOverlay();
+    }
+}
+
+updateQnaVideoVisibility.wasActive = false;
+
+function updateMainVideoVisibility(screenId) {
+    const videoWrapper = document.getElementById('main-video');
+    if (!videoWrapper) return;
+
+    const shouldShow = screenId === 'demo-screen';
+    videoWrapper.classList.toggle('is-visible', shouldShow);
+
+    const video = videoWrapper.querySelector('video');
+    if (!video) return;
+
+    if (shouldShow) {
+        if (!updateMainVideoVisibility.wasActive) {
+            video.currentTime = 0;
+            scheduleMainVideoOverlay();
+        }
+        updateMainVideoVisibility.wasActive = true;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    } else if (updateMainVideoVisibility.wasActive) {
+        video.pause();
+        video.currentTime = 0;
+        updateMainVideoVisibility.wasActive = false;
+        resetMainVideoOverlay();
+    }
+}
+
+updateMainVideoVisibility.wasActive = false;
+
+function scheduleMainVideoOverlay() {
+    const videoWrapper = document.getElementById('main-video');
+    if (!videoWrapper) return;
+
+    const delay = parseInt(videoWrapper.dataset.overlayDelay || '4000', 10);
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+    }
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+    }
+
+    videoWrapper.classList.remove('is-dimmed');
+    resetMainVideoTyping();
+    const timerId = setTimeout(() => {
+        videoWrapper.classList.add('is-dimmed');
+        startMainVideoTyping();
+        const totalDuration = getMainVideoTypingDuration() + TEXT_HOLD_MS;
+        const fadeTimerId = setTimeout(() => {
+            videoWrapper.classList.remove('is-dimmed');
+            resetMainVideoTyping();
+        }, Math.max(0, totalDuration));
+        videoWrapper.dataset.fadeTimerId = String(fadeTimerId);
+    }, Math.max(0, delay));
+
+    videoWrapper.dataset.overlayTimerId = String(timerId);
+}
+
+function resetMainVideoOverlay() {
+    const videoWrapper = document.getElementById('main-video');
+    if (!videoWrapper) return;
+
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+        videoWrapper.dataset.overlayTimerId = '';
+    }
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+        videoWrapper.dataset.fadeTimerId = '';
+    }
+    videoWrapper.classList.remove('is-dimmed');
+    resetMainVideoTyping();
+}
+
+function resetMainVideoTyping() {
+    const overlay = document.querySelector('#main-video .main-video-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('is-typing');
+    const lines = overlay.querySelectorAll('.main-video-line');
+    lines.forEach(line => {
+        line.style.animationDelay = '0ms';
+    });
+}
+
+function startMainVideoTyping() {
+    const overlay = document.querySelector('#main-video .main-video-overlay');
+    if (!overlay) return;
+    const lines = overlay.querySelectorAll('.main-video-line');
+    lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * TEXT_LINE_INTERVAL_MS}ms`;
+    });
+    overlay.classList.add('is-typing');
+}
+
+function getMainVideoTypingDuration() {
+    const overlay = document.querySelector('#main-video .main-video-overlay');
+    if (!overlay) return 0;
+    const lineCount = overlay.querySelectorAll('.main-video-line').length;
+    if (lineCount === 0) return 0;
+    return (lineCount - 1) * TEXT_LINE_INTERVAL_MS + 800;
+}
+
+function initMainVideoPlayback() {
+    const videoWrapper = document.getElementById('main-video');
+    const video = videoWrapper?.querySelector('video');
+    if (!videoWrapper || !video) return;
+
+    video.playbackRate = 1.5;
+    video.loop = false;
+    video.addEventListener('ended', () => {
+        if (!updateMainVideoVisibility.wasActive) return;
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+        scheduleMainVideoOverlay();
+    });
+}
+
+function scheduleQnaVideoOverlay() {
+    const videoWrapper = document.getElementById('qna-video');
+    if (!videoWrapper) return;
+
+    const delay = parseInt(videoWrapper.dataset.overlayDelay || '4000', 10);
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+    }
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+    }
+
+    videoWrapper.classList.remove('is-dimmed');
+    resetQnaVideoTyping();
+    const timerId = setTimeout(() => {
+        videoWrapper.classList.add('is-dimmed');
+        startQnaVideoTyping();
+        const totalDuration = getQnaVideoTypingDuration() + TEXT_HOLD_MS;
+        const fadeTimerId = setTimeout(() => {
+            videoWrapper.classList.remove('is-dimmed');
+            resetQnaVideoTyping();
+        }, Math.max(0, totalDuration));
+        videoWrapper.dataset.fadeTimerId = String(fadeTimerId);
+    }, Math.max(0, delay));
+
+    videoWrapper.dataset.overlayTimerId = String(timerId);
+}
+
+function resetQnaVideoOverlay() {
+    const videoWrapper = document.getElementById('qna-video');
+    if (!videoWrapper) return;
+
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+        videoWrapper.dataset.overlayTimerId = '';
+    }
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+        videoWrapper.dataset.fadeTimerId = '';
+    }
+    videoWrapper.classList.remove('is-dimmed');
+    resetQnaVideoTyping();
+}
+
+function resetQnaVideoTyping() {
+    const overlay = document.querySelector('#qna-video .qna-video-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('is-typing');
+    const lines = overlay.querySelectorAll('.qna-video-line');
+    lines.forEach(line => {
+        line.style.animationDelay = '0ms';
+    });
+}
+
+function startQnaVideoTyping() {
+    const overlay = document.querySelector('#qna-video .qna-video-overlay');
+    if (!overlay) return;
+    const lines = overlay.querySelectorAll('.qna-video-line');
+    lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * TEXT_LINE_INTERVAL_MS}ms`;
+    });
+    overlay.classList.add('is-typing');
+}
+
+function getQnaVideoTypingDuration() {
+    const overlay = document.querySelector('#qna-video .qna-video-overlay');
+    if (!overlay) return 0;
+    const lineCount = overlay.querySelectorAll('.qna-video-line').length;
+    if (lineCount === 0) return 0;
+    return (lineCount - 1) * TEXT_LINE_INTERVAL_MS + 800;
+}
+
+function initQnaVideoPlayback() {
+    const videoWrapper = document.getElementById('qna-video');
+    const video = videoWrapper?.querySelector('video');
+    if (!videoWrapper || !video) return;
+
+    video.playbackRate = 1.5;
+    video.loop = false;
+    video.addEventListener('ended', () => {
+        if (!updateQnaVideoVisibility.wasActive) return;
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+        scheduleQnaVideoOverlay();
+    });
+}
+
+function playInfoGif() {
+    const gifWrapper = document.getElementById('info-gif');
+    if (!gifWrapper) return;
+
+    const img = gifWrapper.querySelector('img');
+    if (!img) return;
+
+    const src = gifWrapper.dataset.src || img.src;
+    const duration = parseInt(gifWrapper.dataset.durationMs || '4000', 10);
+    const loops = parseInt(gifWrapper.dataset.loops || '2', 10);
+    const totalDuration = Math.max(1, duration) * Math.max(1, loops);
+
+    img.dataset.staticFrame = '';
+    img.addEventListener('load', () => {
+        if (img.dataset.staticFrame) return;
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+                ctx.drawImage(img, 0, 0);
+                img.dataset.staticFrame = canvas.toDataURL('image/png');
+            }
+        } catch (e) {
+            // ignore
+        }
+    }, { once: true });
+    img.src = `${src}${src.includes('?') ? '&' : '?'}t=${Date.now()}`;
+
+    if (gifWrapper.dataset.timerId) {
+        clearTimeout(parseInt(gifWrapper.dataset.timerId, 10));
+    }
+    const timerId = setTimeout(() => {
+        if (img.dataset.staticFrame) {
+            img.src = img.dataset.staticFrame;
+        }
+    }, totalDuration);
+    gifWrapper.dataset.timerId = String(timerId);
+}
+
+function scheduleInfoGifOverlay() {
+    const gifWrapper = document.getElementById('info-gif');
+    if (!gifWrapper) return;
+    const delay = parseInt(gifWrapper.dataset.overlayDelay || '4000', 10);
+
+    if (gifWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(gifWrapper.dataset.overlayTimerId, 10));
+    }
+
+    gifWrapper.classList.remove('is-dimmed');
+    resetInfoGifTyping();
+    const timerId = setTimeout(() => {
+        gifWrapper.classList.add('is-dimmed');
+        startInfoGifTyping();
+    }, Math.max(0, delay));
+
+    gifWrapper.dataset.overlayTimerId = String(timerId);
+}
+
+function resetInfoGifTyping() {
+    const overlay = document.querySelector('#info-gif .info-gif-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('is-typing');
+    const lines = overlay.querySelectorAll('.info-gif-line');
+    lines.forEach(line => {
+        line.style.animationDelay = '0ms';
+    });
+}
+
+function startInfoGifTyping() {
+    const overlay = document.querySelector('#info-gif .info-gif-overlay');
+    if (!overlay) return;
+    const lines = overlay.querySelectorAll('.info-gif-line');
+    lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * 1000}ms`;
+    });
+    overlay.classList.add('is-typing');
+}
+
+document.addEventListener('click', (event) => {
+    const gifWrapper = document.getElementById('info-gif');
+    if (!gifWrapper || !gifWrapper.classList.contains('is-visible')) return;
+    const img = gifWrapper.querySelector('img');
+    if (!img) return;
+    if (event.target.closest('#info-gif')) {
+        playInfoGif();
+        scheduleInfoGifOverlay();
+    }
+});
 
 // 말풍선 표시 함수
 function showBalloon(balloonId, delay) {
@@ -117,9 +498,15 @@ function updateBalloons() {
 function showMainBalloons() {
     const mainBalloon1 = document.getElementById('balloon-main-1');
     const mainBalloon2 = document.getElementById('balloon-main-2');
-    
-    if (mainBalloon1) mainBalloon1.style.display = 'flex';
-    if (mainBalloon2) mainBalloon2.style.display = 'flex';
+
+    if (mainBalloon1) {
+        mainBalloon1.style.display = 'flex';
+        mainBalloon1.style.opacity = '1';
+    }
+    if (mainBalloon2) {
+        mainBalloon2.style.display = 'flex';
+        mainBalloon2.style.opacity = '1';
+    }
 }
 
 // 전역 뒤로가기 함수
@@ -298,6 +685,35 @@ function initDemoScreen() {
     }
 }
 
+function restoreActiveScreen() {
+    let screenId = '';
+    try {
+        screenId = localStorage.getItem('activeScreen') || '';
+    } catch (e) {
+        screenId = '';
+    }
+
+    if (!screenId) return;
+
+    const target = document.getElementById(screenId);
+    if (!target) return;
+
+    const persistScreens = new Set([
+        'qna-screen',
+        'qna-question-screen'
+    ]);
+
+    if (!persistScreens.has(screenId)) return;
+
+    if (screenId === 'qna-question-screen') {
+        ScreenManager.screenHistory = ['demo-screen', 'qna-screen'];
+    } else if (screenId === 'qna-screen') {
+        ScreenManager.screenHistory = ['demo-screen'];
+    }
+    ScreenManager.show(screenId);
+    ScreenManager.setPage(2);
+}
+
 // 모달 관리
 function initModal() {
     const modal = document.getElementById('modal');
@@ -412,6 +828,439 @@ function initQnaTabs() {
             });
         });
     });
+}
+
+function initQnaQuestionNavigation() {
+    document.addEventListener('click', (event) => {
+        const fab = event.target.closest('.qna-fab');
+        const speakerAction = event.target.closest('.qna-speaker-action');
+        if (fab || speakerAction) {
+            ScreenManager.show('qna-question-screen');
+        }
+    });
+}
+
+function initQnaQuestionSelect() {
+    const wrapper = document.querySelector('.qna-form-select-wrapper');
+    if (!wrapper) return;
+
+    const button = wrapper.querySelector('.qna-form-select');
+    const options = wrapper.querySelector('.qna-form-options');
+    const name = wrapper.querySelector('.qna-form-select-name');
+    const avatarText = wrapper.querySelector('.qna-form-avatar');
+    const avatarImg = wrapper.querySelector('.qna-form-avatar-img');
+    const leftGroup = wrapper.querySelector('.qna-form-select-left');
+
+    if (!button || !options || !name || !avatarText || !avatarImg || !leftGroup) return;
+
+    const setAllState = () => {
+        name.textContent = '전체';
+        avatarText.textContent = '전체';
+        avatarText.classList.remove('is-yellow');
+        avatarText.classList.add('is-purple');
+        leftGroup.classList.remove('is-image');
+    };
+
+    setAllState();
+
+    const closeOptions = () => {
+        options.hidden = true;
+        button.setAttribute('aria-expanded', 'false');
+    };
+
+    button.addEventListener('click', () => {
+        const isOpen = button.getAttribute('aria-expanded') === 'true';
+        options.hidden = isOpen;
+        button.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    options.addEventListener('click', (event) => {
+        const option = event.target.closest('.qna-form-option');
+        if (!option) return;
+
+        const label = option.getAttribute('data-label') || option.textContent.trim();
+        const avatar = option.getAttribute('data-avatar');
+        name.textContent = label;
+
+        options.querySelectorAll('.qna-form-option').forEach(item => {
+            item.classList.toggle('is-active', item === option);
+        });
+
+        if (avatar) {
+            avatarImg.src = avatar;
+            avatarImg.alt = label;
+            leftGroup.classList.add('is-image');
+        } else {
+            leftGroup.classList.remove('is-image');
+            avatarText.textContent = label;
+            if (label === '전체') {
+                avatarText.classList.remove('is-yellow');
+                avatarText.classList.add('is-purple');
+            } else {
+                avatarText.classList.remove('is-purple');
+                avatarText.classList.add('is-yellow');
+            }
+        }
+
+        closeOptions();
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!wrapper.contains(event.target)) {
+            closeOptions();
+        }
+    });
+}
+
+function initQnaQuestionForm() {
+    const screen = document.getElementById('qna-question-screen');
+    if (!screen) return;
+
+    const nameInput = screen.querySelector('#qna-name-input');
+    const textarea = screen.querySelector('#qna-question-input');
+    const count = screen.querySelector('#qna-question-count');
+    const submit = screen.querySelector('#qna-question-submit');
+    if (!nameInput || !textarea || !count || !submit) return;
+
+    const updateState = () => {
+        if (textarea.value.length > 140) {
+            textarea.value = textarea.value.slice(0, 140);
+        }
+        const length = textarea.value.length;
+        count.textContent = `${length} / 140`;
+        const isActive = length > 0;
+        submit.disabled = !isActive;
+        submit.classList.toggle('is-active', isActive);
+    };
+
+    textarea.addEventListener('input', updateState);
+    nameInput.addEventListener('input', updateState);
+    submit.addEventListener('click', () => {
+        const message = textarea.value.trim();
+        if (!message) return;
+
+        const list = document.getElementById('qna-question-list');
+        if (!list) return;
+
+        const selectedTarget = document.querySelector('.qna-form-select-name');
+        const targetLabel = selectedTarget ? selectedTarget.textContent.trim() : '전체';
+        const author = nameInput.value.trim() || '익명';
+        const now = new Date();
+        const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        const item = document.createElement('div');
+        item.className = 'qna-question-item';
+        item.setAttribute('data-speaker', targetLabel);
+        item.setAttribute('data-status', 'mine');
+        item.setAttribute('data-created', String(Date.now()));
+
+        const header = document.createElement('div');
+        header.className = 'qna-question-header';
+
+        const authorEl = document.createElement('span');
+        authorEl.className = 'qna-question-author';
+        authorEl.textContent = author;
+
+        const targetEl = document.createElement('span');
+        targetEl.className = 'qna-question-target';
+        targetEl.textContent = '→ ';
+
+        const badge = document.createElement('span');
+        badge.className = 'qna-target-badge';
+        if (targetLabel === '전체') {
+            badge.classList.add('is-all');
+        } else {
+            badge.classList.add('is-james');
+        }
+        badge.textContent = targetLabel;
+        targetEl.appendChild(badge);
+
+        const timeEl = document.createElement('span');
+        timeEl.className = 'qna-question-time';
+        timeEl.textContent = time;
+
+        header.append(authorEl, targetEl, timeEl);
+
+        const body = document.createElement('p');
+        body.className = 'qna-question-body';
+        body.textContent = message;
+
+        const actions = document.createElement('div');
+        actions.className = 'qna-question-actions';
+        const icon = document.createElement('span');
+        icon.className = 'material-icons';
+        icon.textContent = 'favorite_border';
+        const countEl = document.createElement('span');
+        countEl.textContent = '0';
+        actions.append(icon, countEl);
+
+        item.append(header, body, actions);
+        list.prepend(item);
+
+        textarea.value = '';
+        updateState();
+        if (typeof window.applyQnaSpeakerFilter === 'function') {
+            const current = list.getAttribute('data-filter') || 'all';
+            window.applyQnaSpeakerFilter(current);
+        }
+        if (typeof window.applyQnaSort === 'function') {
+            window.applyQnaSort();
+        }
+        ScreenManager.show('qna-screen');
+    });
+    updateState();
+}
+
+function initDetailHeaderActions() {
+    const headers = document.querySelectorAll('.detail-header');
+    headers.forEach(header => {
+        if (header.querySelector('.detail-header-action')) return;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'detail-header-action';
+        button.innerHTML = '세션 이동 <span class="material-symbols-outlined">login</span>';
+        button.addEventListener('click', () => {
+            ScreenManager.show('demo-screen', { skipHistory: true });
+            ScreenManager.setPage(2);
+        });
+        header.appendChild(button);
+    });
+}
+
+function initDetailHeaderStatus() {
+    const headers = document.querySelectorAll('.detail-header');
+    if (!headers.length) return;
+
+    const updateTime = () => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
+    headers.forEach(header => {
+        if (header.querySelector('.detail-statusbar')) return;
+
+        header.classList.add('has-status');
+        header.style.position = 'relative';
+
+        const bar = document.createElement('div');
+        bar.className = 'detail-statusbar';
+
+        const time = document.createElement('span');
+        time.className = 'detail-status-time';
+        time.textContent = updateTime();
+
+        const icons = document.createElement('div');
+        icons.className = 'detail-status-icons';
+        icons.innerHTML = `
+            <span class="material-symbols-outlined">wifi</span>
+            <span class="detail-status-battery" aria-hidden="true"></span>
+        `;
+
+        bar.append(time, icons);
+        header.prepend(bar);
+
+        setInterval(() => {
+            time.textContent = updateTime();
+        }, 60000);
+    });
+}
+
+
+function initQnaSpeakerFilter() {
+    const pills = document.querySelectorAll('.qna-speaker-pill');
+    const list = document.getElementById('qna-question-list');
+    const empty = document.getElementById('qna-empty-state');
+    if (!pills.length || !list) return;
+
+    const fab = list.querySelector(':scope > .qna-fab');
+
+    const applyFilter = (speaker) => {
+        const status = list.getAttribute('data-status-filter') || 'all';
+        const items = list.querySelectorAll('.qna-question-item');
+        let visibleCount = 0;
+        let firstVisible = null;
+        items.forEach(item => {
+            const itemSpeaker = item.getAttribute('data-speaker') || '전체';
+            const itemStatus = item.getAttribute('data-status') || 'all';
+            const matchesSpeaker = speaker === 'all' ? true : itemSpeaker === speaker;
+            const matchesStatus = status === 'all' ? itemStatus !== 'answered' : itemStatus === status;
+            const show = matchesSpeaker && matchesStatus;
+            item.style.display = show ? '' : 'none';
+            item.classList.remove('is-first-visible');
+            if (show) visibleCount += 1;
+            if (show && !firstVisible) {
+                firstVisible = item;
+            }
+        });
+        if (firstVisible) {
+            firstVisible.classList.add('is-first-visible');
+        }
+
+        const isLucyOrJune = speaker === 'Lucy' || speaker === 'June';
+        const showEmpty = ((isLucyOrJune || status === 'mine') || (status === 'answered' && speaker === 'James')) && visibleCount === 0;
+        if (empty) {
+            empty.hidden = !showEmpty;
+            empty.style.display = showEmpty ? 'block' : 'none';
+        }
+        if (fab) {
+            fab.style.display = showEmpty ? 'none' : '';
+        }
+        list.setAttribute('data-filter', speaker);
+    };
+
+    window.applyQnaSpeakerFilter = applyFilter;
+    applyFilter('all');
+
+    pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            const speaker = pill.getAttribute('data-speaker') || 'all';
+            pills.forEach(btn => btn.classList.remove('is-active'));
+            pill.classList.add('is-active');
+            applyFilter(speaker);
+        });
+    });
+}
+
+function initQnaFilterTabs() {
+    const tabs = document.querySelectorAll('.qna-filter-tab');
+    const list = document.getElementById('qna-question-list');
+    if (!tabs.length || !list) return;
+
+    const map = {
+        '전체': 'all',
+        '답변 완료': 'answered',
+        '내 질문': 'mine'
+    };
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(btn => btn.classList.remove('is-active'));
+            tab.classList.add('is-active');
+            const key = map[tab.textContent.trim()] || 'all';
+            list.setAttribute('data-status-filter', key);
+            if (typeof window.applyQnaSpeakerFilter === 'function') {
+                const current = list.getAttribute('data-filter') || 'all';
+                window.applyQnaSpeakerFilter(current);
+            }
+            if (typeof window.applyQnaSort === 'function') {
+                window.applyQnaSort();
+            }
+        });
+    });
+}
+
+function initQnaLikes() {
+    document.addEventListener('click', (event) => {
+        const icon = event.target.closest('.qna-question-actions .material-icons');
+        if (!icon) return;
+
+        const actions = icon.closest('.qna-question-actions');
+        if (!actions) return;
+
+        const countEl = actions.querySelector('span:last-child');
+        const current = countEl ? parseInt(countEl.textContent, 10) : 0;
+        const isLiked = actions.dataset.liked === 'true';
+
+        if (isLiked) {
+            if (countEl) {
+                countEl.textContent = String(Math.max(0, current - 1));
+            }
+            icon.classList.remove('is-liked');
+            icon.textContent = 'favorite_border';
+            actions.dataset.liked = 'false';
+            return;
+        }
+
+        if (countEl) {
+            countEl.textContent = String(current + 1);
+        }
+        icon.classList.add('is-liked');
+        icon.textContent = 'favorite';
+        actions.dataset.liked = 'true';
+        if (typeof window.applyQnaSort === 'function') {
+            window.applyQnaSort();
+        }
+    });
+}
+
+function initQnaSort() {
+    const list = document.getElementById('qna-question-list');
+    const select = document.querySelector('.qna-sort');
+    if (!list || !select) return;
+
+    const ensureCreated = () => {
+        const now = new Date();
+        list.querySelectorAll('.qna-question-item').forEach(item => {
+            if (item.dataset.created) return;
+            const timeText = item.querySelector('.qna-question-time')?.textContent?.trim() || '';
+            const match = timeText.match(/^(\d{1,2}):(\d{2})$/);
+            if (match) {
+                const hours = parseInt(match[1], 10);
+                const minutes = parseInt(match[2], 10);
+                const stamp = new Date(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    now.getDate(),
+                    hours,
+                    minutes,
+                    0,
+                    0
+                ).getTime();
+                item.dataset.created = String(stamp);
+            } else {
+                item.dataset.created = String(Date.now());
+            }
+        });
+    };
+
+    const getLikeCount = (item) => {
+        const countEl = item.querySelector('.qna-question-actions span:last-child');
+        return countEl ? parseInt(countEl.textContent, 10) : 0;
+    };
+
+        const sortItems = () => {
+        ensureCreated();
+        const mode = select.value;
+        const items = Array.from(list.querySelectorAll('.qna-question-item'));
+        const empty = list.querySelector('#qna-empty-state');
+        const fab = list.querySelector(':scope > .qna-fab');
+
+        items.sort((a, b) => {
+            const aCreated = parseInt(a.dataset.created || '0', 10);
+            const bCreated = parseInt(b.dataset.created || '0', 10);
+            if (mode === '등록순') {
+                return aCreated - bCreated;
+            }
+            if (mode === '좋아요순') {
+                const aLiked = a.querySelector('.qna-question-actions')?.dataset.liked === 'true';
+                const bLiked = b.querySelector('.qna-question-actions')?.dataset.liked === 'true';
+                if (aLiked !== bLiked) return aLiked ? -1 : 1;
+                const aLikes = getLikeCount(a);
+                const bLikes = getLikeCount(b);
+                if (aLikes !== bLikes) return bLikes - aLikes;
+                return bCreated - aCreated;
+            }
+            const aMine = a.dataset.status === 'mine';
+            const bMine = b.dataset.status === 'mine';
+            if (aMine !== bMine) return aMine ? -1 : 1;
+            return bCreated - aCreated;
+        });
+
+        items.forEach(item => list.appendChild(item));
+        if (empty) list.appendChild(empty);
+        if (fab) list.appendChild(fab);
+
+        if (typeof window.applyQnaSpeakerFilter === 'function') {
+            const current = list.getAttribute('data-filter') || 'all';
+            window.applyQnaSpeakerFilter(current);
+        }
+    };
+
+    window.applyQnaSort = sortItems;
+    select.addEventListener('change', sortItems);
+    sortItems();
 }
 
 // 섹션 접기/펼치기 기능
@@ -547,14 +1396,29 @@ function initIconEdit() {
 document.addEventListener('DOMContentLoaded', () => {
     // 데모 화면 초기화 (등록 없이 바로 접속)
     initDemoScreen();
+    restoreActiveScreen();
     
     initFormValidation();
     initFeatureCards();
     initSectionToggle();
     initQnaTabs();
+    initQnaSpeakerFilter();
+    initQnaFilterTabs();
+    initQnaLikes();
+    initQnaSort();
+    initQnaQuestionNavigation();
+    initQnaQuestionSelect();
+    initQnaQuestionForm();
+    initDetailHeaderActions();
+    initDetailHeaderStatus();
     initIconSelector();
     initIconEdit();
     initNoticeToggle(); // 공지사항 토글 기능 초기화
+    initQnaVideoPlayback();
+    initMainVideoPlayback();
+    updateInfoGifVisibility(ScreenManager.currentScreen);
+    updateQnaVideoVisibility(ScreenManager.currentScreen);
+    updateMainVideoVisibility(ScreenManager.currentScreen);
     
     // 로그인 링크 클릭 (간단한 처리)
     const loginLink = document.getElementById('login-link');
@@ -577,22 +1441,20 @@ document.addEventListener('DOMContentLoaded', () => {
             ScreenManager.updateBalloons();
         });
     });
+
+    // 브라우저 뒤로가기 처리
+    window.addEventListener('popstate', () => {
+        ScreenManager.goBack();
+        if (ScreenManager.currentScreen === 'demo-screen') {
+            ScreenManager.setPage(2);
+        }
+        ScreenManager.updateBalloons();
+    });
     
-    // 헤더 버튼 클릭 이벤트
-    const headerButton = document.getElementById('header-button');
-    if (headerButton) {
-        headerButton.addEventListener('click', () => {
-            alert('솔루션 세팅 페이지로 이동합니다.');
-        });
-    }
-    
-    // 초기 페이지 설정
-    ScreenManager.setPage(0);
-    
-    // 페이지 0에서 시작 후 자동으로 페이지 2로 전환 (데모용)
-    setTimeout(() => {
-        ScreenManager.setPage(2);
-        // 메인 화면 말풍선 표시
+    // 초기 페이지 설정 (상단 버튼 즉시 노출)
+    ScreenManager.setPage(2);
+    // 메인 화면 말풍선 표시
+    if (ScreenManager.currentScreen === 'demo-screen') {
         showMainBalloons();
-    }, 3000);
+    }
 });
