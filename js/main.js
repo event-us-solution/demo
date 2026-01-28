@@ -283,9 +283,11 @@ function updateSurveyVideoVisibility(screenId) {
     const videoWrapper = document.getElementById('survey-video');
     if (!videoWrapper) return;
 
-    const video = videoWrapper.querySelector('video');
     const shouldShow = screenId === 'survey-screen';
     videoWrapper.classList.toggle('is-visible', shouldShow);
+
+    const video = videoWrapper.querySelector('video');
+    if (!video) return;
 
     if (shouldShow) {
         if (!updateSurveyVideoVisibility.wasActive) {
