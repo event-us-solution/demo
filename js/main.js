@@ -33,6 +33,7 @@ const ScreenManager = {
         updateInfoGifVisibility(this.currentScreen);
         updateQnaVideoVisibility(this.currentScreen);
         updateMainVideoVisibility(this.currentScreen);
+        updateAdminPanelContent();
     },
     
     // 화면별 말풍선 업데이트
@@ -275,6 +276,204 @@ function initMainVideoPlayback() {
         }
         scheduleMainVideoOverlay();
     });
+}
+
+const adminPanelState = {
+    origins: new Map(),
+    currentNode: null,
+    enabled: false,
+    portraitTimerId: null
+};
+
+function isMobileView() {
+    return window.matchMedia('(max-width: 1024px)').matches;
+}
+
+function isLandscape() {
+    return window.matchMedia('(orientation: landscape)').matches;
+}
+
+function rememberMediaOrigin(node) {
+    if (!node || adminPanelState.origins.has(node)) return;
+    adminPanelState.origins.set(node, {
+        parent: node.parentElement,
+        next: node.nextElementSibling
+    });
+}
+
+function restoreAdminMedia() {
+    adminPanelState.origins.forEach((pos, node) => {
+        if (!node || !pos.parent) return;
+        if (pos.next && pos.next.parentElement === pos.parent) {
+            pos.parent.insertBefore(node, pos.next);
+        } else {
+            pos.parent.appendChild(node);
+        }
+    });
+    adminPanelState.currentNode = null;
+}
+
+function getAdminMediaForScreen(screenId) {
+    if (screenId === 'demo-screen') {
+        return document.getElementById('main-video');
+    }
+    if (screenId === 'qna-screen' || screenId === 'qna-question-screen') {
+        return document.getElementById('qna-video');
+    }
+    if (screenId === 'info-screen') {
+        return document.getElementById('info-gif');
+    }
+    return null;
+}
+
+function updateAdminPanelContent() {
+    const panel = document.getElementById('mobile-admin-panel');
+    const panelBody = document.getElementById('mobile-admin-panel-body');
+    if (!panel || !panelBody || !panel.classList.contains('is-open')) return;
+
+    panel.classList.toggle('is-portrait', isMobileView() && !isLandscape());
+
+    panelBody.innerHTML = '';
+    restoreAdminMedia();
+
+    if (panel.classList.contains('is-portrait')) {
+        panelBody.innerHTML = '<p class="mobile-admin-empty">가로 모드에서 관리자 화면이 표시됩니다.</p>';
+        schedulePortraitAutoClose();
+        return;
+    }
+
+    const mediaNode = getAdminMediaForScreen(ScreenManager.currentScreen);
+    if (!mediaNode) {
+        panelBody.innerHTML = '<p class="mobile-admin-empty">이 화면에는 관리자용 미디어가 없습니다.</p>';
+        return;
+    }
+
+    rememberMediaOrigin(mediaNode);
+    panelBody.appendChild(mediaNode);
+    adminPanelState.currentNode = mediaNode;
+}
+
+function openAdminPanel({ enable = false } = {}) {
+    const panel = document.getElementById('mobile-admin-panel');
+    if (!panel) return;
+    if (enable) {
+        adminPanelState.enabled = true;
+    }
+    panel.hidden = false;
+    panel.classList.add('is-open');
+    document.body.classList.add('is-admin-panel-open');
+    updateAdminPanelContent();
+}
+
+function closeAdminPanel({ keepEnabled = false } = {}) {
+    const panel = document.getElementById('mobile-admin-panel');
+    const panelBody = document.getElementById('mobile-admin-panel-body');
+    if (!panel) return;
+    panel.classList.remove('is-open');
+    panel.classList.remove('is-portrait');
+    panel.hidden = true;
+    document.body.classList.remove('is-admin-panel-open');
+    if (panelBody) {
+        panelBody.innerHTML = '';
+    }
+    restoreAdminMedia();
+    if (!keepEnabled) {
+        adminPanelState.enabled = false;
+    }
+    clearPortraitAutoClose();
+}
+
+function clearPortraitAutoClose() {
+    if (adminPanelState.portraitTimerId) {
+        clearTimeout(adminPanelState.portraitTimerId);
+        adminPanelState.portraitTimerId = null;
+    }
+}
+
+function schedulePortraitAutoClose() {
+    clearPortraitAutoClose();
+    adminPanelState.portraitTimerId = setTimeout(() => {
+        if (!adminPanelState.enabled) return;
+        closeAdminPanel();
+    }, 5000);
+}
+
+function syncAdminPanelOrientation() {
+    if (!isMobileView() || !adminPanelState.enabled) return;
+    if (isLandscape()) {
+        clearPortraitAutoClose();
+        openAdminPanel();
+    } else {
+        openAdminPanel();
+        updateAdminPanelContent();
+    }
+}
+
+function initMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const adminBtn = document.getElementById('mobile-admin-btn');
+    const adminClose = document.getElementById('mobile-admin-close');
+    const adminPanel = document.getElementById('mobile-admin-panel');
+    const rotateHint = document.getElementById('mobile-rotate-hint');
+
+    if (!menu) return;
+
+    const menuButtons = document.querySelectorAll('.mobile-menu-btn');
+    if (!menuButtons.length) return;
+
+    const closeMenu = () => {
+        menu.classList.remove('is-open');
+        menu.hidden = true;
+        menuButtons.forEach(button => button.setAttribute('aria-expanded', 'false'));
+    };
+
+    menuButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const isOpen = menu.classList.contains('is-open');
+            if (isOpen) {
+                closeMenu();
+                return;
+            }
+            menu.classList.add('is-open');
+            menu.hidden = false;
+            menuButtons.forEach(btn => btn.setAttribute('aria-expanded', 'true'));
+        });
+    });
+
+    if (adminBtn) {
+        adminBtn.addEventListener('click', () => {
+            closeMenu();
+            openAdminPanel({ enable: true });
+        });
+    }
+
+    if (adminClose) {
+        adminClose.addEventListener('click', () => closeAdminPanel());
+    }
+
+    if (adminPanel) {
+        adminPanel.addEventListener('click', (event) => {
+            if (event.target === adminPanel) {
+                closeAdminPanel();
+            }
+        });
+    }
+
+    if (rotateHint) {
+        rotateHint.addEventListener('click', () => {
+            closeAdminPanel();
+        });
+    }
+
+    document.addEventListener('click', (event) => {
+        const isMenuButton = event.target.closest('.mobile-menu-btn');
+        if (!menu.contains(event.target) && !isMenuButton) {
+            closeMenu();
+        }
+    });
+
+    window.addEventListener('orientationchange', syncAdminPanelOrientation);
+    window.addEventListener('resize', syncAdminPanelOrientation);
 }
 
 function scheduleQnaVideoOverlay() {
@@ -698,18 +897,16 @@ function restoreActiveScreen() {
     const target = document.getElementById(screenId);
     if (!target) return;
 
-    const persistScreens = new Set([
-        'qna-screen',
-        'qna-question-screen'
-    ]);
+    // 메인 화면이면 복원하지 않음
+    if (screenId === 'demo-screen') return;
 
-    if (!persistScreens.has(screenId)) return;
-
+    // 화면별 히스토리 설정
     if (screenId === 'qna-question-screen') {
         ScreenManager.screenHistory = ['demo-screen', 'qna-screen'];
-    } else if (screenId === 'qna-screen') {
+    } else {
         ScreenManager.screenHistory = ['demo-screen'];
     }
+    
     ScreenManager.show(screenId);
     ScreenManager.setPage(2);
 }
@@ -827,6 +1024,63 @@ function initQnaTabs() {
                 panel.classList.toggle('is-active', panel.id === target);
             });
         });
+    });
+}
+
+function initSurveyTabs() {
+    const buttons = document.querySelectorAll('.survey-tab-button');
+    const panels = document.querySelectorAll('.survey-tab-panel');
+    if (!buttons.length || !panels.length) return;
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const target = button.getAttribute('data-tab');
+            buttons.forEach(btn => btn.classList.remove('is-active'));
+            button.classList.add('is-active');
+            panels.forEach(panel => {
+                panel.classList.toggle('is-active', panel.id === target);
+            });
+        });
+    });
+}
+
+function initSurveySubmit() {
+    const surveyContent = document.querySelector('.survey-content');
+    const submitBtn = document.querySelector('.survey-submit-btn');
+    const completeScreen = document.getElementById('survey-complete');
+    const completeBtn = document.querySelector('.survey-complete-btn');
+    const tabPanels = document.querySelectorAll('.survey-tab-panel');
+    const tabs = document.querySelector('.survey-tabs');
+    
+    if (!submitBtn || !completeScreen || !completeBtn) return;
+
+    submitBtn.addEventListener('click', () => {
+        // 탭과 설문 패널 숨기기
+        tabPanels.forEach(panel => panel.style.display = 'none');
+        if (tabs) tabs.style.display = 'none';
+        
+        // 완료 화면 표시
+        completeScreen.classList.add('is-active');
+    });
+
+    completeBtn.addEventListener('click', () => {
+        // 완료 화면 숨기기
+        completeScreen.classList.remove('is-active');
+        
+        // 탭과 설문 패널 다시 표시
+        if (tabs) tabs.style.display = '';
+        tabPanels.forEach(panel => {
+            panel.style.display = '';
+        });
+        
+        // 제출 완료 상태로 변경
+        if (surveyContent) {
+            surveyContent.classList.add('is-submitted');
+        }
+        
+        // 제출 버튼 비활성화
+        submitBtn.disabled = true;
+        submitBtn.textContent = '제출완료';
     });
 }
 
@@ -1028,6 +1282,7 @@ function initDetailHeaderActions() {
 }
 
 function initDetailHeaderStatus() {
+    if (window.matchMedia('(max-width: 1024px)').matches) return;
     const headers = document.querySelectorAll('.detail-header');
     if (!headers.length) return;
 
@@ -1067,6 +1322,22 @@ function initDetailHeaderStatus() {
     });
 }
 
+function initMobileHeaderMenus() {
+    if (!window.matchMedia('(max-width: 1024px)').matches) return;
+    const headers = document.querySelectorAll('.detail-header');
+    if (!headers.length) return;
+
+    headers.forEach(header => {
+        if (header.querySelector('.mobile-menu-btn')) return;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'mobile-menu-btn';
+        button.setAttribute('aria-label', '메뉴 열기');
+        button.setAttribute('aria-expanded', 'false');
+        button.innerHTML = '<span class="material-icons">menu</span>';
+        header.prepend(button);
+    });
+}
 
 function initQnaSpeakerFilter() {
     const pills = document.querySelectorAll('.qna-speaker-pill');
@@ -1402,6 +1673,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initFeatureCards();
     initSectionToggle();
     initQnaTabs();
+    initSurveyTabs();
+    initSurveySubmit();
     initQnaSpeakerFilter();
     initQnaFilterTabs();
     initQnaLikes();
@@ -1416,6 +1689,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initNoticeToggle(); // 공지사항 토글 기능 초기화
     initQnaVideoPlayback();
     initMainVideoPlayback();
+    initMobileHeaderMenus();
+    initMobileMenu();
     updateInfoGifVisibility(ScreenManager.currentScreen);
     updateQnaVideoVisibility(ScreenManager.currentScreen);
     updateMainVideoVisibility(ScreenManager.currentScreen);

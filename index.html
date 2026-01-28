@@ -37,6 +37,11 @@
         </div>
     </div>
 
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <button class="mobile-menu-item" id="mobile-admin-btn" type="button">관리자화면보기</button>
+        <a class="mobile-menu-item" href="https://blog.event-us.kr/solutiontype/offline" target="_blank" rel="noopener noreferrer">상담신청하기</a>
+    </div>
+
     <!-- 메인 레이아웃: 왼쪽 핸드폰 + 오른쪽 말풍선 -->
     <div class="main-layout">
         <!-- 왼쪽: iPhone 14 Pro 프레임 -->
@@ -519,18 +524,138 @@
 
                         <!-- 설문조사 화면 -->
                         <div id="survey-screen" class="phone-screen-inner">
-                            <div class="detail-header" style="background: #ffb800;">
+                            <div class="detail-header" style="background: #5C3FBF;">
                                 <button class="back-btn" onclick="goBack()">
                                     <span class="material-icons">chevron_left</span>
                                 </button>
                                 <h1 class="detail-title">설문조사</h1>
                             </div>
                             <div class="app-content">
-                                <div style="padding: 20px;">
-                                    <p style="color: #666; margin-bottom: 20px;">진행 중인 설문조사에 참여할 수 있습니다.</p>
-                                    <div style="text-align: center; padding: 40px 20px;">
-                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">assignment</span>
-                                        <p style="color: #999;">진행 중인 설문조사가 없습니다.</p>
+                                <div class="survey-content">
+                                    <div class="survey-tabs">
+                                        <button class="survey-tab-button" type="button" data-tab="survey-tab-guide">안내</button>
+                                        <button class="survey-tab-button is-active" type="button" data-tab="survey-tab-questions">설문</button>
+                                    </div>
+
+                                    <div class="survey-tab-panel" id="survey-tab-guide">
+                                        <p class="survey-guide-text">많은 참여 부탁드립니다.</p>
+                                    </div>
+
+                                    <div class="survey-tab-panel is-active" id="survey-tab-questions">
+                                        <!-- 질문 1: 만족도 조사 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">만족도 조사</h3>
+                                            <p class="survey-question-desc">행사 만족도, 세션별 만족도, 피드백을 취합하고 실시간으로 확인할수 있습니다.</p>
+                                            <div class="survey-options">
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="5">
+                                                    <span>매우 만족</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="4">
+                                                    <span>만족</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="3">
+                                                    <span>보통</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="2">
+                                                    <span>불만족</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="1">
+                                                    <span>매우 불만족</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 질문 2: 주관식 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">이번 행사에서 가장 인상적이었던 부분을 자유롭게 작성해주세요.</h3>
+                                            <p class="survey-question-desc">주관식 설문입니다.</p>
+                                            <textarea class="survey-textarea" placeholder="내용을 입력해주세요."></textarea>
+                                        </div>
+
+                                        <!-- 질문 3: 단일선택 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">행사 종료후 세일즈 담당자의 연락을 받아보시겠습니까?</h3>
+                                            <p class="survey-question-desc">단일선택, 보기 중 하나만 선택할 수 있습니다. 필수답변 문항 설정도 가능합니다.</p>
+                                            <div class="survey-options">
+                                                <label class="survey-option">
+                                                    <input type="radio" name="contact" value="yes">
+                                                    <span>네</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="contact" value="no">
+                                                    <span>아니오</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="contact" value="docs">
+                                                    <span>소개자료만 보내주세요</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 질문 4: 다중선택 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">이번 행사 정보를 어디에서 확인하셨나요?</h3>
+                                            <p class="survey-question-desc">다수의 문항을 선택할 수 있고, 선택 가능한 수를 제한할 수 있습니다. <span class="survey-highlight">7개만 선택 가능</span></p>
+                                            <div class="survey-options">
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="sns">
+                                                    <span>SNS</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="referral">
+                                                    <span>지인 추천</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="newsletter">
+                                                    <span>뉴스레터</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="search">
+                                                    <span>검색</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="ads">
+                                                    <span>디스플레이 광고</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="invitation">
+                                                    <span>초청</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="other">
+                                                    <span>기타</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 질문 5: 퀴즈용 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">퀴즈이벤트용으로도 사용할 수 있습니다.</h3>
+                                            <p class="survey-question-desc">공개, 비공개 설정, 설문 활성화 설정이 실시간으로 연동됩니다. 참가자들의 집중도를 높이기 위한 깜짝퀴즈용으로도 사용합니다.</p>
+                                            <textarea class="survey-textarea" placeholder="정답을 입력해주세요."></textarea>
+                                        </div>
+
+                                        <!-- 질문 6: 이벤트용 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">삼행시 이벤트, 동료에게 전하고 싶은말 등 이벤트 목적으로도 사용합니다.</h3>
+                                            <textarea class="survey-textarea" placeholder="내용을 입력해주세요."></textarea>
+                                        </div>
+
+                                        <button class="survey-submit-btn" type="button">제출하기</button>
+                                    </div>
+
+                                    <!-- 제출 완료 화면 -->
+                                    <div class="survey-complete" id="survey-complete">
+                                        <div class="survey-complete-icon">
+                                            <span class="material-icons">check</span>
+                                        </div>
+                                        <p class="survey-complete-text">참여해 주셔서 감사합니다.</p>
+                                        <button class="survey-complete-btn" type="button">확인</button>
                                     </div>
                                 </div>
                             </div>
@@ -774,6 +899,25 @@
                 <p class="main-video-line">올인원 기능 배치: 행사 정보, Q&amp;A, 설문 등 꼭 필요한 기능을 클릭 몇 번으로 배치하고 실시간으로 반영합니다.</p>
                 <p class="main-video-line">세션별 접근 설정: 각 세션의 공개 범위를 그룹별로 지정하여 유료 및 비공개 세션을 철저히 관리합니다.</p>
             </div>
+        </div>
+    </div>
+
+    <div class="mobile-admin-panel" id="mobile-admin-panel" hidden>
+        <div class="mobile-rotate-hint" id="mobile-rotate-hint">
+            <div class="mobile-rotate-card">
+                <span class="material-icons">screen_rotation</span>
+                <p>관리자 화면은 가로 모드에서 더 잘 보여요.</p>
+                <p>휴대폰을 가로로 돌려주세요.</p>
+            </div>
+        </div>
+        <div class="mobile-admin-panel-card">
+            <div class="mobile-admin-panel-header">
+                <span>관리자 화면보기</span>
+                <button class="mobile-admin-close" id="mobile-admin-close" type="button" aria-label="닫기">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="mobile-admin-panel-body" id="mobile-admin-panel-body"></div>
         </div>
     </div>
 

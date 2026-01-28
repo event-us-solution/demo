@@ -126,6 +126,147 @@ body {
     display: flex;
 }
 
+.mobile-menu-btn {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: #fff;
+    margin-right: 12px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.mobile-menu-btn .material-icons {
+    font-size: 20px;
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 72px;
+    left: 16px;
+    right: 16px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+    padding: 10px 0;
+    z-index: 200;
+    display: none;
+}
+
+.mobile-menu.is-open {
+    display: block;
+}
+
+.mobile-menu-item {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    font-size: 14px;
+    color: #222;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+}
+
+.mobile-menu-item:hover {
+    background: #f5f5f5;
+}
+
+.mobile-admin-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 300;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 84px 16px 16px;
+}
+
+.mobile-admin-panel.is-open {
+    display: flex;
+}
+
+.mobile-rotate-hint {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    color: #ffffff;
+}
+
+.mobile-admin-panel.is-portrait .mobile-rotate-hint {
+    display: flex;
+}
+
+.mobile-rotate-card {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    padding: 20px 16px;
+    max-width: 320px;
+}
+
+.mobile-rotate-card .material-icons {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.mobile-rotate-card p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+.mobile-admin-panel-card {
+    width: 100%;
+    max-width: 640px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-admin-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+    border-bottom: 1px solid #ededed;
+}
+
+.mobile-admin-close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #555;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-admin-panel-body {
+    padding: 12px;
+}
+
+.mobile-admin-empty {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    padding: 24px 12px;
+}
 .header-button {
     background: rgba(255, 255, 255, 0.2);
     height: 40px;
@@ -1906,18 +2047,430 @@ body {
 }
 
 @media (max-width: 1024px) {
+    .top-header {
+        display: none;
+    }
+
     .main-layout {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+        margin-top: 0;
+        padding-top: 0;
     }
     
+    .mobile-menu-btn {
+        display: inline-flex;
+    }
+
+    .header-right {
+        display: none !important;
+    }
+
+    .mobile-menu {
+        top: 64px;
+    }
+
     .balloon-container {
         width: 100%;
         padding: 20px;
     }
     
     .device-container {
-        margin: 40px auto 0;
-        transform-origin: top center;
+        margin: 0;
+        width: 100%;
+        transform: none;
     }
+
+    .device-iphone-14-pro {
+        width: 100%;
+        height: auto;
+    }
+
+    .device-iphone-14-pro .device-frame {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0;
+        width: 100%;
+        height: auto;
+    }
+
+    .device-iphone-14-pro .device-frame::before,
+    .device-iphone-14-pro .device-header,
+    .device-iphone-14-pro .device-sensors::after,
+    .device-iphone-14-pro .device-sensors::before,
+    .device-iphone-14-pro .device-btns,
+    .device-iphone-14-pro .device-power,
+    .device-iphone-14-pro .device-stripe::after,
+    .device-iphone-14-pro .device-stripe::before {
+        display: none;
+    }
+
+    .device-iphone-14-pro .device-screen {
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+    }
+
+    .phone-screen-inner {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .detail-header.has-status {
+        height: auto;
+        padding-top: 16px;
+        padding-bottom: 12px;
+    }
+
+    .detail-header.has-status .detail-title,
+    .detail-header.has-status .detail-header-action,
+    .detail-header.has-status .main-profile-btn {
+        margin-top: 0;
+    }
+
+    .main-detail-header.has-status {
+        padding-top: 16px;
+    }
+
+    .detail-statusbar {
+        display: none;
+    }
+
+    .info-gif,
+    .qna-video,
+    .main-video {
+        display: none !important;
+    }
+
+    .mobile-admin-panel .info-gif,
+    .mobile-admin-panel .qna-video,
+    .mobile-admin-panel .main-video {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        left: auto;
+        top: auto;
+        display: block !important;
+    }
+}
+
+/* 설문조사 스타일 */
+.survey-content {
+    margin: -16px;
+    min-height: calc(100vh - 56px);
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--qna-font);
+}
+
+.survey-tabs {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #e6e6e6;
+    background: #fff;
+}
+
+.survey-tab-button {
+    flex: 1;
+    max-width: 200px;
+    padding: 14px 0;
+    background: transparent;
+    border: none;
+    font-size: 15px;
+    color: #666;
+    font-weight: 400;
+    position: relative;
+    cursor: pointer;
+}
+
+.survey-tab-button.is-active {
+    color: #5C3FBF;
+    font-weight: 400;
+}
+
+.survey-tab-button.is-active::after {
+    content: "";
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    bottom: -1px;
+    height: 2px;
+    background: #5C3FBF;
+    border-radius: 2px;
+}
+
+.survey-tab-panel {
+    display: none;
+    padding: 20px 16px;
+    padding-bottom: 100px;
+}
+
+.survey-tab-panel.is-active {
+    display: block;
+}
+
+.survey-guide-text {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.survey-question {
+    margin-bottom: 28px;
+}
+
+.survey-question:first-of-type {
+    margin-top: 20px;
+}
+
+.survey-question-title {
+    font-size: 16px;
+    font-weight: 400;
+    color: #111;
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+.survey-question-desc {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 14px;
+    line-height: 1.47;
+}
+
+.survey-highlight {
+    color: #e53935;
+    font-weight: 500;
+    display: block;
+    margin-top: 6px;
+}
+
+.survey-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.survey-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.survey-option:hover {
+    border-color: #ccc;
+}
+
+.survey-option:has(input:checked) {
+    background: #f3f0ff;
+    border-color: #5C3FBF;
+}
+
+.survey-option input[type="radio"],
+.survey-option input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.survey-option input[type="checkbox"] {
+    border-radius: 4px;
+}
+
+.survey-option input[type="radio"]:checked,
+.survey-option input[type="checkbox"]:checked {
+    border-color: #5C3FBF;
+    background: #5C3FBF;
+}
+
+.survey-option input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+.survey-option input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.survey-option span {
+    font-size: 15px;
+    color: #333;
+}
+
+.survey-textarea {
+    width: 100%;
+    min-height: 100px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 15px;
+    color: #333;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.survey-textarea::placeholder {
+    color: #aaa;
+}
+
+.survey-textarea:focus {
+    outline: none;
+    border-color: #5C3FBF;
+}
+
+.survey-submit-btn {
+    width: 100%;
+    padding: 10px;
+    background: #5C3FBF;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 400;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s ease;
+}
+
+.survey-submit-btn:hover {
+    background: #4a32a0;
+}
+
+.survey-submit-btn:disabled {
+    background: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* 설문 완료 화면 */
+.survey-complete {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    padding-bottom: 80px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    overflow: hidden;
+}
+
+.survey-complete.is-active {
+    display: flex;
+}
+
+.survey-complete-icon {
+    width: 60px;
+    height: 60px;
+    background: #EDFFF8;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.survey-complete-icon .material-icons {
+    font-size: 32px;
+    color: #23896B;
+}
+
+.survey-complete-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.survey-complete-btn {
+    width: 100%;
+    max-width: 320px;
+    padding: 13px;
+    background: #5C3FBF;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.survey-complete-btn:hover {
+    background: #4a32a0;
+}
+
+/* 설문 제출 완료 상태 */
+.survey-content.is-submitted .survey-option {
+    pointer-events: none;
+    background: #f5f5f5;
+    border-color: #e0e0e0;
+}
+
+.survey-content.is-submitted .survey-option span {
+    color: #999;
+}
+
+.survey-content.is-submitted .survey-option input[type="radio"],
+.survey-content.is-submitted .survey-option input[type="checkbox"] {
+    border-color: #ccc;
+}
+
+/* 선택된 항목은 원래 스타일 유지 */
+.survey-content.is-submitted .survey-option:has(input:checked) {
+    background: #f3f0ff;
+    border-color: #5C3FBF;
+}
+
+.survey-content.is-submitted .survey-option:has(input:checked) span {
+    color: #333;
+}
+
+.survey-content.is-submitted .survey-option input[type="radio"]:checked,
+.survey-content.is-submitted .survey-option input[type="checkbox"]:checked {
+    border-color: #5C3FBF;
+    background: #5C3FBF;
+}
+
+.survey-content.is-submitted .survey-textarea {
+    pointer-events: none;
+    background: #f5f5f5;
+    border-color: #e0e0e0;
+    color: #999;
 }
