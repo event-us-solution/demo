@@ -416,6 +416,69 @@ body {
     animation: info-gif-line-in 0.8s ease forwards;
 }
 
+.survey-video {
+    position: absolute;
+    top: 50px;
+    left: calc(150px + 428px);
+    width: min(1100px, calc(100vw - (150px + 428px) - 40px));
+    aspect-ratio: 16 / 9;
+    display: none;
+}
+
+.survey-video.is-visible {
+    display: block;
+}
+
+.survey-video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #000;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.survey-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 16, 48, 0.62);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    border-radius: 8px;
+}
+
+.survey-video.is-dimmed .survey-video-overlay {
+    opacity: 1;
+}
+
+.survey-video-text {
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+.survey-video-line {
+    margin: 0 0 10px;
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.survey-video-line:last-child {
+    margin-bottom: 0;
+}
+
+.survey-video-overlay.is-typing .survey-video-line {
+    animation: info-gif-line-in 0.8s ease forwards;
+}
+
 .qna-video-overlay {
     position: absolute;
     inset: 0;
@@ -2140,13 +2203,15 @@ body {
 
     .info-gif,
     .qna-video,
-    .main-video {
+    .main-video,
+    .survey-video {
         display: none !important;
     }
 
     .mobile-admin-panel .info-gif,
     .mobile-admin-panel .qna-video,
-    .mobile-admin-panel .main-video {
+    .mobile-admin-panel .main-video,
+    .mobile-admin-panel .survey-video {
         position: static;
         width: 100%;
         max-width: 100%;

@@ -33,6 +33,7 @@ const ScreenManager = {
         updateInfoGifVisibility(this.currentScreen);
         updateQnaVideoVisibility(this.currentScreen);
         updateMainVideoVisibility(this.currentScreen);
+        updateSurveyVideoVisibility(this.currentScreen);
         updateAdminPanelContent();
     },
     
@@ -278,6 +279,124 @@ function initMainVideoPlayback() {
     });
 }
 
+function updateSurveyVideoVisibility(screenId) {
+    const videoWrapper = document.getElementById('survey-video');
+    if (!videoWrapper) return;
+
+    const video = videoWrapper.querySelector('video');
+    const shouldShow = screenId === 'survey-screen';
+    videoWrapper.classList.toggle('is-visible', shouldShow);
+
+    if (shouldShow) {
+        if (!updateSurveyVideoVisibility.wasActive) {
+            video.currentTime = 0;
+            scheduleSurveyVideoOverlay();
+        }
+        updateSurveyVideoVisibility.wasActive = true;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    } else if (updateSurveyVideoVisibility.wasActive) {
+        video.pause();
+        video.currentTime = 0;
+        updateSurveyVideoVisibility.wasActive = false;
+        resetSurveyVideoOverlay();
+    }
+}
+
+updateSurveyVideoVisibility.wasActive = false;
+
+function scheduleSurveyVideoOverlay() {
+    const videoWrapper = document.getElementById('survey-video');
+    if (!videoWrapper) return;
+
+    const delay = parseInt(videoWrapper.dataset.overlayDelay || '4000', 10);
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+    }
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+    }
+
+    videoWrapper.classList.remove('is-dimmed');
+    resetSurveyVideoTyping();
+    const timerId = setTimeout(() => {
+        videoWrapper.classList.add('is-dimmed');
+        startSurveyVideoTyping();
+        const totalDuration = getSurveyVideoTypingDuration() + TEXT_HOLD_MS;
+        const fadeTimerId = setTimeout(() => {
+            videoWrapper.classList.remove('is-dimmed');
+            resetSurveyVideoTyping();
+        }, Math.max(0, totalDuration));
+        videoWrapper.dataset.fadeTimerId = String(fadeTimerId);
+    }, Math.max(0, delay));
+
+    videoWrapper.dataset.overlayTimerId = String(timerId);
+}
+
+function resetSurveyVideoOverlay() {
+    const videoWrapper = document.getElementById('survey-video');
+    if (!videoWrapper) return;
+
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+        videoWrapper.dataset.overlayTimerId = '';
+    }
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+        videoWrapper.dataset.fadeTimerId = '';
+    }
+    videoWrapper.classList.remove('is-dimmed');
+    resetSurveyVideoTyping();
+}
+
+function resetSurveyVideoTyping() {
+    const overlay = document.querySelector('#survey-video .survey-video-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('is-typing');
+    const lines = overlay.querySelectorAll('.survey-video-line');
+    lines.forEach(line => {
+        line.style.animationDelay = '0ms';
+    });
+}
+
+function startSurveyVideoTyping() {
+    const overlay = document.querySelector('#survey-video .survey-video-overlay');
+    if (!overlay) return;
+    const lines = overlay.querySelectorAll('.survey-video-line');
+    lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * TEXT_LINE_INTERVAL_MS}ms`;
+    });
+    overlay.classList.add('is-typing');
+}
+
+function getSurveyVideoTypingDuration() {
+    const overlay = document.querySelector('#survey-video .survey-video-overlay');
+    if (!overlay) return 0;
+    const lineCount = overlay.querySelectorAll('.survey-video-line').length;
+    if (lineCount === 0) return 0;
+    return (lineCount - 1) * TEXT_LINE_INTERVAL_MS + 800;
+}
+
+function initSurveyVideoPlayback() {
+    const videoWrapper = document.getElementById('survey-video');
+    const video = videoWrapper?.querySelector('video');
+    if (!videoWrapper || !video) return;
+
+    video.playbackRate = 1.5;
+    video.loop = false;
+    video.addEventListener('ended', () => {
+        if (!updateSurveyVideoVisibility.wasActive) return;
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+        scheduleSurveyVideoOverlay();
+    });
+}
+
 const adminPanelState = {
     origins: new Map(),
     currentNode: null,
@@ -322,6 +441,9 @@ function getAdminMediaForScreen(screenId) {
     }
     if (screenId === 'info-screen') {
         return document.getElementById('info-gif');
+    }
+    if (screenId === 'survey-screen') {
+        return document.getElementById('survey-video');
     }
     return null;
 }
@@ -1689,11 +1811,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initNoticeToggle(); // 공지사항 토글 기능 초기화
     initQnaVideoPlayback();
     initMainVideoPlayback();
+    initSurveyVideoPlayback();
     initMobileHeaderMenus();
     initMobileMenu();
     updateInfoGifVisibility(ScreenManager.currentScreen);
     updateQnaVideoVisibility(ScreenManager.currentScreen);
     updateMainVideoVisibility(ScreenManager.currentScreen);
+    updateSurveyVideoVisibility(ScreenManager.currentScreen);
     
     // 로그인 링크 클릭 (간단한 처리)
     const loginLink = document.getElementById('login-link');
