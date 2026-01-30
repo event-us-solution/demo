@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,GRAD@24,400,0" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=20260121-1">
@@ -765,19 +766,21 @@
 
                         <!-- 경품추첨 화면 -->
                         <div id="lottery-screen" class="phone-screen-inner">
-                            <div class="detail-header" style="background: #ff5e7e;">
+                            <div class="detail-header" style="background: #5c3fbf;">
                                 <button class="back-btn" onclick="goBack()">
                                     <span class="material-icons">chevron_left</span>
                                 </button>
                                 <h1 class="detail-title">경품추첨</h1>
                             </div>
-                            <div class="app-content">
-                                <div style="padding: 20px;">
-                                    <p style="color: #666; margin-bottom: 20px;">경품추첨 이벤트에 참여할 수 있습니다.</p>
-                                    <div style="text-align: center; padding: 40px 20px;">
-                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">card_giftcard</span>
-                                        <p style="color: #999;">진행 중인 경품추첨이 없습니다.</p>
-                                    </div>
+                            <!-- 로딩 화면 -->
+                            <div class="lottery-body lottery-loading" id="lottery-loading">
+                                <div class="lottery-loading-text">추첨번호 받는 중...</div>
+                            </div>
+                            <!-- 결과 화면 -->
+                            <div class="lottery-body lottery-result" id="lottery-result" style="display: none;">
+                                <div class="lottery-number-container">
+                                    <h5 class="lottery-number-label">내 추첨 번호</h5>
+                                    <div class="lottery-number" id="lottery-number">1</div>
                                 </div>
                             </div>
                         </div>

@@ -1033,6 +1033,11 @@ function restoreActiveScreen() {
     
     ScreenManager.show(screenId);
     ScreenManager.setPage(2);
+    
+    // 경품추첨 화면이면 로딩 애니메이션 시작
+    if (screenId === 'lottery-screen') {
+        setTimeout(() => initLotteryLoading(), 0);
+    }
 }
 
 // 모달 관리
@@ -1121,6 +1126,8 @@ function handleFeatureClick(feature, modal) {
             break;
         case 'lottery':
             screenId = 'lottery-screen';
+            // 로딩 애니메이션 시작
+            setTimeout(() => initLotteryLoading(), 0);
             break;
         default:
             screenContent = '<p>준비 중인 기능입니다.</p>';
@@ -1166,6 +1173,34 @@ function initSurveyTabs() {
             });
         });
     });
+}
+
+// 경품추첨 로딩 애니메이션
+let lotteryVisited = false;
+
+function initLotteryLoading() {
+    const loadingScreen = document.getElementById('lottery-loading');
+    const resultScreen = document.getElementById('lottery-result');
+    
+    if (!loadingScreen || !resultScreen) return;
+    
+    // 이미 방문한 적 있으면 바로 결과 화면 표시
+    if (lotteryVisited) {
+        loadingScreen.style.display = 'none';
+        resultScreen.style.display = '';
+        return;
+    }
+    
+    // 최초 방문: 로딩 화면 표시, 결과 화면 숨김
+    loadingScreen.style.display = '';
+    resultScreen.style.display = 'none';
+    
+    // 1초 후 결과 화면으로 전환
+    setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        resultScreen.style.display = '';
+        lotteryVisited = true;
+    }, 1000);
 }
 
 function initSurveySubmit() {
