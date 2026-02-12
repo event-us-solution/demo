@@ -302,6 +302,27 @@ npx serve .
 
 ---
 
+## 배포 (GitHub Pages)
+
+이 프로젝트는 **GitHub Pages**로 배포됩니다. `main` 브랜치에 푸시하면 자동으로 배포됩니다.
+
+### 배포 URL
+
+- **메인**: `https://event-us-solution.github.io/demo/`
+- **관리자**: `https://event-us-solution.github.io/demo/admin.html`
+
+### 최초 1회 설정 (저장소 관리자)
+
+배포가 동작하려면 GitHub 저장소에서 **한 번만** 아래 설정이 필요합니다.
+
+1. GitHub에서 저장소 **event-us-solution/demo** 열기
+2. **Settings** → 왼쪽 메뉴 **Pages**
+3. **Build and deployment** → **Source**를 **GitHub Actions**로 선택
+
+이후 `main`에 푸시할 때마다 Actions에서 자동 배포됩니다. 배포 상태는 **Actions** 탭에서 확인할 수 있습니다.
+
+---
+
 ## HubSpot CMS 버전
 
 HubSpot CMS에 업로드하기 위한 변환 버전이 `hubspot/` 폴더에 있습니다.
