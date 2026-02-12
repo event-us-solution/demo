@@ -1,5 +1,86 @@
+/**
+ * 관리자 로그인 설정
+ * ※ 데모/체험용: 실제 서비스에서는 반드시 서버 측 인증을 사용하세요.
+ */
+const AdminAuthConfig = {
+    id: 'operation@event-us.kr',
+    password: 'Evenoper2022!!'
+};
+
+const ADMIN_SESSION_KEY = 'adminAuthenticated';
+
+function isAdminAuthenticated() {
+    return sessionStorage.getItem(ADMIN_SESSION_KEY) === '1';
+}
+
+function setAdminAuthenticated() {
+    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+}
+
+function clearAdminAuth() {
+    sessionStorage.removeItem(ADMIN_SESSION_KEY);
+}
+
+function showAdminLogin() {
+    const loginWrap = document.getElementById('admin-login-wrap');
+    const contentWrap = document.getElementById('admin-content-wrap');
+    if (loginWrap) loginWrap.style.display = 'flex';
+    if (contentWrap) contentWrap.classList.remove('authenticated');
+}
+
+function showAdminContent() {
+    const loginWrap = document.getElementById('admin-login-wrap');
+    const contentWrap = document.getElementById('admin-content-wrap');
+    if (loginWrap) loginWrap.style.display = 'none';
+    if (contentWrap) contentWrap.classList.add('authenticated');
+}
+
+function initAdminAuth() {
+    const form = document.getElementById('admin-login-form');
+    const errorEl = document.getElementById('admin-login-error');
+
+    if (isAdminAuthenticated()) {
+        showAdminContent();
+        return true;
+    }
+
+    showAdminLogin();
+    if (errorEl) errorEl.classList.remove('show');
+
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const idInput = document.getElementById('admin-id');
+            const pwInput = document.getElementById('admin-pw');
+            const id = (idInput && idInput.value) ? idInput.value.trim() : '';
+            const pw = (pwInput && pwInput.value) ? pwInput.value : '';
+
+            if (id === AdminAuthConfig.id && pw === AdminAuthConfig.password) {
+                setAdminAuthenticated();
+                if (errorEl) errorEl.classList.remove('show');
+                showAdminContent();
+                // 로그인 후 관리자 콘텐츠 초기화
+                if (typeof loadData === 'function') loadData();
+                if (typeof loadBalloonFormData === 'function') loadBalloonFormData();
+                if (typeof setupPreviewUpdates === 'function') setupPreviewUpdates();
+                if (typeof loadMediaSettings === 'function') loadMediaSettings();
+            } else {
+                if (errorEl) errorEl.classList.add('show');
+                if (pwInput) pwInput.value = '';
+                pwInput && pwInput.focus();
+            }
+        });
+    }
+    return false;
+}
+
 // 관리자 페이지 초기화
 document.addEventListener('DOMContentLoaded', () => {
+    // 로그인 확인 후 콘텐츠 초기화
+    if (!initAdminAuth()) {
+        return;
+    }
+
     // 데이터 로드
     loadData();
     

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "video_settings_group",
+    "name": "video_settings_group",
+    "label": "영상 설정",
+    "type": "group",
+    "children": [
+      {
+        "id": "main_video_url",
+        "name": "main_video_url",
+        "label": "메인 화면 영상 URL",
+        "type": "url",
+        "default": "",
+        "help_text": "메인 화면(세션/기능)에서 표시되는 영상 URL입니다. HubSpot 파일 매니저에 업로드한 영상 URL을 입력하세요."
+      },
+      {
+        "id": "info_video_url",
+        "name": "info_video_url",
+        "label": "행사정보 영상 URL",
+        "type": "url",
+        "default": "",
+        "help_text": "행사정보 화면에서 표시되는 영상 URL입니다."
+      },
+      {
+        "id": "qna_video_url",
+        "name": "qna_video_url",
+        "label": "질의응답 영상 URL",
+        "type": "url",
+        "default": "",
+        "help_text": "질의응답 화면에서 표시되는 영상 URL입니다."
+      },
+      {
+        "id": "survey_video_url",
+        "name": "survey_video_url",
+        "label": "설문조사 영상 URL",
+        "type": "url",
+        "default": "",
+        "help_text": "설문조사 화면에서 표시되는 영상 URL입니다."
+      },
+      {
+        "id": "lottery_video_url",
+        "name": "lottery_video_url",
+        "label": "경품추첨 영상 URL",
+        "type": "url",
+        "default": "",
+        "help_text": "경품추첨 화면에서 표시되는 영상 URL입니다."
+      }
+    ]
+  },
+  {
+    "id": "hubspot_form_id",
+    "name": "hubspot_form_id",
+    "label": "HubSpot 폼 ID",
+    "type": "text",
+    "default": "",
+    "help_text": "CRM 연동용 HubSpot 폼 ID를 입력하세요. (선택사항)"
+  }
+]

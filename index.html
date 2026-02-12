@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,GRAD@24,400,0" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=20260130-2">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
 </head>
 <body>
     <!-- 배경 -->
@@ -23,11 +24,7 @@
         <div class="header-left">
             <div class="logo-container">
                 <a href="/" class="logo-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" fill="none">
-                        <path d="M31 31H0V0h31v31zM1.888 29.112h27.224V1.888H1.888v27.225z" fill="#fff" />
-                        <path d="M21.393 7.969H9.217v3.522h12.176V7.969z" fill="#FFC200" />
-                        <path d="M17.296 17.261H9.217V13.74h8.75l-.671 3.522zM21.666 19.499H9.217v3.522h12.449V19.5z" fill="#fff" />
-                    </svg>
+                    <img src="assets/logo/02. 로고_기본형_투명.png" alt="이벤터스 로고" class="header-logo">
                 </a>
             </div>
             <div class="header-title">솔루션 체험 페이지</div>
@@ -146,9 +143,6 @@
                                     <span class="material-icons">menu</span>
                                 </button>
                                 <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
-                                <button class="main-profile-btn" type="button" aria-label="프로필">
-                                    <span class="material-icons">person</span>
-                                </button>
                             </div>
 
                             <!-- 콘텐츠 영역 -->
@@ -180,6 +174,739 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- 하단 탭 (세션/기능 활성 시 표시) -->
+                            <nav class="bottom-nav" id="bottom-nav" aria-label="하단 메뉴">
+                                <a class="bottom-nav-item is-active" href="#" data-tab="session" aria-current="page">
+                                    <span class="bottom-nav-icon"><span class="material-symbols-outlined">widgets</span></span>
+                                    <span class="bottom-nav-label">세션/기능</span>
+                                </a>
+                                <a class="bottom-nav-item" href="#" data-tab="networking">
+                                    <span class="bottom-nav-icon"><span class="material-symbols-outlined">groups</span></span>
+                                    <span class="bottom-nav-label">네트워킹</span>
+                                </a>
+                                <a class="bottom-nav-item" href="#" data-tab="myinfo">
+                                    <span class="bottom-nav-icon"><span class="material-symbols-outlined">person</span></span>
+                                    <span class="bottom-nav-label">내정보</span>
+                                </a>
+                                <a class="bottom-nav-item" href="#" data-tab="settings">
+                                    <span class="bottom-nav-icon"><span class="material-symbols-outlined">settings</span></span>
+                                    <span class="bottom-nav-label">설정</span>
+                                </a>
+                            </nav>
+                        </div>
+
+                        <!-- 내정보 화면 (하단 탭) - 상단 네비 메인과 동일 높이·구성 -->
+                        <div id="myinfo-screen" class="phone-screen-inner">
+                            <div class="detail-header main-detail-header has-status">
+                                <button class="mobile-menu-btn" type="button" aria-label="메뉴 열기" aria-expanded="false">
+                                    <span class="material-icons">menu</span>
+                                </button>
+                                <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
+                            </div>
+                            <h2 class="myinfo-page-title">내정보</h2>
+                            <div class="myinfo-tabs" role="tablist">
+                                <button type="button" class="myinfo-tab is-active" role="tab" data-myinfo-tab="qr" aria-selected="true">QR&nbsp;&nbsp;</button>
+                                <button type="button" class="myinfo-tab" role="tab" data-myinfo-tab="info" aria-selected="false">내정보</button>
+                                <button type="button" class="myinfo-tab" role="tab" data-myinfo-tab="history" aria-selected="false">참여기록</button>
+                            </div>
+                            <div class="app-content myinfo-content">
+                                <!-- QR 탭 -->
+                                <div class="myinfo-panel is-active" id="myinfo-panel-qr" role="tabpanel">
+                                    <p class="myinfo-qr-guide">출석체크 등에서 아래 QR코드를 사용하세요</p>
+                                    <div class="myinfo-qr-image-wrap">
+                                        <img src="assets/myinfo/myinfo_qr.png" alt="QR코드" class="myinfo-qr-image">
+                                    </div>
+                                    <p class="myinfo-qr-title">김이벤</p>
+                                    <p class="myinfo-qr-code">8NMgqa</p>
+                                </div>
+                                <!-- 내정보 탭 (항목별 두 줄: 라벨 / 값) -->
+                                <div class="myinfo-panel" id="myinfo-panel-info" role="tabpanel" hidden>
+                                    <div class="myinfo-field-row">
+                                        <span class="myinfo-field-label">이름</span>
+                                        <span class="myinfo-field-value">김이벤</span>
+                                    </div>
+                                    <div class="myinfo-field-row">
+                                        <span class="myinfo-field-label">이메일</span>
+                                        <span class="myinfo-field-value">operation@event-us.kr</span>
+                                    </div>
+                                    <div class="myinfo-field-row">
+                                        <span class="myinfo-field-label">휴대전화</span>
+                                        <span class="myinfo-field-value">01066902088</span>
+                                    </div>
+                                </div>
+                                <!-- 참여기록 탭 -->
+                                <div class="myinfo-panel" id="myinfo-panel-history" role="tabpanel" hidden>
+                                    <button type="button" class="myinfo-pdf-btn">PDF 내보내기</button>
+                                    <div class="myinfo-stats">
+                                        <div class="myinfo-stat-card">
+                                            <span class="myinfo-stat-label">참여 기능 수</span>
+                                            <span class="myinfo-stat-value">4<span class="myinfo-stat-unit">개</span></span>
+                                        </div>
+                                        <div class="myinfo-stat-card">
+                                            <span class="myinfo-stat-label">기능 참여율</span>
+                                            <span class="myinfo-stat-value">50<span class="myinfo-stat-unit">%</span></span>
+                                        </div>
+                                    </div>
+                                    <h3 class="myinfo-history-title">출석 / 세션 접속 기록</h3>
+                                    <ul class="myinfo-history-list">
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-05 13:50</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-05 12:30</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-04 15:20</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-03 10:00</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-01-23 11:34</span></li>
+                                    </ul>
+                                    <h3 class="myinfo-history-title">기능별 활동 기록</h3>
+                                    <ul class="myinfo-history-list">
+                                        <li class="myinfo-history-item"><span>질의응답 기능 접속</span><span>2026-02-05 14:17</span></li>
+                                        <li class="myinfo-history-item"><span>행사정보 기능 접속</span><span>2026-02-05 13:57</span></li>
+                                        <li class="myinfo-history-item"><span>행사정보 기능 접속</span><span>2026-02-05 13:56</span></li>
+                                        <li class="myinfo-history-item"><span>설문조사 기능 접속</span><span>2026-02-05 13:52</span></li>
+                                        <li class="myinfo-history-item"><span>경품추첨 기능 접속</span><span>2026-01-30 15:01</span></li>
+                                        <li class="myinfo-history-item"><span>경품추첨 기능 접속</span><span>2026-01-30 15:00</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- PDF 내보내기 모달 (참여기록 탭) -->
+                            <div class="myinfo-pdf-modal" id="myinfo-pdf-modal" role="dialog" aria-labelledby="myinfo-pdf-modal-title" aria-modal="true" hidden>
+                                <div class="myinfo-pdf-modal-backdrop"></div>
+                                <div class="myinfo-pdf-modal-card">
+                                    <h3 class="myinfo-pdf-modal-title" id="myinfo-pdf-modal-title">참여 기록 PDF로 내보내기</h3>
+                                    <p class="myinfo-pdf-modal-desc">내보낼 항목을 선택해 주세요</p>
+                                    <div class="myinfo-pdf-modal-options">
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="participants" checked>
+                                            <span>참여 수</span>
+                                        </label>
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="attendance" checked>
+                                            <span>출석/세션 접속 기록</span>
+                                        </label>
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="webinar" checked>
+                                            <span>웨비나 시청 기록</span>
+                                        </label>
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="activity" checked>
+                                            <span>기능별 활동 기록</span>
+                                        </label>
+                                    </div>
+                                    <div class="myinfo-pdf-modal-actions">
+                                        <button type="button" class="myinfo-pdf-modal-btn myinfo-pdf-modal-cancel" id="myinfo-pdf-modal-cancel">취소</button>
+                                        <button type="button" class="myinfo-pdf-modal-btn myinfo-pdf-modal-submit" id="myinfo-pdf-modal-submit">내보내기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <nav class="bottom-nav" aria-label="하단 메뉴">
+                                <a class="bottom-nav-item" href="#" data-tab="session"><span class="bottom-nav-icon"><span class="material-symbols-outlined">widgets</span></span><span class="bottom-nav-label">세션/기능</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="networking"><span class="bottom-nav-icon"><span class="material-symbols-outlined">groups</span></span><span class="bottom-nav-label">네트워킹</span></a>
+                                <a class="bottom-nav-item is-active" href="#" data-tab="myinfo" aria-current="page"><span class="bottom-nav-icon"><span class="material-symbols-outlined">person</span></span><span class="bottom-nav-label">내정보</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="settings"><span class="bottom-nav-icon"><span class="material-symbols-outlined">settings</span></span><span class="bottom-nav-label">설정</span></a>
+                            </nav>
+                        </div>
+
+                        <!-- 네트워킹 화면 (하단 탭) - 참가 전 목록 + 필터 -->
+                        <div id="networking-screen" class="phone-screen-inner">
+                            <div class="detail-header main-detail-header has-status">
+                                <button class="mobile-menu-btn" type="button" aria-label="메뉴 열기" aria-expanded="false">
+                                    <span class="material-icons">menu</span>
+                                </button>
+                                <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
+                            </div>
+                            <h2 class="networking-page-title">네트워킹</h2>
+                            <div class="app-content networking-content">
+                                <!-- 참가 전: 가려진 참가자 목록 + 참여하기 버튼 (참여 완료 후 → 참여 후 화면으로 전환) -->
+                                <div id="networking-before-join">
+                                    <div class="networking-scroll-area">
+                                    <div class="networking-top-row">
+                                        <div class="networking-search-wrap">
+                                            <input type="search" class="networking-search-input" placeholder="검색" aria-label="검색">
+                                        </div>
+                                        <div class="networking-meta">
+                                            <span class="networking-count">5명 참여중</span>
+                                            <button type="button" class="networking-filter-btn" aria-label="필터">
+                                                <span class="material-symbols-outlined">tune</span>
+                                            </button>
+                                        </div>
+                                        <div class="networking-search-divider"></div>
+                                    </div>
+                                    <ul class="networking-list" id="networking-list">
+                                        <li class="networking-card">
+                                            <div class="networking-card-photo"></div>
+                                            <div class="networking-card-body">
+                                                <p class="networking-card-name">문**</p>
+                                                <p class="networking-card-role">*** /매니저</p>
+                                                <p class="networking-card-msg">네트워킹에 참여해 주세요. 참여 후 확인 가능합니다.</p>
+                                            </div>
+                                        </li>
+                                        <li class="networking-card">
+                                            <div class="networking-card-photo"></div>
+                                            <div class="networking-card-body">
+                                                <p class="networking-card-name">박**</p>
+                                                <p class="networking-card-role">*** /CX매니저</p>
+                                                <p class="networking-card-msg">네트워킹에 참여해 주세요. 참여 후 확인 가능합니다.</p>
+                                            </div>
+                                        </li>
+                                        <li class="networking-card">
+                                            <div class="networking-card-photo"></div>
+                                            <div class="networking-card-body">
+                                                <p class="networking-card-name">황**</p>
+                                                <p class="networking-card-role">*** /리더</p>
+                                                <p class="networking-card-msg">네트워킹에 참여해 주세요. 참여 후 확인 가능합니다.</p>
+                                            </div>
+                                        </li>
+                                        <li class="networking-card">
+                                            <div class="networking-card-photo"></div>
+                                            <div class="networking-card-body">
+                                                <p class="networking-card-name">이**</p>
+                                                <p class="networking-card-role">*** /기획</p>
+                                                <p class="networking-card-msg">네트워킹에 참여해 주세요. 참여 후 확인 가능합니다.</p>
+                                            </div>
+                                        </li>
+                                        <li class="networking-card">
+                                            <div class="networking-card-photo"></div>
+                                            <div class="networking-card-body">
+                                                <p class="networking-card-name">서**</p>
+                                                <p class="networking-card-role">*** /매니저</p>
+                                                <p class="networking-card-msg">네트워킹에 참여해 주세요. 참여 후 확인 가능합니다.</p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="networking-pagination">
+                                        <button type="button" class="networking-pagination-prev" aria-label="이전"><span class="material-icons">chevron_left</span></button>
+                                        <span class="networking-pagination-current">1</span>
+                                        <button type="button" class="networking-pagination-next" aria-label="다음"><span class="material-icons">chevron_right</span></button>
+                                    </div>
+                                    </div>
+                                    <div class="networking-join-divider"></div>
+                                    <button type="button" class="networking-join-btn">네트워킹 참여하기</button>
+                                </div>
+                                <!-- 참여 후: 전체 프로필 목록 + 내 정보 수정하기 -->
+                                <div id="networking-after-join" hidden>
+                                    <div class="networking-top-row">
+                                        <div class="networking-search-wrap">
+                                            <input type="search" class="networking-search-input" placeholder="검색" aria-label="검색">
+                                        </div>
+                                        <div class="networking-meta">
+                                            <span class="networking-count" id="networking-count-after">5명 참여중</span>
+                                            <button type="button" class="networking-filter-btn" aria-label="필터">
+                                                <span class="material-symbols-outlined">tune</span>
+                                            </button>
+                                        </div>
+                                        <div class="networking-search-divider"></div>
+                                    </div>
+                                    <div class="networking-scroll-area networking-after-scroll">
+                                    <ul class="networking-list networking-list-after" id="networking-list-after">
+                                        <li class="networking-profile-card is-me" data-affiliation="주식회사 이벤터스" data-title="리더" data-department="" data-career="10년차" data-jobs="세일즈" data-linkedin="" data-remember="" data-color="#178263" data-photo="">
+                                            <div class="networking-profile-avatar networking-profile-avatar-no-photo">김</div>
+                                            <div class="networking-profile-body">
+                                                <p class="networking-profile-name">김이벤 <span class="networking-profile-badge">(나)</span></p>
+                                                <p class="networking-profile-role">이벤터스/리더</p>
+                                                <p class="networking-profile-intro">IT 솔루션으로 복잡한 행사 운영을 간편하게 해결하는, 이벤터스 리더입니다.</p>
+                                                <div class="networking-profile-tags">
+                                                    <span class="networking-tag">솔루션사업팀</span>
+                                                    <span class="networking-tag">10년차</span>
+                                                    <span class="networking-tag">세일즈</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="networking-profile-card" data-affiliation="주식회사 이벤터스" data-title="매니저" data-department="솔루션 사업팀" data-career="1년차" data-jobs="세일즈, 물류/무역" data-linkedin="" data-remember="" data-color="#178263" data-photo="assets/networking/02.png">
+                                            <div class="networking-profile-avatar has-photo" style="background-image: url('assets/networking/02.png'); background-size: cover; background-position: center;">문</div>
+                                            <div class="networking-profile-body">
+                                                <p class="networking-profile-name">문창훈</p>
+                                                <p class="networking-profile-role">주식회사 이벤터스/매니저</p>
+                                                <p class="networking-profile-intro">IT 솔루션으로 복잡한 행사 운영을 간편하게 해결하는, 이벤터스 매니저 문창훈입니다.</p>
+                                                <div class="networking-profile-tags">
+                                                    <span class="networking-tag">솔루션 사업팀</span>
+                                                    <span class="networking-tag">1년차</span>
+                                                    <span class="networking-tag">세일즈</span>
+                                                    <span class="networking-tag">물류/무역</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="networking-profile-card" data-affiliation="주식회사 이벤터스" data-title="매니저" data-department="" data-career="1년차" data-jobs="마케팅, CX/CS" data-linkedin="" data-remember="" data-color="#178263" data-photo="assets/networking/03.png">
+                                            <div class="networking-profile-avatar has-photo" style="background-image: url('assets/networking/03.png'); background-size: cover; background-position: center;">박</div>
+                                            <div class="networking-profile-body">
+                                                <p class="networking-profile-name">박윤주 <span class="networking-profile-icon"><span class="material-icons">check_circle</span></span><span class="networking-profile-icon"><span class="material-icons">link</span></span></p>
+                                                <p class="networking-profile-role">주식회사 이벤터스/매니저</p>
+                                                <p class="networking-profile-intro">현장 운영 경험을 바탕으로 효율적인 행사 운영 솔루션을 제안합니다.</p>
+                                                <div class="networking-profile-tags">
+                                                    <span class="networking-tag">마케팅</span>
+                                                    <span class="networking-tag">1년차</span>
+                                                    <span class="networking-tag">CX/CS</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="networking-profile-card" data-affiliation="주식회사 이벤터스" data-title="매니저" data-department="" data-career="" data-jobs="" data-linkedin="" data-remember="" data-color="#178263" data-photo="assets/networking/01.png">
+                                            <div class="networking-profile-avatar has-photo" style="background-image: url('assets/networking/01.png'); background-size: cover; background-position: center;">이</div>
+                                            <div class="networking-profile-body">
+                                                <p class="networking-profile-name">이행사</p>
+                                                <p class="networking-profile-role">주식회사 이벤터스/매니저</p>
+                                                <p class="networking-profile-intro">안녕하세요! 행사에 대해 궁금한 점이 있다면 언제든 연락주세요.</p>
+                                                <div class="networking-profile-tags"></div>
+                                            </div>
+                                        </li>
+                                        <li class="networking-profile-card" data-affiliation="주식회사 이벤터스" data-title="CX매니저" data-department="솔루션사업팀" data-career="5년차" data-jobs="CX/CS, 세일즈" data-linkedin="" data-remember="https://link.rmbr.in/dln8s1" data-color="#178263" data-photo="assets/networking/04.png">
+                                            <div class="networking-profile-avatar has-photo" style="background-image: url('assets/networking/04.png'); background-size: cover; background-position: center;">박</div>
+                                            <div class="networking-profile-body">
+                                                <p class="networking-profile-name">박현우</p>
+                                                <p class="networking-profile-role">주식회사 이벤터스/CX매니저</p>
+                                                <p class="networking-profile-intro">이벤터스 솔루션 고객 경험 개선과 현장 운영을 담당합니다.</p>
+                                                <div class="networking-profile-tags">
+                                                    <span class="networking-tag">플랫폼사업팀</span>
+                                                    <span class="networking-tag">12년차</span>
+                                                    <span class="networking-tag">세일즈</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="networking-profile-card" data-affiliation="주식회사 이벤터스" data-title="매니저" data-department="" data-career="" data-jobs="마케팅, CX/CS" data-linkedin="" data-remember="" data-color="#178263" data-photo="assets/networking/05.png">
+                                            <div class="networking-profile-avatar has-photo" style="background-image: url('assets/networking/05.png'); background-size: cover; background-position: center;">서</div>
+                                            <div class="networking-profile-body">
+                                                <p class="networking-profile-name">서지혜</p>
+                                                <p class="networking-profile-role">주식회사 이벤터스/매니저</p>
+                                                <p class="networking-profile-intro">B2B 리드 확보를 돕는 마케팅을 담당합니다.</p>
+                                                <div class="networking-profile-tags">
+                                                    <span class="networking-tag">마케팅</span>
+                                                    <span class="networking-tag">CX/CS</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="networking-pagination">
+                                        <button type="button" class="networking-pagination-prev" aria-label="이전"><span class="material-icons">chevron_left</span></button>
+                                        <span class="networking-pagination-current">1</span>
+                                        <button type="button" class="networking-pagination-next" aria-label="다음"><span class="material-icons">chevron_right</span></button>
+                                    </div>
+                                    </div>
+                                    <div class="networking-join-divider"></div>
+                                    <button type="button" class="networking-edit-myinfo-btn">내 정보 수정하기</button>
+                                </div>
+                            </div>
+                            <!-- 필터 모달 -->
+                            <div class="networking-filter-modal" id="networking-filter-modal" role="dialog" aria-labelledby="networking-filter-title" aria-modal="true" hidden>
+                                <div class="networking-filter-backdrop"></div>
+                                <div class="networking-filter-panel">
+                                    <div class="networking-filter-header">
+                                        <h3 class="networking-filter-title" id="networking-filter-title">필터</h3>
+                                        <button type="button" class="networking-filter-reset">필터 초기화</button>
+                                    </div>
+                                    <div class="networking-filter-body">
+                                        <p class="networking-filter-label">정렬</p>
+                                        <div class="networking-filter-sort">
+                                            <button type="button" class="networking-sort-option is-active" data-sort="name">이름 순</button>
+                                            <button type="button" class="networking-sort-option" data-sort="registered">등록순</button>
+                                            <button type="button" class="networking-sort-option" data-sort="career">연차 순</button>
+                                        </div>
+                                        <p class="networking-filter-label">직무 * 다중 선택</p>
+                                        <div class="networking-filter-jobs" id="networking-filter-jobs">
+                                            <button type="button" class="networking-job-tag" data-job="창업/경영"><span class="networking-job-tag-emoji">🚀</span><span class="networking-job-tag-text">창업/경영</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="사업 기획(BD)"><span class="networking-job-tag-emoji">📂</span><span class="networking-job-tag-text">사업 기획(BD)</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="세일즈"><span class="networking-job-tag-emoji">🤝</span><span class="networking-job-tag-text">세일즈</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="마케팅"><span class="networking-job-tag-emoji">✅</span><span class="networking-job-tag-text">마케팅</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="CX/CS"><span class="networking-job-tag-emoji">🎧</span><span class="networking-job-tag-text">CX/CS</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="서비스 기획"><span class="networking-job-tag-emoji">🛠️</span><span class="networking-job-tag-text">서비스 기획</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="개발"><span class="networking-job-tag-emoji">💻</span><span class="networking-job-tag-text">개발</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="디자인"><span class="networking-job-tag-emoji">💡</span><span class="networking-job-tag-text">디자인</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="인사(HR)"><span class="networking-job-tag-emoji">👥</span><span class="networking-job-tag-text">인사(HR)</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="재무/회계/총무"><span class="networking-job-tag-emoji">💰</span><span class="networking-job-tag-text">재무/회계/총무</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="미디어"><span class="networking-job-tag-emoji">📺</span><span class="networking-job-tag-text">미디어</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="엔지니어링/설계"><span class="networking-job-tag-emoji">⚙️</span><span class="networking-job-tag-text">엔지니어링/설계</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="엔터/공연"><span class="networking-job-tag-emoji">🎵</span><span class="networking-job-tag-text">엔터/공연</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="게임"><span class="networking-job-tag-emoji">🎮</span><span class="networking-job-tag-text">게임</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="금융"><span class="networking-job-tag-emoji">📈</span><span class="networking-job-tag-text">금융</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="제조/생산"><span class="networking-job-tag-emoji">🏭</span><span class="networking-job-tag-text">제조/생산</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="교육"><span class="networking-job-tag-emoji">📚</span><span class="networking-job-tag-text">교육</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="의료/제약/바이오"><span class="networking-job-tag-emoji">🧬</span><span class="networking-job-tag-text">의료/제약/바이오</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="물류/무역"><span class="networking-job-tag-emoji">🚚</span><span class="networking-job-tag-text">물류/무역</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="식음료"><span class="networking-job-tag-emoji">🍚</span><span class="networking-job-tag-text">식음료</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="법률"><span class="networking-job-tag-emoji">⚖️</span><span class="networking-job-tag-text">법률</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="공공/복지"><span class="networking-job-tag-emoji">🏛️</span><span class="networking-job-tag-text">공공/복지</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="건설/시설"><span class="networking-job-tag-emoji">🏗️</span><span class="networking-job-tag-text">건설/시설</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="교수/교직원"><span class="networking-job-tag-emoji">🧑‍🏫</span><span class="networking-job-tag-text">교수/교직원</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="예비 창업자"><span class="networking-job-tag-emoji">💡</span><span class="networking-job-tag-text">예비 창업자</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="프리랜서"><span class="networking-job-tag-emoji">💼</span><span class="networking-job-tag-text">프리랜서</span></button>
+                                            <button type="button" class="networking-job-tag" data-job="기타"><span class="networking-job-tag-emoji">✨</span><span class="networking-job-tag-text">기타</span></button>
+                                        </div>
+                                        <p class="networking-filter-label">연차</p>
+                                        <div class="networking-filter-career">
+                                            <p class="networking-career-range" id="networking-career-range">경력 없음 ~ 15년 이상</p>
+                                            <div class="networking-career-slider-wrap">
+                                                <div class="networking-career-track-bg" aria-hidden="true"></div>
+                                                <div class="networking-career-track-fill" id="networking-career-track-fill" aria-hidden="true"></div>
+                                                <input type="range" class="networking-career-min" id="networking-career-min" min="0" max="15" value="0" aria-label="연차 최소">
+                                                <input type="range" class="networking-career-max" id="networking-career-max" min="0" max="15" value="15" aria-label="연차 최대">
+                                            </div>
+                                            <div class="networking-career-labels">
+                                                <span>경력 없음</span>
+                                                <span>15년 이상</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="networking-filter-apply-wrap">
+                                        <button type="button" class="networking-filter-apply">적용</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 네트워킹 참여하기 모달 -->
+                            <div class="networking-join-modal" id="networking-join-modal" role="dialog" aria-labelledby="networking-join-title" aria-modal="true" hidden>
+                                <div class="networking-join-backdrop"></div>
+                                <div class="networking-join-panel">
+                                    <div class="networking-join-header">
+                                        <h3 class="networking-join-title" id="networking-join-title">네트워킹 참여하기</h3>
+                                        <button type="button" class="networking-join-close" aria-label="닫기"><span class="material-icons">close</span></button>
+                                    </div>
+                                    <div class="networking-join-body">
+                                        <div class="networking-join-profile">
+                                            <div class="networking-join-profile-card">
+                                                <div class="networking-join-photo-wrap">
+                                                    <input type="file" accept="image/*" class="networking-join-photo-input" id="networking-join-photo-input" hidden aria-label="프로필 이미지 선택" style="display:none">
+                                                    <img class="networking-join-photo-preview" alt="" style="display:none">
+                                                    <span class="networking-join-photo-placeholder" aria-hidden="true">김</span>
+                                                    <button type="button" class="networking-join-upload" aria-label="프로필 이미지 업로드"><span class="material-icons" aria-hidden="true">image</span> 업로드</button>
+                                                </div>
+                                                <div class="networking-join-profile-info">
+                                                    <p class="networking-join-team">김이벤 <span class="material-icons networking-join-info" aria-hidden="true" title="인증됨">verified</span></p>
+                                                    <p class="networking-join-affiliation">주식회사 이벤터스/매니저</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-body-inner">
+                                        <div class="networking-join-field networking-join-color-field">
+                                            <label class="networking-join-label">색상</label>
+                                            <div class="networking-join-color-wrap" tabindex="0" role="button" aria-expanded="false" aria-haspopup="true">
+                                                <span class="networking-join-color-swatch" style="background:#178263"></span>
+                                                <span class="networking-join-color-value">#178263</span>
+                                                <span class="material-icons">keyboard_arrow_down</span>
+                                            </div>
+                                            <div class="networking-join-color-picker-panel" hidden>
+                                                <div class="color-picker-inner">
+                                                    <div class="color-picker-row">
+                                                        <div class="color-picker-palette-wrap">
+                                                            <div class="color-picker-palette" aria-label="채도·명도 선택"></div>
+                                                            <span class="color-picker-palette-handle" aria-hidden="true"></span>
+                                                        </div>
+                                                        <div class="color-picker-hue-wrap">
+                                                            <div class="color-picker-hue" aria-label="색조 선택"></div>
+                                                            <span class="color-picker-hue-handle" aria-hidden="true"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="color-picker-footer">
+                                                        <input type="text" class="color-picker-hex" value="#178263" maxlength="7" aria-label="헥사코드">
+                                                        <button type="button" class="color-picker-confirm">확인</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-field">
+                                            <label class="networking-join-label">소개</label>
+                                            <textarea class="networking-join-textarea" rows="3" placeholder="안녕하세요. 김이벤입니다.">안녕하세요. 김이벤입니다.</textarea>
+                                        </div>
+                                        <div class="networking-join-row">
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">소속(회사/기관/학교명)</label>
+                                                <input type="text" class="networking-join-input" value="주식회사 이벤터스" placeholder="소속을 입력하세요">
+                                            </div>
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">직함</label>
+                                                <input type="text" class="networking-join-input" value="매니저" placeholder="직함을 입력하세요">
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-row">
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">부서</label>
+                                                <input type="text" class="networking-join-input" placeholder="부서를 입력하세요">
+                                            </div>
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">연차</label>
+                                                <div class="networking-join-select-wrap">
+                                                    <span>11년</span>
+                                                    <span class="material-icons">keyboard_arrow_down</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-notice">
+                                            소속, 직함, 부서, 연차는 행사 신청시 제출한 정보와 연동됩니다.
+                                        </div>
+                                        <p class="networking-join-label">관심 직무</p>
+                                        <div class="networking-join-jobs" id="networking-join-jobs">
+                                            <button type="button" class="networking-join-job-tag" data-job="창업/경영"><span class="networking-join-job-emoji">🚀</span><span class="networking-join-job-text">창업/경영</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="사업 기획(BD)"><span class="networking-join-job-emoji">📂</span><span class="networking-join-job-text">사업 기획(BD)</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="세일즈"><span class="networking-join-job-emoji">🤝</span><span class="networking-join-job-text">세일즈</span></button>
+                                            <button type="button" class="networking-join-job-tag is-selected" data-job="마케팅"><span class="networking-join-job-emoji">✅</span><span class="networking-join-job-text">마케팅</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="CX/CS"><span class="networking-join-job-emoji">🎧</span><span class="networking-join-job-text">CX/CS</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="서비스 기획"><span class="networking-join-job-emoji">🛠️</span><span class="networking-join-job-text">서비스 기획</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="개발"><span class="networking-join-job-emoji">💻</span><span class="networking-join-job-text">개발</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="디자인"><span class="networking-join-job-emoji">💡</span><span class="networking-join-job-text">디자인</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="인사(HR)"><span class="networking-join-job-emoji">👥</span><span class="networking-join-job-text">인사(HR)</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="재무/회계/총무"><span class="networking-join-job-emoji">💰</span><span class="networking-join-job-text">재무/회계/총무</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="미디어"><span class="networking-join-job-emoji">📺</span><span class="networking-join-job-text">미디어</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="엔지니어링/설계"><span class="networking-join-job-emoji">⚙️</span><span class="networking-join-job-text">엔지니어링/설계</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="엔터/공연"><span class="networking-join-job-emoji">🎵</span><span class="networking-join-job-text">엔터/공연</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="게임"><span class="networking-join-job-emoji">🎮</span><span class="networking-join-job-text">게임</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="금융"><span class="networking-join-job-emoji">📈</span><span class="networking-join-job-text">금융</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="제조/생산"><span class="networking-join-job-emoji">🏭</span><span class="networking-join-job-text">제조/생산</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="교육"><span class="networking-join-job-emoji">📚</span><span class="networking-join-job-text">교육</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="의료/제약/바이오"><span class="networking-join-job-emoji">🧬</span><span class="networking-join-job-text">의료/제약/바이오</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="물류/무역"><span class="networking-join-job-emoji">🚚</span><span class="networking-join-job-text">물류/무역</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="식음료"><span class="networking-join-job-emoji">🍚</span><span class="networking-join-job-text">식음료</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="법률"><span class="networking-join-job-emoji">⚖️</span><span class="networking-join-job-text">법률</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="공공/복지"><span class="networking-join-job-emoji">🏛️</span><span class="networking-join-job-text">공공/복지</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="건설/시설"><span class="networking-join-job-emoji">🏗️</span><span class="networking-join-job-text">건설/시설</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="교수/교직원"><span class="networking-join-job-emoji">🧑‍🏫</span><span class="networking-join-job-text">교수/교직원</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="예비 창업자"><span class="networking-join-job-emoji">💡</span><span class="networking-join-job-text">예비 창업자</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="프리랜서"><span class="networking-join-job-emoji">💼</span><span class="networking-join-job-text">프리랜서</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="기타"><span class="networking-join-job-emoji">✨</span><span class="networking-join-job-text">기타</span></button>
+                                        </div>
+                                        <div class="networking-join-row">
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">링크드인 프로필 URL</label>
+                                                <input type="url" class="networking-join-input" value="https://www.linkedin.com/i" placeholder="https://www.linkedin.com/...">
+                                            </div>
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">리멤버 명함 URL</label>
+                                                <input type="url" class="networking-join-input" value="https://link.rmbr.in/abcDEF" placeholder="https://link.rmbr.in/...">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="networking-join-footer">
+                                        <button type="button" class="networking-join-cancel">취소</button>
+                                        <button type="button" class="networking-join-submit">참여하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 내 정보 수정 모달 -->
+                            <div class="networking-join-modal" id="networking-edit-modal" role="dialog" aria-labelledby="networking-edit-title" aria-modal="true" hidden>
+                                <div class="networking-join-backdrop"></div>
+                                <div class="networking-join-panel">
+                                    <div class="networking-join-header">
+                                        <h3 class="networking-join-title" id="networking-edit-title">내 정보 수정</h3>
+                                        <button type="button" class="networking-join-close networking-edit-close" aria-label="닫기"><span class="material-icons">close</span></button>
+                                    </div>
+                                    <div class="networking-join-body">
+                                        <div class="networking-join-profile">
+                                            <div class="networking-join-profile-card">
+                                                <div class="networking-join-photo-wrap">
+                                                    <input type="file" accept="image/*" class="networking-join-photo-input" id="networking-edit-photo-input" hidden aria-label="프로필 이미지 선택" style="display:none">
+                                                    <img class="networking-join-photo-preview" alt="" style="display:none">
+                                                    <span class="networking-join-photo-placeholder" aria-hidden="true">김</span>
+                                                    <button type="button" class="networking-join-upload" aria-label="프로필 이미지 업로드"><span class="material-icons" aria-hidden="true">image</span> 업로드</button>
+                                                </div>
+                                                <div class="networking-join-profile-info">
+                                                    <p class="networking-join-team">김이벤 <span class="material-icons networking-join-info" aria-hidden="true" title="인증됨">verified</span></p>
+                                                    <p class="networking-join-affiliation">주식회사 이벤터스/매니저</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-body-inner">
+                                        <div class="networking-join-field networking-join-color-field">
+                                            <label class="networking-join-label">색상</label>
+                                            <div class="networking-join-color-wrap" tabindex="0" role="button" aria-expanded="false" aria-haspopup="true">
+                                                <span class="networking-join-color-swatch" style="background:#178263"></span>
+                                                <span class="networking-join-color-value">#178263</span>
+                                                <span class="material-icons">keyboard_arrow_down</span>
+                                            </div>
+                                            <div class="networking-join-color-picker-panel" hidden>
+                                                <div class="color-picker-inner">
+                                                    <div class="color-picker-row">
+                                                        <div class="color-picker-palette-wrap">
+                                                            <div class="color-picker-palette" aria-label="채도·명도 선택"></div>
+                                                            <span class="color-picker-palette-handle" aria-hidden="true"></span>
+                                                        </div>
+                                                        <div class="color-picker-hue-wrap">
+                                                            <div class="color-picker-hue" aria-label="색조 선택"></div>
+                                                            <span class="color-picker-hue-handle" aria-hidden="true"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="color-picker-footer">
+                                                        <input type="text" class="color-picker-hex" value="#178263" maxlength="7" aria-label="헥사코드">
+                                                        <button type="button" class="color-picker-confirm">확인</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-field">
+                                            <label class="networking-join-label">소개</label>
+                                            <textarea class="networking-join-textarea" rows="3" placeholder="안녕하세요. 김이벤입니다.">안녕하세요. 김이벤입니다.</textarea>
+                                        </div>
+                                        <div class="networking-join-row">
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">소속(회사/기관/학교명)</label>
+                                                <input type="text" class="networking-join-input" value="주식회사 이벤터스" placeholder="소속을 입력하세요">
+                                            </div>
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">직함</label>
+                                                <input type="text" class="networking-join-input" value="매니저" placeholder="직함을 입력하세요">
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-row">
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">부서</label>
+                                                <input type="text" class="networking-join-input" placeholder="부서를 입력하세요">
+                                            </div>
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">연차</label>
+                                                <div class="networking-join-select-wrap">
+                                                    <span>연차 선택</span>
+                                                    <span class="material-icons">keyboard_arrow_down</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="networking-join-notice">
+                                            소속, 직함, 부서, 연차는 행사 신청시 제출한 정보와 연동됩니다.
+                                        </div>
+                                        <p class="networking-join-label">관심 직무</p>
+                                        <div class="networking-join-jobs networking-edit-jobs">
+                                            <button type="button" class="networking-join-job-tag is-selected" data-job="창업/경영"><span class="networking-join-job-emoji">🚀</span><span class="networking-join-job-text">창업/경영</span></button>
+                                            <button type="button" class="networking-join-job-tag is-selected" data-job="사업 기획(BD)"><span class="networking-join-job-emoji">📂</span><span class="networking-join-job-text">사업 기획(BD)</span></button>
+                                            <button type="button" class="networking-join-job-tag is-selected" data-job="세일즈"><span class="networking-join-job-emoji">🤝</span><span class="networking-join-job-text">세일즈</span></button>
+                                            <button type="button" class="networking-join-job-tag is-selected" data-job="마케팅"><span class="networking-join-job-emoji">✅</span><span class="networking-join-job-text">마케팅</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="CX/CS"><span class="networking-join-job-emoji">🎧</span><span class="networking-join-job-text">CX/CS</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="서비스 기획"><span class="networking-join-job-emoji">🛠️</span><span class="networking-join-job-text">서비스 기획</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="개발"><span class="networking-join-job-emoji">💻</span><span class="networking-join-job-text">개발</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="디자인"><span class="networking-join-job-emoji">💡</span><span class="networking-join-job-text">디자인</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="인사(HR)"><span class="networking-join-job-emoji">👥</span><span class="networking-join-job-text">인사(HR)</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="재무/회계/총무"><span class="networking-join-job-emoji">💰</span><span class="networking-join-job-text">재무/회계/총무</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="미디어"><span class="networking-join-job-emoji">📺</span><span class="networking-join-job-text">미디어</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="엔지니어링/설계"><span class="networking-join-job-emoji">⚙️</span><span class="networking-join-job-text">엔지니어링/설계</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="엔터/공연"><span class="networking-join-job-emoji">🎵</span><span class="networking-join-job-text">엔터/공연</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="게임"><span class="networking-join-job-emoji">🎮</span><span class="networking-join-job-text">게임</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="금융"><span class="networking-join-job-emoji">📈</span><span class="networking-join-job-text">금융</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="제조/생산"><span class="networking-join-job-emoji">🏭</span><span class="networking-join-job-text">제조/생산</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="교육"><span class="networking-join-job-emoji">📚</span><span class="networking-join-job-text">교육</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="의료/제약/바이오"><span class="networking-join-job-emoji">🧬</span><span class="networking-join-job-text">의료/제약/바이오</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="물류/무역"><span class="networking-join-job-emoji">🚚</span><span class="networking-join-job-text">물류/무역</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="식음료"><span class="networking-join-job-emoji">🍚</span><span class="networking-join-job-text">식음료</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="법률"><span class="networking-join-job-emoji">⚖️</span><span class="networking-join-job-text">법률</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="공공/복지"><span class="networking-join-job-emoji">🏛️</span><span class="networking-join-job-text">공공/복지</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="건설/시설"><span class="networking-join-job-emoji">🏗️</span><span class="networking-join-job-text">건설/시설</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="교수/교직원"><span class="networking-join-job-emoji">🧑‍🏫</span><span class="networking-join-job-text">교수/교직원</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="예비 창업자"><span class="networking-join-job-emoji">💡</span><span class="networking-join-job-text">예비 창업자</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="프리랜서"><span class="networking-join-job-emoji">💼</span><span class="networking-join-job-text">프리랜서</span></button>
+                                            <button type="button" class="networking-join-job-tag" data-job="기타"><span class="networking-join-job-emoji">✨</span><span class="networking-join-job-text">기타</span></button>
+                                        </div>
+                                        <div class="networking-join-row">
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">링크드인 프로필 URL</label>
+                                                <input type="url" class="networking-join-input" value="https://www.linkedin.com/i" placeholder="https://www.linkedin.com/...">
+                                            </div>
+                                            <div class="networking-join-field">
+                                                <label class="networking-join-label">리멤버 명함 URL</label>
+                                                <input type="url" class="networking-join-input" value="https://link.rmbr.in/abcDEF" placeholder="https://link.rmbr.in/...">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="networking-join-footer">
+                                        <button type="button" class="networking-join-cancel networking-edit-cancel">취소</button>
+                                        <button type="button" class="networking-join-submit networking-edit-save">저장하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 이미지 잘라내기 모달 (크롭) -->
+                            <div class="crop-modal" id="crop-modal" role="dialog" aria-labelledby="crop-modal-title" aria-modal="true" hidden>
+                                <div class="crop-modal-backdrop"></div>
+                                <div class="crop-modal-panel">
+                                    <h3 class="crop-modal-title" id="crop-modal-title">이미지 잘라내기</h3>
+                                    <div class="crop-modal-body">
+                                        <div class="crop-modal-crop-wrap">
+                                            <img id="crop-modal-img" src="" alt="" class="crop-modal-img">
+                                        </div>
+                                    </div>
+                                    <div class="crop-modal-footer">
+                                        <button type="button" class="crop-modal-btn crop-modal-close">닫기</button>
+                                        <button type="button" class="crop-modal-btn crop-modal-confirm">확인</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 참가자 상세 정보 모달 (참여하기 모달과 동일 상단 레이아웃, 색상 선택 없음) -->
+                            <div class="participant-detail-modal" id="participant-detail-modal" role="dialog" aria-labelledby="participant-detail-name" aria-modal="true" hidden>
+                                <div class="participant-detail-backdrop"></div>
+                                <div class="participant-detail-panel">
+                                    <button type="button" class="participant-detail-close" aria-label="닫기"><span class="material-icons">close</span></button>
+                                    <div class="participant-detail-header" id="participant-detail-header">
+                                        <div class="participant-detail-profile-card">
+                                            <div class="participant-detail-photo-wrap">
+                                                <img class="participant-detail-photo" id="participant-detail-photo" src="" alt="">
+                                                <span class="participant-detail-photo-placeholder" id="participant-detail-photo-placeholder" aria-hidden="true">김</span>
+                                            </div>
+                                            <div class="participant-detail-profile-info">
+                                                <p class="participant-detail-name" id="participant-detail-name">이름 <span class="material-icons participant-detail-verified" aria-hidden="true" title="인증됨">verified</span></p>
+                                                <p class="participant-detail-role" id="participant-detail-role">소속/직함</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="participant-detail-body">
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">소개</span>
+                                            <p class="participant-detail-value" id="participant-detail-intro">—</p>
+                                        </div>
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">소속</span>
+                                            <p class="participant-detail-value" id="participant-detail-affiliation">—</p>
+                                        </div>
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">직함</span>
+                                            <p class="participant-detail-value" id="participant-detail-title">—</p>
+                                        </div>
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">부서</span>
+                                            <p class="participant-detail-value" id="participant-detail-department">—</p>
+                                        </div>
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">연차</span>
+                                            <p class="participant-detail-value" id="participant-detail-career">—</p>
+                                        </div>
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">관심직무</span>
+                                            <p class="participant-detail-value" id="participant-detail-jobs">—</p>
+                                        </div>
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">링크드인</span>
+                                            <p class="participant-detail-value" id="participant-detail-linkedin">없음</p>
+                                        </div>
+                                        <div class="participant-detail-item">
+                                            <span class="participant-detail-label">리멤버</span>
+                                            <p class="participant-detail-value" id="participant-detail-remember">없음</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <nav class="bottom-nav" aria-label="하단 메뉴">
+                                <a class="bottom-nav-item" href="#" data-tab="session"><span class="bottom-nav-icon"><span class="material-symbols-outlined">widgets</span></span><span class="bottom-nav-label">세션/기능</span></a>
+                                <a class="bottom-nav-item is-active" href="#" data-tab="networking" aria-current="page"><span class="bottom-nav-icon"><span class="material-symbols-outlined">groups</span></span><span class="bottom-nav-label">네트워킹</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="myinfo"><span class="bottom-nav-icon"><span class="material-symbols-outlined">person</span></span><span class="bottom-nav-label">내정보</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="settings"><span class="bottom-nav-icon"><span class="material-symbols-outlined">settings</span></span><span class="bottom-nav-label">설정</span></a>
+                            </nav>
+                        </div>
+
+                        <!-- 설정 화면 (하단 탭) - 이미지 레이아웃 -->
+                        <div id="settings-screen" class="phone-screen-inner">
+                            <div class="detail-header main-detail-header has-status">
+                                <button class="mobile-menu-btn" type="button" aria-label="메뉴 열기" aria-expanded="false">
+                                    <span class="material-icons">menu</span>
+                                </button>
+                                <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
+                            </div>
+                            <h2 class="settings-page-title">설정</h2>
+                            <div class="app-content settings-content">
+                                <div class="settings-block">
+                                    <span class="settings-block-label">접속 정보</span>
+                                    <span class="settings-block-value">operation@event-us.kr</span>
+                                </div>
+                                <div class="settings-divider"></div>
+                                <button type="button" class="settings-logout-row">
+                                    <span class="settings-logout-text">로그아웃</span>
+                                    <span class="material-icons">chevron_right</span>
+                                </button>
+                                <div class="settings-divider"></div>
+                                <p class="settings-footer">이벤터스 솔루션</p>
+                            </div>
+                            <nav class="bottom-nav" aria-label="하단 메뉴">
+                                <a class="bottom-nav-item" href="#" data-tab="session"><span class="bottom-nav-icon"><span class="material-symbols-outlined">widgets</span></span><span class="bottom-nav-label">세션/기능</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="networking"><span class="bottom-nav-icon"><span class="material-symbols-outlined">groups</span></span><span class="bottom-nav-label">네트워킹</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="myinfo"><span class="bottom-nav-icon"><span class="material-symbols-outlined">person</span></span><span class="bottom-nav-label">내정보</span></a>
+                                <a class="bottom-nav-item is-active" href="#" data-tab="settings" aria-current="page"><span class="bottom-nav-icon"><span class="material-symbols-outlined">settings</span></span><span class="bottom-nav-label">설정</span></a>
+                            </nav>
                         </div>
 
                         <!-- 공지사항 화면 -->
@@ -869,13 +1596,16 @@
             </div>
         </div>
 
-        <div class="info-gif" id="info-gif" data-src="assets/info/information.gif" data-duration-ms="2000" data-loops="2" data-overlay-delay="4000">
-            <img src="assets/info/information.gif" alt="행사정보 안내 GIF">
-            <div class="info-gif-overlay">
-                <div class="info-gif-text">
-                    <p class="info-gif-line">참가자에게 전달하고 싶은 모든 정보를 한번에 작성하세요.</p>
-                    <p class="info-gif-line">행사에 필요한 상세 안내부터 연사 정보, 관련 자료까지 한곳에 모을수 있습니다.</p>
-                    <p class="info-gif-line">텍스트, 파일 다운로드, 외부 링크 연결, 영상 시청까지 페이지 하나로 간편하게 해결할 수 있습니다.</p>
+        <div class="info-video" id="info-video" aria-label="행사정보 안내 영상" data-overlay-delay="4000">
+            <video class="info-video-player" muted playsinline autoplay controls preload="metadata">
+                <source src="assets/info/information.mp4" type="video/mp4">
+                브라우저가 동영상을 지원하지 않습니다.
+            </video>
+            <div class="info-video-overlay">
+                <div class="info-video-text">
+                    <p class="info-video-line">참가자에게 전달하고 싶은 모든 정보를 한번에 작성하세요.</p>
+                    <p class="info-video-line">행사에 필요한 상세 안내부터 연사 정보, 관련 자료까지 한곳에 모을수 있습니다.</p>
+                    <p class="info-video-line">텍스트, 파일 다운로드, 외부 링크 연결, 영상 시청까지 페이지 하나로 간편하게 해결할 수 있습니다.</p>
                 </div>
             </div>
         </div>
@@ -924,6 +1654,20 @@
         </div>
     </div>
 
+    <div class="lottery-video" id="lottery-video" aria-label="경품추첨 안내 영상" data-overlay-delay="4000">
+        <video class="lottery-video-player" muted playsinline autoplay controls preload="metadata">
+            <source src="assets/lucky-draw/lucky-draw.mp4" type="video/mp4">
+            브라우저가 동영상을 지원하지 않습니다.
+        </video>
+        <div class="lottery-video-overlay">
+            <div class="lottery-video-text">
+                <p class="lottery-video-line">행사의 마무리 럭키드로우!</p>
+                <p class="lottery-video-line">참여할 수 있는 그룹을 선택할 수 있습니다.</p>
+                <p class="lottery-video-line">설문조사, 질의응답 등 특정 기능에 참여한 사람에게만 추첨번호를 받도록 설정할 수 있습니다.</p>
+            </div>
+        </div>
+    </div>
+
     <div class="mobile-admin-panel" id="mobile-admin-panel" hidden>
         <div class="mobile-rotate-hint" id="mobile-rotate-hint">
             <div class="mobile-rotate-card">
@@ -946,6 +1690,7 @@
     </div>
 
     <script src="js/data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,35 @@
+<!--
+  HubSpot 파일 매니저 구조: solution-demo / css, js, assets
+  아래 코드를 템플릿 상단(<!DOCTYPE 위)과 head/body에 붙여넣으세요.
+-->
+
+<!-- ========== 1. 템플릿 상단(변수 정의 부분)에 추가 ========== -->
+{% set file_base = 'https://' ~ portal_id ~ '.fs1.hubspotusercontent-na1.net/hubfs/' ~ portal_id ~ '/solution-demo' %}
+{# 포털에 따라 도메인이 다를 수 있음. 예: fs2, hubspotusercontent-eu1 등 → fs1, na1 부분만 수정 #}
+
+
+<!-- ========== 2. <head> 안에 – CSS 연결 ========== -->
+<link rel="stylesheet" href="{{ file_base }}/css/style.css">
+
+
+<!-- ========== 3. </body> 직전 – JS 연결 ========== -->
+<script src="{{ file_base }}/js/data.js"></script>
+<script src="{{ file_base }}/js/main.js"></script>
+
+
+<!-- ========== 4. assets 폴더 내 파일 예시 (필요한 곳에) ========== -->
+{# 로고 #}
+<img src="{{ file_base }}/assets/logo/02. 로고_기본형_투명.png" alt="이벤터스 로고" class="header-logo">
+
+{# 영상 (기본값으로 쓰는 경우) #}
+<source src="{{ file_base }}/assets/main/main_setting.mp4" type="video/mp4">
+<source src="{{ file_base }}/assets/info/information.mp4" type="video/mp4">
+<source src="{{ file_base }}/assets/qna/qna_demo.mp4" type="video/mp4">
+<source src="{{ file_base }}/assets/survey/survey.mp4" type="video/mp4">
+<source src="{{ file_base }}/assets/lucky-draw/lucky-draw.mp4" type="video/mp4">
+
+{# 이미지 (예: 연사 프로필, QR 등) #}
+<img src="{{ file_base }}/assets/qna/james.png" alt="James">
+<img src="{{ file_base }}/assets/qna/lucy.png" alt="Lucy">
+<img src="{{ file_base }}/assets/qna/june.png" alt="June">
+<img src="{{ file_base }}/assets/myinfo/myinfo_qr.png" alt="QR코드">

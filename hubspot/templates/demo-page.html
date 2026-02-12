@@ -1,0 +1,879 @@
+<!--
+    templateType: page
+    isAvailableForNewContent: true
+    label: 이벤터스 솔루션 데모 페이지
+    screenshotPath: ../images/template-preview.png
+-->
+
+{# 아래 file_base 에 파일 매니저에서 style.css URL 복사 후, 맨 뒤 /css/style.css 를 뺀 주소를 넣으세요 #}
+{% set file_base = "https://22319584.fs1.hubspotusercontent-na1.net/hubfs/22319584/solution-demo" %}
+{% set main_video_url = module.main_video_url || file_base ~ "/assets/offline/main/main_setting.mp4" %}
+{% set info_video_url = module.info_video_url || file_base ~ "/assets/offline/info/information.mp4" %}
+{% set qna_video_url = module.qna_video_url || file_base ~ "/assets/offline/qna/qna_demo.mp4" %}
+{% set survey_video_url = module.survey_video_url || file_base ~ "/assets/offline/survey/survey.mp4" %}
+{% set lottery_video_url = module.lottery_video_url || file_base ~ "/assets/offline/lucky-draw/lucky-draw.mp4" %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4A90E2">
+    <title>{{ page_meta.html_title || "솔루션 체험 페이지 - 이벤터스" }}</title>
+    <meta name="description" content="{{ page_meta.meta_description }}">
+    {{ standard_header_includes }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,GRAD@24,400,0" rel="stylesheet">
+    <link rel="stylesheet" href="{{ file_base }}/css/style.css">
+</head>
+<body>
+    <!-- 배경 -->
+    <div class="background-image"></div>
+    
+    <!-- 상단 헤더 -->
+    <div class="top-header">
+        <div class="header-left">
+            <div class="logo-container">
+                <a href="/" class="logo-link">
+                    <img src="{{ file_base }}/assets/offline/logo/02. 로고_기본형_투명.png" alt="이벤터스 로고" class="header-logo">
+                </a>
+            </div>
+            <div class="header-title">솔루션 체험 페이지</div>
+        </div>
+        <div class="header-right" id="header-right" style="display: none;">
+            <a class="header-button" id="header-button" href="https://blog.event-us.kr/solutiontype/offline" target="_blank" rel="noopener noreferrer">
+                <div class="header-button-text">상담 신청하기</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <button class="mobile-menu-item" id="mobile-admin-btn" type="button">관리자화면보기</button>
+        <a class="mobile-menu-item" href="https://blog.event-us.kr/solutiontype/offline" target="_blank" rel="noopener noreferrer">상담신청하기</a>
+    </div>
+
+    <!-- 메인 레이아웃: 왼쪽 핸드폰 + 오른쪽 영상 -->
+    <div class="main-layout">
+        <!-- 왼쪽: iPhone 14 Pro 프레임 -->
+        <div class="device-container">
+            <div class="device device-iphone-14-pro">
+                <div class="device-frame">
+                    <div class="device-screen">
+                        <!-- 참가자 정보 입력 화면 (숨김) -->
+                        <div id="registration-screen" class="phone-screen-inner">
+                            <div class="phone-header">
+                                <h2>체험을 시작할 정보를 입력해주세요</h2>
+                            </div>
+
+                            <!-- HubSpot Form Embed Area -->
+                            <div id="hubspot-form-container">
+                                {% module "form" path="@hubspot/form"
+                                    form={ "form_id": "{{ module.hubspot_form_id }}", "response_type": "redirect" }
+                                %}
+                            </div>
+                            <!-- End HubSpot Form -->
+
+                            <div class="login-link">
+                                이미 이벤터스 회원이신가요? <a href="#" id="login-link">로그인 ></a>
+                            </div>
+                        </div>
+
+                        <!-- 솔루션 체험 메인 화면 -->
+                        <div id="demo-screen" class="phone-screen-inner active">
+                            <!-- 상단 네비게이션 -->
+                            <div class="detail-header main-detail-header has-status">
+                                <button class="mobile-menu-btn" type="button" aria-label="메뉴 열기" aria-expanded="false">
+                                    <span class="material-icons">menu</span>
+                                </button>
+                                <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
+                            </div>
+
+                            <!-- 콘텐츠 영역 -->
+                            <div class="app-content">
+                                <!-- 섹션: 오프라인 솔루션 -->
+                                <div class="content-section">
+                                    <div class="section-header">
+                                        <span class="section-icon">⭐</span>
+                                        <span class="section-title">오프라인 솔루션</span>
+                                        <span class="section-toggle"><span class="material-icons">keyboard_arrow_up</span></span>
+                                    </div>
+                                    <div class="section-buttons">
+                                        <button class="section-btn btn-info" data-feature="info">
+                                            <span class="btn-icon"><span class="material-icons">info</span></span>
+                                            <span class="btn-text">행사정보</span>
+                                        </button>
+                                        <button class="section-btn btn-qna" data-feature="qna">
+                                            <span class="btn-icon"><span class="material-icons">help_outline</span></span>
+                                            <span class="btn-text">질의응답</span>
+                                        </button>
+                                        <button class="section-btn btn-survey" data-feature="survey">
+                                            <span class="btn-icon"><span class="material-icons">assignment</span></span>
+                                            <span class="btn-text">설문조사</span>
+                                        </button>
+                                        <button class="section-btn btn-lottery" data-feature="lottery">
+                                            <span class="btn-icon"><span class="material-icons">card_giftcard</span></span>
+                                            <span class="btn-text">경품추첨</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 하단 탭 (세션/기능 활성 시 표시) -->
+                            <nav class="bottom-nav" id="bottom-nav" aria-label="하단 메뉴">
+                                <a class="bottom-nav-item is-active" href="#" data-tab="session" aria-current="page">
+                                    <span class="bottom-nav-icon"><span class="material-icons">apps</span></span>
+                                    <span class="bottom-nav-label">세션/기능</span>
+                                </a>
+                                <a class="bottom-nav-item" href="#" data-tab="myinfo">
+                                    <span class="bottom-nav-icon"><span class="material-icons">person</span></span>
+                                    <span class="bottom-nav-label">내정보</span>
+                                </a>
+                                <a class="bottom-nav-item" href="#" data-tab="settings">
+                                    <span class="bottom-nav-icon"><span class="material-icons">settings</span></span>
+                                    <span class="bottom-nav-label">설정</span>
+                                </a>
+                            </nav>
+                        </div>
+
+                        <!-- 내정보 화면 (하단 탭) -->
+                        <div id="myinfo-screen" class="phone-screen-inner">
+                            <div class="detail-header main-detail-header has-status">
+                                <button class="mobile-menu-btn" type="button" aria-label="메뉴 열기" aria-expanded="false">
+                                    <span class="material-icons">menu</span>
+                                </button>
+                                <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
+                            </div>
+                            <h2 class="myinfo-page-title">내정보</h2>
+                            <div class="myinfo-tabs" role="tablist">
+                                <button type="button" class="myinfo-tab is-active" role="tab" data-myinfo-tab="qr" aria-selected="true">QR&nbsp;&nbsp;</button>
+                                <button type="button" class="myinfo-tab" role="tab" data-myinfo-tab="info" aria-selected="false">내정보</button>
+                                <button type="button" class="myinfo-tab" role="tab" data-myinfo-tab="history" aria-selected="false">참여기록</button>
+                            </div>
+                            <div class="app-content myinfo-content">
+                                <!-- QR 탭 -->
+                                <div class="myinfo-panel is-active" id="myinfo-panel-qr" role="tabpanel">
+                                    <p class="myinfo-qr-guide">출석체크 등에서 아래 QR코드를 사용하세요</p>
+                                    <div class="myinfo-qr-image-wrap">
+                                        <img src="{{ file_base }}/assets/offline/myinfo/myinfo_qr.png" alt="QR코드" class="myinfo-qr-image">
+                                    </div>
+                                    <p class="myinfo-qr-title">김이벤</p>
+                                    <p class="myinfo-qr-code">8NMgqa</p>
+                                </div>
+                                <!-- 내정보 탭 -->
+                                <div class="myinfo-panel" id="myinfo-panel-info" role="tabpanel" hidden>
+                                    <div class="myinfo-field-row">
+                                        <span class="myinfo-field-label">이름</span>
+                                        <span class="myinfo-field-value">김이벤</span>
+                                    </div>
+                                    <div class="myinfo-field-row">
+                                        <span class="myinfo-field-label">이메일</span>
+                                        <span class="myinfo-field-value">operation@event-us.kr</span>
+                                    </div>
+                                    <div class="myinfo-field-row">
+                                        <span class="myinfo-field-label">휴대전화</span>
+                                        <span class="myinfo-field-value">01066902088</span>
+                                    </div>
+                                </div>
+                                <!-- 참여기록 탭 -->
+                                <div class="myinfo-panel" id="myinfo-panel-history" role="tabpanel" hidden>
+                                    <button type="button" class="myinfo-pdf-btn">PDF 내보내기</button>
+                                    <div class="myinfo-stats">
+                                        <div class="myinfo-stat-card">
+                                            <span class="myinfo-stat-label">참여 기능 수</span>
+                                            <span class="myinfo-stat-value">4<span class="myinfo-stat-unit">개</span></span>
+                                        </div>
+                                        <div class="myinfo-stat-card">
+                                            <span class="myinfo-stat-label">기능 참여율</span>
+                                            <span class="myinfo-stat-value">50<span class="myinfo-stat-unit">%</span></span>
+                                        </div>
+                                    </div>
+                                    <h3 class="myinfo-history-title">출석 / 세션 접속 기록</h3>
+                                    <ul class="myinfo-history-list">
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-05 13:50</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-05 12:30</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-04 15:20</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-02-03 10:00</span></li>
+                                        <li class="myinfo-history-item"><span>세션 접속</span><span>2026-01-23 11:34</span></li>
+                                    </ul>
+                                    <h3 class="myinfo-history-title">기능별 활동 기록</h3>
+                                    <ul class="myinfo-history-list">
+                                        <li class="myinfo-history-item"><span>질의응답 기능 접속</span><span>2026-02-05 14:17</span></li>
+                                        <li class="myinfo-history-item"><span>행사정보 기능 접속</span><span>2026-02-05 13:57</span></li>
+                                        <li class="myinfo-history-item"><span>행사정보 기능 접속</span><span>2026-02-05 13:56</span></li>
+                                        <li class="myinfo-history-item"><span>설문조사 기능 접속</span><span>2026-02-05 13:52</span></li>
+                                        <li class="myinfo-history-item"><span>경품추첨 기능 접속</span><span>2026-01-30 15:01</span></li>
+                                        <li class="myinfo-history-item"><span>경품추첨 기능 접속</span><span>2026-01-30 15:00</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- PDF 내보내기 모달 -->
+                            <div class="myinfo-pdf-modal" id="myinfo-pdf-modal" role="dialog" aria-labelledby="myinfo-pdf-modal-title" aria-modal="true" hidden>
+                                <div class="myinfo-pdf-modal-backdrop"></div>
+                                <div class="myinfo-pdf-modal-card">
+                                    <h3 class="myinfo-pdf-modal-title" id="myinfo-pdf-modal-title">참여 기록 PDF로 내보내기</h3>
+                                    <p class="myinfo-pdf-modal-desc">내보낼 항목을 선택해 주세요</p>
+                                    <div class="myinfo-pdf-modal-options">
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="participants" checked>
+                                            <span>참여 수</span>
+                                        </label>
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="attendance" checked>
+                                            <span>출석/세션 접속 기록</span>
+                                        </label>
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="webinar" checked>
+                                            <span>웨비나 시청 기록</span>
+                                        </label>
+                                        <label class="myinfo-pdf-modal-option">
+                                            <input type="checkbox" name="pdf-export" value="activity" checked>
+                                            <span>기능별 활동 기록</span>
+                                        </label>
+                                    </div>
+                                    <div class="myinfo-pdf-modal-actions">
+                                        <button type="button" class="myinfo-pdf-modal-btn myinfo-pdf-modal-cancel" id="myinfo-pdf-modal-cancel">취소</button>
+                                        <button type="button" class="myinfo-pdf-modal-btn myinfo-pdf-modal-submit" id="myinfo-pdf-modal-submit">내보내기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <nav class="bottom-nav" aria-label="하단 메뉴">
+                                <a class="bottom-nav-item" href="#" data-tab="session"><span class="bottom-nav-icon"><span class="material-icons">apps</span></span><span class="bottom-nav-label">세션/기능</span></a>
+                                <a class="bottom-nav-item is-active" href="#" data-tab="myinfo" aria-current="page"><span class="bottom-nav-icon"><span class="material-icons">person</span></span><span class="bottom-nav-label">내정보</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="settings"><span class="bottom-nav-icon"><span class="material-icons">settings</span></span><span class="bottom-nav-label">설정</span></a>
+                            </nav>
+                        </div>
+
+                        <!-- 설정 화면 (하단 탭) -->
+                        <div id="settings-screen" class="phone-screen-inner">
+                            <div class="detail-header main-detail-header has-status">
+                                <button class="mobile-menu-btn" type="button" aria-label="메뉴 열기" aria-expanded="false">
+                                    <span class="material-icons">menu</span>
+                                </button>
+                                <h1 class="detail-title">이벤터스 솔루션 체험페이지</h1>
+                            </div>
+                            <h2 class="settings-page-title">설정</h2>
+                            <div class="app-content settings-content">
+                                <div class="settings-block">
+                                    <span class="settings-block-label">접속 정보</span>
+                                    <span class="settings-block-value">operation@event-us.kr</span>
+                                </div>
+                                <div class="settings-divider"></div>
+                                <button type="button" class="settings-logout-row">
+                                    <span class="settings-logout-text">로그아웃</span>
+                                    <span class="material-icons">chevron_right</span>
+                                </button>
+                                <div class="settings-divider"></div>
+                                <p class="settings-footer">이벤터스 솔루션</p>
+                            </div>
+                            <nav class="bottom-nav" aria-label="하단 메뉴">
+                                <a class="bottom-nav-item" href="#" data-tab="session"><span class="bottom-nav-icon"><span class="material-icons">apps</span></span><span class="bottom-nav-label">세션/기능</span></a>
+                                <a class="bottom-nav-item" href="#" data-tab="myinfo"><span class="bottom-nav-icon"><span class="material-icons">person</span></span><span class="bottom-nav-label">내정보</span></a>
+                                <a class="bottom-nav-item is-active" href="#" data-tab="settings" aria-current="page"><span class="bottom-nav-icon"><span class="material-icons">settings</span></span><span class="bottom-nav-label">설정</span></a>
+                            </nav>
+                        </div>
+
+                        <!-- 공지사항 화면 -->
+                        <div id="notice-screen" class="phone-screen-inner">
+                            <div class="detail-header">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">공지사항</h1>
+                            </div>
+                            <div class="notice-list">
+                                <div class="notice-item" data-notice-id="1">
+                                    <div class="notice-item-header">
+                                        <span class="notice-icon">📢</span>
+                                        <div class="notice-content">
+                                            <h3 class="notice-title">EVENCON에 오신 여러분! 환영합니다.</h3>
+                                            <p class="notice-date">2023-03-10 pm 15:26:28</p>
+                                            <p class="notice-preview">EVENCON(이벤콘)에 오신 여러분 환영합니...</p>
+                                        </div>
+                                        <button class="notice-toggle">
+                                            <span class="material-icons">keyboard_arrow_down</span>
+                                        </button>
+                                    </div>
+                                    <div class="notice-item-body">
+                                        <div class="notice-detail">
+                                            <p><strong>EVENCON(이벤콘)에 오신 여러분 환영합니다 😊</strong></p>
+                                            <p>프로그램 안내, 이벤트 안내, 행사장 정보, 주차안내 등 지속적으로 업데이트 되는 소식은 공지사항에서 확인해주시기 바랍니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="notice-item" data-notice-id="2">
+                                    <div class="notice-item-header">
+                                        <span class="notice-icon">📍</span>
+                                        <div class="notice-content">
+                                            <h3 class="notice-title">☆(오프라인) 행사장 안내</h3>
+                                            <p class="notice-date">2023-03-10 오후 15:28:02</p>
+                                            <p class="notice-preview">(펼쳐주세요)</p>
+                                        </div>
+                                        <button class="notice-toggle">
+                                            <span class="material-icons">keyboard_arrow_down</span>
+                                        </button>
+                                    </div>
+                                    <div class="notice-item-body">
+                                        <div class="notice-detail">
+                                            <div class="notice-map" style="width: 100%; height: 200px; background: linear-gradient(135deg, #87CEEB 0%, #98D8C8 100%); border-radius: 8px; margin-top: 12px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="notice-item" data-notice-id="3">
+                                    <div class="notice-item-header">
+                                        <span class="notice-icon">📍</span>
+                                        <div class="notice-content">
+                                            <h3 class="notice-title">☆(온라인) 웨비나 시청 안내</h3>
+                                            <p class="notice-date">2023-03-10 오후 16:14:54</p>
+                                        </div>
+                                        <button class="notice-toggle">
+                                            <span class="material-icons">keyboard_arrow_down</span>
+                                        </button>
+                                    </div>
+                                    <div class="notice-item-body">
+                                        <div class="notice-detail">
+                                            <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">이벤터스 웨비나, 이렇게 시청하세요!</h4>
+                                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                                <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                                    <span class="material-icons" style="position: absolute; left: 0; top: 2px; font-size: 18px; color: #27AE60;">check</span>
+                                                    <span>Please click the [Watch] button and play (▶).</span>
+                                                </li>
+                                                <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                                                    <span class="material-icons" style="position: absolute; left: 0; top: 2px; font-size: 18px; color: #27AE60;">check</span>
+                                                    <span>The Eventus webinar is optimized for 'Chrome browser'.</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 행사정보 화면 -->
+                        <div id="info-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #5c3fbf;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">행사정보</h1>
+                            </div>
+                            <div class="app-content">
+                                <div class="info-content">
+                                    <div class="info-container">
+                                        <h2 class="info-title">이벤터스 솔루션 체험페이지</h2>
+                                        <div class="info-top-box">
+                                            <p>참가자들이 경험하는 페이지입니다.</p>
+                                            <p>행사와 관련된 다양한 콘텐츠로 구성할수 있습니다.</p>
+                                        </div>
+
+                                        <div class="info-section">
+                                            <div class="info-section-title">이벤터스 솔루션</div>
+                                            <a class="info-link" href="https://blog.event-us.kr/eventus-solution" target="_blank" rel="noopener noreferrer">https://blog.event-us.kr/eventus-solution</a>
+                                        </div>
+
+                                        <div class="info-divider"></div>
+
+                                        <div class="info-section file-section">
+                                            <div class="info-section-title">파일 1</div>
+                                            <div class="info-file-row">
+                                                <div class="info-file-name">Solution_서비스 소개자료_26.1Q.pdf</div>
+                                                <a class="info-file-download" href="https://drive.google.com/file/d/1dQQZVoTplDWP_mjn-sB1oyT24AOJWgZR/view?usp=drive_link" target="_blank" rel="noopener noreferrer" aria-label="파일 다운로드">
+                                                    <span class="material-icons">save_alt</span>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="info-divider"></div>
+
+                                        <div class="info-section">
+                                            <div class="info-section-title">동영상</div>
+                                            <div class="info-video-card">
+                                                <div class="info-video-frame">
+                                                    <iframe
+                                                        src="https://www.youtube-nocookie.com/embed/VsCgoa0vsg4"
+                                                        title="EventUs Video"
+                                                        frameborder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                        referrerpolicy="strict-origin-when-cross-origin"
+                                                        allowfullscreen></iframe>
+                                                </div>
+                                                <div class="info-video-title">[EventUs] Video sketch of EventUs' own event in Singapore & interviews with participants</div>
+                                                <div class="info-video-subtitle">EVENT with US - 이벤터스</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 질의응답 화면 -->
+                        <div id="qna-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #5c3fbf;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">질의응답</h1>
+                            </div>
+                            <div class="app-content">
+                                <div class="qna-content">
+                                    <div class="qna-tabs">
+                                        <button class="qna-tab-button" type="button" data-tab="qna-tab-guide">안내</button>
+                                        <button class="qna-tab-button" type="button" data-tab="qna-tab-speakers">연사</button>
+                                        <button class="qna-tab-button is-active" type="button" data-tab="qna-tab-questions">질문</button>
+                                    </div>
+
+                                    <div class="qna-tab-panel" id="qna-tab-guide">
+                                        <p class="qna-guide-text">안녕하세요</p>
+                                        <p class="qna-guide-text">연사에게 궁금한 점을 작성해주세요</p>
+                                        <p class="qna-guide-text">연사를 선택하지 않고 질문을 남기시면 전체에게 남긴 질문으로 분류됩니다.</p>
+                                        <p class="qna-guide-text">질문 작성시 성함을 작성하지 않으시면 익명으로 업로드됩니다.</p>
+                                    </div>
+
+                                    <div class="qna-tab-panel" id="qna-tab-speakers">
+                                        <div class="qna-speaker-list">
+                                            <div class="qna-speaker-card">
+                                                <div class="qna-speaker-row">
+                                                    <div class="qna-speaker-info">
+                                                        <div class="qna-avatar qna-avatar-lg is-yellow">
+                                                            <img src="{{ file_base }}/assets/offline/qna/james.png" alt="James">
+                                                        </div>
+                                                        <div>
+                                                            <div class="qna-speaker-name">James</div>
+                                                            <div class="qna-speaker-role">Event-us / Leader</div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="qna-speaker-action" type="button">질문하기</button>
+                                                </div>
+                                                <p class="qna-speaker-desc">안녕하세요 경영, 마케팅에 관심이 있는 James 입니다. 질문 많이 해주세요.</p>
+                                            </div>
+
+                                            <div class="qna-speaker-card">
+                                                <div class="qna-speaker-row">
+                                                    <div class="qna-speaker-info">
+                                                        <div class="qna-avatar qna-avatar-lg is-yellow">
+                                                            <img src="{{ file_base }}/assets/offline/qna/lucy.png" alt="Lucy">
+                                                        </div>
+                                                        <div>
+                                                            <div class="qna-speaker-name">Lucy</div>
+                                                            <div class="qna-speaker-role">Event-us / Marketer</div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="qna-speaker-action" type="button">질문하기</button>
+                                                </div>
+                                                <p class="qna-speaker-desc">안녕하세요 마케팅 매니저 Lucy입니다.</p>
+                                            </div>
+
+                                            <div class="qna-speaker-card">
+                                                <div class="qna-speaker-row">
+                                                    <div class="qna-speaker-info">
+                                                        <div class="qna-avatar qna-avatar-lg is-yellow">
+                                                            <img src="{{ file_base }}/assets/offline/qna/june.png" alt="June">
+                                                        </div>
+                                                        <div>
+                                                            <div class="qna-speaker-name">June</div>
+                                                            <div class="qna-speaker-role">Event-us / Sales</div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="qna-speaker-action" type="button">질문하기</button>
+                                                </div>
+                                                <p class="qna-speaker-desc">세일즈를 담당하고 있습니다. 질문 많이 해주세요.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="qna-tab-panel is-active" id="qna-tab-questions">
+                                        <div class="qna-question-title">연사 3</div>
+                                        <div class="qna-speaker-pills">
+                                            <button class="qna-speaker-pill is-active" type="button" data-speaker="all">
+                                                <div class="qna-avatar qna-avatar-lg is-purple">전체</div>
+                                                <div class="qna-speaker-pill-name">질문</div>
+                                            </button>
+                                            <button class="qna-speaker-pill" type="button" data-speaker="James">
+                                                <div class="qna-avatar qna-avatar-lg is-yellow">
+                                                    <img src="{{ file_base }}/assets/offline/qna/james.png" alt="James">
+                                                </div>
+                                                <div class="qna-speaker-pill-name">James</div>
+                                                <div class="qna-speaker-pill-role">Event-us<br>Leader</div>
+                                            </button>
+                                            <button class="qna-speaker-pill" type="button" data-speaker="Lucy">
+                                                <div class="qna-avatar qna-avatar-lg is-yellow">
+                                                    <img src="{{ file_base }}/assets/offline/qna/lucy.png" alt="Lucy">
+                                                </div>
+                                                <div class="qna-speaker-pill-name">Lucy</div>
+                                                <div class="qna-speaker-pill-role">Event-us<br>Marketer</div>
+                                            </button>
+                                            <button class="qna-speaker-pill" type="button" data-speaker="June">
+                                                <div class="qna-avatar qna-avatar-lg is-yellow">
+                                                    <img src="{{ file_base }}/assets/offline/qna/june.png" alt="June">
+                                                </div>
+                                                <div class="qna-speaker-pill-name">June</div>
+                                                <div class="qna-speaker-pill-role">Event-us<br>Sales</div>
+                                            </button>
+                                        </div>
+
+                                        <div class="qna-filter-bar">
+                                            <div class="qna-filter-tabs">
+                                                <button class="qna-filter-tab is-active" type="button">전체</button>
+                                                <button class="qna-filter-tab" type="button">답변 완료</button>
+                                                <button class="qna-filter-tab" type="button">내 질문</button>
+                                            </div>
+                                            <select class="qna-sort" aria-label="정렬">
+                                                <option>최신순</option>
+                                                <option>좋아요순</option>
+                                                <option>등록순</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="qna-question-list" id="qna-question-list">
+                                            <div class="qna-question-item" data-speaker="James" data-status="all">
+                                                <div class="qna-question-header">
+                                                    <span class="qna-question-author">Peter</span>
+                                                    <span class="qna-question-target">→ <span class="qna-target-badge is-james">James</span></span>
+                                                    <span class="qna-question-time">16:37</span>
+                                                </div>
+                                                <p class="qna-question-body">James님께서 생각하시기에 행사를 성공적으로 준비하는데 있어 가장 중요하다고 여기시는 부분은 무엇인가요?</p>
+                                                <div class="qna-question-actions">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span>0</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="qna-question-item" data-speaker="전체" data-status="all">
+                                                <div class="qna-question-header">
+                                                    <span class="qna-question-author">Chris</span>
+                                                    <span class="qna-question-target">→ <span class="qna-target-badge is-all">전체</span></span>
+                                                    <span class="qna-question-time">16:36</span>
+                                                </div>
+                                                <p class="qna-question-body">안녕하세요. 행사를 준비할 때 이벤트 플랫폼인 이벤터스가 필수적인 이유에 대해 알고 싶습니다.</p>
+                                                <div class="qna-question-actions">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span>0</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="qna-question-item" data-speaker="Lucy" data-status="answered">
+                                                <div class="qna-question-header">
+                                                    <span class="qna-question-author">익명</span>
+                                                    <span class="qna-question-target">→ <span class="qna-target-badge is-james">Lucy</span></span>
+                                                    <span class="qna-question-time">16:35</span>
+                                                </div>
+                                                <p class="qna-question-body">참가자 모객의 성공여부를 결정하는 핵심요인을 무엇이라고 생각하시나요?</p>
+                                                <div class="qna-question-actions">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span>0</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="qna-empty-state" id="qna-empty-state" hidden>
+                                                <p>작성된 질문이 없습니다.</p>
+                                                <p>질문을 작성해 주세요.</p>
+                                                <button class="qna-fab" type="button">질문하기</button>
+                                            </div>
+
+                                            <button class="qna-fab" type="button">질문하기</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="qna-question-screen" class="phone-screen-inner">
+                            <div class="detail-header">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">질문하기</h1>
+                            </div>
+                            <div class="app-content">
+                                <div class="qna-form-content">
+                                    <div class="qna-form-select-wrapper">
+                                        <button class="qna-form-select" type="button" aria-expanded="false">
+                                            <div class="qna-form-select-left">
+                                                <div class="qna-avatar qna-avatar-sm is-purple qna-form-avatar">전체</div>
+                                                <img class="qna-form-avatar-img" src="{{ get_asset_url('../assets/qna/james.png') }}" alt="James">
+                                                <span class="qna-form-select-name">전체</span>
+                                            </div>
+                                            <span class="material-icons">expand_more</span>
+                                        </button>
+                                        <div class="qna-form-options" hidden>
+                                            <button class="qna-form-option is-active" type="button" data-label="전체">전체</button>
+                                            <button class="qna-form-option" type="button" data-label="James" data-avatar="{{ file_base }}/assets/offline/qna/james.png">James</button>
+                                            <button class="qna-form-option" type="button" data-label="Lucy" data-avatar="{{ file_base }}/assets/offline/qna/lucy.png">Lucy</button>
+                                            <button class="qna-form-option" type="button" data-label="June" data-avatar="{{ file_base }}/assets/offline/qna/june.png">June</button>
+                                        </div>
+                                    </div>
+                                    <div class="qna-form-field">
+                                        <input class="qna-form-input" id="qna-name-input" type="text" placeholder="(선택) 이름을 입력해 주세요.">
+                                    </div>
+                                    <div class="qna-form-field">
+                                        <textarea class="qna-form-textarea" id="qna-question-input" placeholder="질문을 입력해 주세요. 부적절한 내용이나 공격적인 질문은 허용되지 않습니다."></textarea>
+                                        <div class="qna-form-meta">
+                                            <span class="qna-form-count" id="qna-question-count">0 / 140</span>
+                                            <button class="qna-form-submit" id="qna-question-submit" type="button" disabled>작성하기</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 설문조사 화면 -->
+                        <div id="survey-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #5C3FBF;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">설문조사</h1>
+                            </div>
+                            <div class="app-content">
+                                <div class="survey-content">
+                                    <div class="survey-tabs">
+                                        <button class="survey-tab-button" type="button" data-tab="survey-tab-guide">안내</button>
+                                        <button class="survey-tab-button is-active" type="button" data-tab="survey-tab-questions">설문</button>
+                                    </div>
+
+                                    <div class="survey-tab-panel" id="survey-tab-guide">
+                                        <p class="survey-guide-text">많은 참여 부탁드립니다.</p>
+                                    </div>
+
+                                    <div class="survey-tab-panel is-active" id="survey-tab-questions">
+                                        <!-- 질문 1: 만족도 조사 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">만족도 조사</h3>
+                                            <p class="survey-question-desc">행사 만족도, 세션별 만족도, 피드백을 취합하고 실시간으로 확인할수 있습니다.</p>
+                                            <div class="survey-options">
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="5">
+                                                    <span>매우 만족</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="4">
+                                                    <span>만족</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="3">
+                                                    <span>보통</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="2">
+                                                    <span>불만족</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="satisfaction" value="1">
+                                                    <span>매우 불만족</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 질문 2: 주관식 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">이번 행사에서 가장 인상적이었던 부분을 자유롭게 작성해주세요.</h3>
+                                            <p class="survey-question-desc">주관식 설문입니다.</p>
+                                            <textarea class="survey-textarea" placeholder="내용을 입력해주세요."></textarea>
+                                        </div>
+
+                                        <!-- 질문 3: 단일선택 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">행사 종료후 세일즈 담당자의 연락을 받아보시겠습니까?</h3>
+                                            <p class="survey-question-desc">단일선택, 보기 중 하나만 선택할 수 있습니다. 필수답변 문항 설정도 가능합니다.</p>
+                                            <div class="survey-options">
+                                                <label class="survey-option">
+                                                    <input type="radio" name="contact" value="yes">
+                                                    <span>네</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="contact" value="no">
+                                                    <span>아니오</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="radio" name="contact" value="docs">
+                                                    <span>소개자료만 보내주세요</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 질문 4: 다중선택 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">이번 행사 정보를 어디에서 확인하셨나요?</h3>
+                                            <p class="survey-question-desc">다수의 문항을 선택할 수 있고, 선택 가능한 수를 제한할 수 있습니다. <span class="survey-highlight">7개만 선택 가능</span></p>
+                                            <div class="survey-options">
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="sns">
+                                                    <span>SNS</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="referral">
+                                                    <span>지인 추천</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="newsletter">
+                                                    <span>뉴스레터</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="search">
+                                                    <span>검색</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="ads">
+                                                    <span>디스플레이 광고</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="invitation">
+                                                    <span>초청</span>
+                                                </label>
+                                                <label class="survey-option">
+                                                    <input type="checkbox" name="source" value="other">
+                                                    <span>기타</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- 질문 5: 퀴즈용 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">퀴즈이벤트용으로도 사용할 수 있습니다.</h3>
+                                            <p class="survey-question-desc">공개, 비공개 설정, 설문 활성화 설정이 실시간으로 연동됩니다. 참가자들의 집중도를 높이기 위한 깜짝퀴즈용으로도 사용합니다.</p>
+                                            <textarea class="survey-textarea" placeholder="정답을 입력해주세요."></textarea>
+                                        </div>
+
+                                        <!-- 질문 6: 이벤트용 -->
+                                        <div class="survey-question">
+                                            <h3 class="survey-question-title">삼행시 이벤트, 동료에게 전하고 싶은말 등 이벤트 목적으로도 사용합니다.</h3>
+                                            <textarea class="survey-textarea" placeholder="내용을 입력해주세요."></textarea>
+                                        </div>
+
+                                        <button class="survey-submit-btn" type="button">제출하기</button>
+                                    </div>
+
+                                    <!-- 제출 완료 화면 -->
+                                    <div class="survey-complete" id="survey-complete">
+                                        <div class="survey-complete-icon">
+                                            <span class="material-icons">check</span>
+                                        </div>
+                                        <p class="survey-complete-text">참여해 주셔서 감사합니다.</p>
+                                        <button class="survey-complete-btn" type="button">확인</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 파일공유 화면 -->
+                        <div id="files-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: var(--purple);">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">파일공유</h1>
+                            </div>
+                            <div class="app-content">
+                                <div style="padding: 20px;">
+                                    <p style="color: #666; margin-bottom: 20px;">공유된 파일을 확인할 수 있습니다.</p>
+                                    <div style="text-align: center; padding: 40px 20px;">
+                                        <span class="material-icons" style="font-size: 48px; color: #999; margin-bottom: 12px; display: block;">cloud_upload</span>
+                                        <p style="color: #999;">공유된 파일이 없습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 경품추첨 화면 -->
+                        <div id="lottery-screen" class="phone-screen-inner">
+                            <div class="detail-header" style="background: #5c3fbf;">
+                                <button class="back-btn" onclick="goBack()">
+                                    <span class="material-icons">chevron_left</span>
+                                </button>
+                                <h1 class="detail-title">경품추첨</h1>
+                            </div>
+                            <!-- 로딩 화면 -->
+                            <div class="lottery-body lottery-loading" id="lottery-loading">
+                                <div class="lottery-loading-text">추첨번호 받는 중...</div>
+                            </div>
+                            <!-- 결과 화면 -->
+                            <div class="lottery-body lottery-result" id="lottery-result" style="display: none;">
+                                <div class="lottery-number-container">
+                                    <h5 class="lottery-number-label">내 추첨 번호</h5>
+                                    <div class="lottery-number" id="lottery-number">1</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 우측 영상 영역 (오버레이 제거됨) -->
+        <!-- HubSpot에서 영상 URL 편집 가능 -->
+        <!-- ========================================== -->
+
+        <!-- 행사정보 영상 -->
+        <div class="info-video" id="info-video" aria-label="행사정보 안내 영상">
+            <video class="info-video-player" muted playsinline autoplay controls preload="metadata">
+                <source src="{{ info_video_url }}" type="video/mp4">
+                브라우저가 동영상을 지원하지 않습니다.
+            </video>
+        </div>
+
+        <!-- 질의응답 영상 -->
+        <div class="qna-video" id="qna-video" aria-label="질의응답 안내 영상">
+            <video class="qna-video-player" muted playsinline autoplay controls preload="metadata">
+                <source src="{{ qna_video_url }}" type="video/mp4">
+                브라우저가 동영상을 지원하지 않습니다.
+            </video>
+        </div>
+
+        <!-- 메인 영상 -->
+        <div class="main-video" id="main-video" aria-label="메인 안내 영상">
+            <video class="main-video-player" muted playsinline autoplay controls preload="metadata">
+                <source src="{{ main_video_url }}" type="video/mp4">
+                브라우저가 동영상을 지원하지 않습니다.
+            </video>
+        </div>
+
+        <!-- 설문조사 영상 -->
+        <div class="survey-video" id="survey-video" aria-label="설문조사 안내 영상">
+            <video class="survey-video-player" muted playsinline autoplay controls preload="metadata">
+                <source src="{{ survey_video_url }}" type="video/mp4">
+                브라우저가 동영상을 지원하지 않습니다.
+            </video>
+        </div>
+
+        <!-- 경품추첨 영상 -->
+        <div class="lottery-video" id="lottery-video" aria-label="경품추첨 안내 영상">
+            <video class="lottery-video-player" muted playsinline autoplay controls preload="metadata">
+                <source src="{{ lottery_video_url }}" type="video/mp4">
+                브라우저가 동영상을 지원하지 않습니다.
+            </video>
+        </div>
+
+        <!-- 모바일 관리자 패널 -->
+        <div class="mobile-admin-panel" id="mobile-admin-panel" hidden>
+            <div class="mobile-rotate-hint" id="mobile-rotate-hint">
+                <div class="mobile-rotate-card">
+                    <span class="material-icons">screen_rotation</span>
+                    <p>관리자 화면은 가로 모드에서 더 잘 보여요.</p>
+                    <p>휴대폰을 가로로 돌려주세요.</p>
+                </div>
+            </div>
+            <div class="mobile-admin-panel-card">
+                <div class="mobile-admin-panel-header">
+                    <span>관리자 화면보기</span>
+                    <button class="mobile-admin-close" id="mobile-admin-close" type="button" aria-label="닫기">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <div class="mobile-admin-panel-body" id="mobile-admin-panel-body"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="{{ file_base }}/js/data.js"></script>
+    <script src="{{ file_base }}/js/main.js"></script>
+    {{ standard_footer_includes }}
+</body>
+</html>

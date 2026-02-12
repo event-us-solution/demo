@@ -30,11 +30,13 @@ const ScreenManager = {
         
         // 화면 전환 시 말풍선 업데이트
         this.updateBalloons();
-        updateInfoGifVisibility(this.currentScreen);
+        updateInfoVideoVisibility(this.currentScreen);
         updateQnaVideoVisibility(this.currentScreen);
         updateMainVideoVisibility(this.currentScreen);
         updateSurveyVideoVisibility(this.currentScreen);
+        updateLotteryVideoVisibility(this.currentScreen);
         updateAdminPanelContent();
+        updateBottomNavActive(screenId);
     },
     
     // 화면별 말풍선 업데이트
@@ -43,12 +45,13 @@ const ScreenManager = {
         hideAllBalloons();
         
         // 현재 화면에 맞는 말풍선 표시
+        const mainTabScreens = ['demo-screen', 'myinfo-screen', 'networking-screen', 'settings-screen'];
         const balloonContainer = document.getElementById('balloon-container');
         if (balloonContainer) {
-            balloonContainer.style.display = this.currentScreen === 'demo-screen' ? 'none' : 'flex';
+            balloonContainer.style.display = mainTabScreens.includes(this.currentScreen) ? 'none' : 'flex';
         }
 
-        if (this.currentScreen === 'demo-screen') {
+        if (mainTabScreens.includes(this.currentScreen)) {
             return;
         } else {
             const mainBalloon1 = document.getElementById('balloon-main-1');
@@ -109,25 +112,35 @@ const ScreenManager = {
     }
 };
 
-function updateInfoGifVisibility(screenId) {
-    const gifWrapper = document.getElementById('info-gif');
-    if (!gifWrapper) return;
+function updateInfoVideoVisibility(screenId) {
+    const videoWrapper = document.getElementById('info-video');
+    if (!videoWrapper) return;
 
     const shouldShow = screenId === 'info-screen';
-    gifWrapper.classList.toggle('is-visible', shouldShow);
+    videoWrapper.classList.toggle('is-visible', shouldShow);
+
+    const video = videoWrapper.querySelector('video');
+    if (!video) return;
+
     if (shouldShow) {
-        playInfoGif();
-        scheduleInfoGifOverlay();
-    } else if (gifWrapper.dataset.timerId) {
-        clearTimeout(parseInt(gifWrapper.dataset.timerId, 10));
-        gifWrapper.dataset.timerId = '';
-        if (gifWrapper.dataset.overlayTimerId) {
-            clearTimeout(parseInt(gifWrapper.dataset.overlayTimerId, 10));
-            gifWrapper.dataset.overlayTimerId = '';
+        if (!updateInfoVideoVisibility.wasActive) {
+            video.currentTime = 0;
+            scheduleInfoVideoOverlay();
         }
-        gifWrapper.classList.remove('is-dimmed');
+        updateInfoVideoVisibility.wasActive = true;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    } else if (updateInfoVideoVisibility.wasActive) {
+        video.pause();
+        video.currentTime = 0;
+        updateInfoVideoVisibility.wasActive = false;
+        resetInfoVideoOverlay();
     }
 }
+
+updateInfoVideoVisibility.wasActive = false;
 
 function updateQnaVideoVisibility(screenId) {
     const videoWrapper = document.getElementById('qna-video');
@@ -189,32 +202,9 @@ function updateMainVideoVisibility(screenId) {
 
 updateMainVideoVisibility.wasActive = false;
 
+// 영상 오버레이 비활성화 (HubSpot 랜딩과 동일 - 영상 자체에 텍스트 포함)
 function scheduleMainVideoOverlay() {
-    const videoWrapper = document.getElementById('main-video');
-    if (!videoWrapper) return;
-
-    const delay = parseInt(videoWrapper.dataset.overlayDelay || '4000', 10);
-    if (videoWrapper.dataset.overlayTimerId) {
-        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
-    }
-    if (videoWrapper.dataset.fadeTimerId) {
-        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
-    }
-
-    videoWrapper.classList.remove('is-dimmed');
-    resetMainVideoTyping();
-    const timerId = setTimeout(() => {
-        videoWrapper.classList.add('is-dimmed');
-        startMainVideoTyping();
-        const totalDuration = getMainVideoTypingDuration() + TEXT_HOLD_MS;
-        const fadeTimerId = setTimeout(() => {
-            videoWrapper.classList.remove('is-dimmed');
-            resetMainVideoTyping();
-        }, Math.max(0, totalDuration));
-        videoWrapper.dataset.fadeTimerId = String(fadeTimerId);
-    }, Math.max(0, delay));
-
-    videoWrapper.dataset.overlayTimerId = String(timerId);
+    return;
 }
 
 function resetMainVideoOverlay() {
@@ -266,7 +256,7 @@ function initMainVideoPlayback() {
     const video = videoWrapper?.querySelector('video');
     if (!videoWrapper || !video) return;
 
-    video.playbackRate = 1.5;
+    video.playbackRate = 1;
     video.loop = false;
     video.addEventListener('ended', () => {
         if (!updateMainVideoVisibility.wasActive) return;
@@ -309,32 +299,9 @@ function updateSurveyVideoVisibility(screenId) {
 
 updateSurveyVideoVisibility.wasActive = false;
 
+// 영상 오버레이 비활성화 (HubSpot 랜딩과 동일)
 function scheduleSurveyVideoOverlay() {
-    const videoWrapper = document.getElementById('survey-video');
-    if (!videoWrapper) return;
-
-    const delay = parseInt(videoWrapper.dataset.overlayDelay || '4000', 10);
-    if (videoWrapper.dataset.overlayTimerId) {
-        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
-    }
-    if (videoWrapper.dataset.fadeTimerId) {
-        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
-    }
-
-    videoWrapper.classList.remove('is-dimmed');
-    resetSurveyVideoTyping();
-    const timerId = setTimeout(() => {
-        videoWrapper.classList.add('is-dimmed');
-        startSurveyVideoTyping();
-        const totalDuration = getSurveyVideoTypingDuration() + TEXT_HOLD_MS;
-        const fadeTimerId = setTimeout(() => {
-            videoWrapper.classList.remove('is-dimmed');
-            resetSurveyVideoTyping();
-        }, Math.max(0, totalDuration));
-        videoWrapper.dataset.fadeTimerId = String(fadeTimerId);
-    }, Math.max(0, delay));
-
-    videoWrapper.dataset.overlayTimerId = String(timerId);
+    return;
 }
 
 function resetSurveyVideoOverlay() {
@@ -386,7 +353,7 @@ function initSurveyVideoPlayback() {
     const video = videoWrapper?.querySelector('video');
     if (!videoWrapper || !video) return;
 
-    video.playbackRate = 1.5;
+    video.playbackRate = 1;
     video.loop = false;
     video.addEventListener('ended', () => {
         if (!updateSurveyVideoVisibility.wasActive) return;
@@ -396,6 +363,104 @@ function initSurveyVideoPlayback() {
             playPromise.catch(() => {});
         }
         scheduleSurveyVideoOverlay();
+    });
+}
+
+// 경품추첨 영상 관리
+function updateLotteryVideoVisibility(screenId) {
+    const videoWrapper = document.getElementById('lottery-video');
+    if (!videoWrapper) return;
+
+    const shouldShow = screenId === 'lottery-screen';
+    videoWrapper.classList.toggle('is-visible', shouldShow);
+
+    const video = videoWrapper.querySelector('video');
+    if (!video) return;
+
+    if (shouldShow) {
+        if (!updateLotteryVideoVisibility.wasActive) {
+            video.currentTime = 0;
+            scheduleLotteryVideoOverlay();
+        }
+        updateLotteryVideoVisibility.wasActive = true;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    } else if (updateLotteryVideoVisibility.wasActive) {
+        video.pause();
+        video.currentTime = 0;
+        updateLotteryVideoVisibility.wasActive = false;
+        resetLotteryVideoOverlay();
+    }
+}
+
+updateLotteryVideoVisibility.wasActive = false;
+
+// 영상 오버레이 비활성화 (HubSpot 랜딩과 동일)
+function scheduleLotteryVideoOverlay() {
+    return;
+}
+
+function resetLotteryVideoOverlay() {
+    const videoWrapper = document.getElementById('lottery-video');
+    if (!videoWrapper) return;
+
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+        videoWrapper.dataset.overlayTimerId = '';
+    }
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+        videoWrapper.dataset.fadeTimerId = '';
+    }
+    videoWrapper.classList.remove('is-dimmed');
+    resetLotteryVideoTyping();
+}
+
+function resetLotteryVideoTyping() {
+    const overlay = document.querySelector('#lottery-video .lottery-video-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('is-typing');
+    const lines = overlay.querySelectorAll('.lottery-video-line');
+    lines.forEach(line => {
+        line.style.animationDelay = '0ms';
+    });
+}
+
+function startLotteryVideoTyping() {
+    const overlay = document.querySelector('#lottery-video .lottery-video-overlay');
+    if (!overlay) return;
+    const lines = overlay.querySelectorAll('.lottery-video-line');
+    lines.forEach((line, index) => {
+        line.style.animationDelay = `${index * TEXT_LINE_INTERVAL_MS}ms`;
+    });
+    overlay.classList.add('is-typing');
+}
+
+function getLotteryVideoTypingDuration() {
+    const overlay = document.querySelector('#lottery-video .lottery-video-overlay');
+    if (!overlay) return 0;
+    const lineCount = overlay.querySelectorAll('.lottery-video-line').length;
+    if (lineCount === 0) return 0;
+    return (lineCount - 1) * TEXT_LINE_INTERVAL_MS + 800;
+}
+
+function initLotteryVideoPlayback() {
+    const videoWrapper = document.getElementById('lottery-video');
+    const video = videoWrapper?.querySelector('video');
+    if (!videoWrapper || !video) return;
+
+    video.playbackRate = 1;
+    video.loop = false;
+    video.addEventListener('ended', () => {
+        if (!updateLotteryVideoVisibility.wasActive) return;
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+        scheduleLotteryVideoOverlay();
     });
 }
 
@@ -442,7 +507,7 @@ function getAdminMediaForScreen(screenId) {
         return document.getElementById('qna-video');
     }
     if (screenId === 'info-screen') {
-        return document.getElementById('info-gif');
+        return document.getElementById('info-video');
     }
     if (screenId === 'survey-screen') {
         return document.getElementById('survey-video');
@@ -600,32 +665,824 @@ function initMobileMenu() {
     window.addEventListener('resize', syncAdminPanelOrientation);
 }
 
+/** 하단 탭(세션/기능, 내정보, 설정) 활성 상태 동기화 */
+function updateBottomNavActive(screenId) {
+    const tabMap = {
+        'demo-screen': 'session',
+        'myinfo-screen': 'myinfo',
+        'networking-screen': 'networking',
+        'settings-screen': 'settings'
+    };
+    const activeTab = tabMap[screenId] || null;
+    document.querySelectorAll('.bottom-nav').forEach(nav => {
+        nav.querySelectorAll('.bottom-nav-item').forEach(item => {
+            const tab = item.getAttribute('data-tab');
+            const isActive = tab === activeTab;
+            item.classList.toggle('is-active', isActive);
+            item.setAttribute('aria-current', isActive ? 'page' : null);
+        });
+    });
+}
+
+/** 하단 탭 클릭 시 화면 전환 */
+function initBottomNav() {
+    document.querySelectorAll('.bottom-nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tab = item.getAttribute('data-tab');
+            const screenMap = { session: 'demo-screen', myinfo: 'myinfo-screen', networking: 'networking-screen', settings: 'settings-screen' };
+            const screenId = screenMap[tab];
+            if (screenId) {
+                ScreenManager.show(screenId, { skipHistory: true });
+                ScreenManager.screenHistory = [screenId];
+            }
+        });
+    });
+}
+
+/** 네트워킹 화면: 필터 모달, 정렬/직무/연차, 페이지네이션, 참여하기 */
+function initNetworkingTabs() {
+    const screen = document.getElementById('networking-screen');
+    if (!screen) return;
+
+    const modal = screen.querySelector('#networking-filter-modal');
+    const filterBtn = screen.querySelector('.networking-filter-btn');
+    const backdrop = screen.querySelector('.networking-filter-backdrop');
+    const applyBtn = screen.querySelector('.networking-filter-apply');
+    const resetBtn = screen.querySelector('.networking-filter-reset');
+    const sortOptions = screen.querySelectorAll('.networking-sort-option');
+    const jobTags = screen.querySelectorAll('.networking-job-tag');
+    const careerMin = screen.querySelector('#networking-career-min');
+    const careerMax = screen.querySelector('#networking-career-max');
+    const careerRangeText = screen.querySelector('#networking-career-range');
+    const careerTrackFill = screen.querySelector('#networking-career-track-fill');
+    const joinBtn = screen.querySelector('.networking-join-btn');
+
+    function openFilterModal() {
+        if (!modal) return;
+        modal.hidden = false;
+        requestAnimationFrame(() => {
+            modal.classList.add('is-open');
+        });
+    }
+
+    function closeFilterModal() {
+        if (!modal) return;
+        modal.classList.remove('is-open');
+        const panel = modal.querySelector('.networking-filter-panel');
+        const onEnd = () => {
+            modal.hidden = true;
+            if (panel) panel.removeEventListener('transitionend', onEnd);
+        };
+        if (panel) panel.addEventListener('transitionend', onEnd);
+        if (!panel) modal.hidden = true;
+    }
+
+    function formatCareerLabel(val) {
+        const n = parseInt(val, 10);
+        if (n === 0) return '경력 없음';
+        if (n >= 15) return '15년 이상';
+        return n + '년';
+    }
+
+    function updateCareerRangeText() {
+        if (!careerRangeText || !careerMin || !careerMax) return;
+        let minVal = parseInt(careerMin.value, 10);
+        let maxVal = parseInt(careerMax.value, 10);
+        if (minVal > maxVal) {
+            careerMin.value = maxVal;
+            careerMax.value = minVal;
+            minVal = maxVal;
+            maxVal = parseInt(careerMax.value, 10);
+        }
+        const min = Math.min(parseInt(careerMin.value, 10), parseInt(careerMax.value, 10));
+        const max = Math.max(parseInt(careerMin.value, 10), parseInt(careerMax.value, 10));
+        careerRangeText.textContent = formatCareerLabel(String(min)) + ' ~ ' + formatCareerLabel(String(max));
+        updateCareerTrackFill(min, max);
+    }
+
+    function updateCareerTrackFill(min, max) {
+        if (!careerTrackFill) return;
+        const MIN = 0;
+        const MAX = 15;
+        const left = (min / MAX) * 100;
+        const width = ((max - min) / MAX) * 100;
+        careerTrackFill.style.left = left + '%';
+        careerTrackFill.style.width = width + '%';
+    }
+
+    function resetFilter() {
+        sortOptions.forEach((opt, i) => {
+            opt.classList.toggle('is-active', i === 0);
+        });
+        jobTags.forEach(tag => tag.classList.remove('is-selected'));
+        if (careerMin) careerMin.value = '0';
+        if (careerMax) careerMax.value = '15';
+        updateCareerRangeText();
+    }
+
+    screen.querySelectorAll('.networking-filter-btn').forEach(btn => {
+        btn.addEventListener('click', openFilterModal);
+    });
+    if (backdrop) backdrop.addEventListener('click', closeFilterModal);
+    if (applyBtn) applyBtn.addEventListener('click', closeFilterModal);
+    if (resetBtn) resetBtn.addEventListener('click', resetFilter);
+
+    sortOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            sortOptions.forEach(o => o.classList.remove('is-active'));
+            opt.classList.add('is-active');
+        });
+    });
+
+    jobTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            tag.classList.toggle('is-selected');
+        });
+    });
+
+    if (careerMin) {
+        careerMin.addEventListener('input', () => {
+            const maxVal = parseInt(careerMax.value, 10);
+            if (parseInt(careerMin.value, 10) > maxVal) careerMin.value = maxVal;
+            updateCareerRangeText();
+        });
+    }
+    if (careerMax) {
+        careerMax.addEventListener('input', () => {
+            const minVal = parseInt(careerMin.value, 10);
+            if (parseInt(careerMax.value, 10) < minVal) careerMax.value = minVal;
+            updateCareerRangeText();
+        });
+    }
+    updateCareerRangeText();
+
+    let currentPage = 1;
+    screen.addEventListener('click', (e) => {
+        const prev = e.target.closest('.networking-pagination-prev');
+        const next = e.target.closest('.networking-pagination-next');
+        const block = prev || next;
+        if (!block) return;
+        const container = block.closest('.networking-content');
+        const currentEl = container && container.querySelector('.networking-pagination-current');
+        if (prev && currentPage > 1) {
+            currentPage--;
+            if (currentEl) currentEl.textContent = currentPage;
+        } else if (next) {
+            currentPage++;
+            if (currentEl) currentEl.textContent = currentPage;
+        }
+    });
+
+    /* 네트워킹 참여하기 모달 */
+    const joinModal = screen.querySelector('#networking-join-modal');
+    const joinClose = joinModal && joinModal.querySelector('.networking-join-close');
+    const joinBackdrop = joinModal && joinModal.querySelector('.networking-join-backdrop');
+    const joinCancel = screen.querySelector('.networking-join-cancel');
+    const joinSubmit = screen.querySelector('.networking-join-submit');
+    const joinJobTags = screen.querySelectorAll('.networking-join-job-tag');
+
+    /** 프로필 이미지: 세션 동안 유지, 모달 닫았다 열어도 유지 (서버 전송 없음) */
+    let networkingProfilePhotoUrl = null;
+    const joinPhotoWrap = joinModal && joinModal.querySelector('.networking-join-photo-wrap');
+    const joinPhotoInput = joinModal && joinModal.querySelector('.networking-join-photo-input');
+    const joinPhotoPreview = joinPhotoWrap && joinPhotoWrap.querySelector('.networking-join-photo-preview');
+    const joinPhotoPlaceholder = joinPhotoWrap && joinPhotoWrap.querySelector('.networking-join-photo-placeholder');
+
+    function applyProfilePhotoToWrap(wrap, previewEl, placeholderEl, url) {
+        if (!wrap || !previewEl || !placeholderEl) return;
+        if (url) {
+            previewEl.src = url;
+            previewEl.style.display = 'block';
+            placeholderEl.style.visibility = 'hidden';
+            placeholderEl.setAttribute('aria-hidden', 'true');
+            wrap.classList.add('has-image');
+        } else {
+            previewEl.removeAttribute('src');
+            previewEl.style.display = 'none';
+            placeholderEl.style.visibility = '';
+            placeholderEl.setAttribute('aria-hidden', 'false');
+            wrap.classList.remove('has-image');
+        }
+    }
+
+    /** 이미지 잘라내기 모달: 파일 선택 시 크롭 모달만 열고, 확인 시에만 프로필에 반영 */
+    const cropModal = screen.querySelector('#crop-modal');
+    const cropModalImg = cropModal && cropModal.querySelector('#crop-modal-img');
+    const cropModalCloseBtn = cropModal && cropModal.querySelector('.crop-modal-close');
+    const cropModalConfirmBtn = cropModal && cropModal.querySelector('.crop-modal-confirm');
+    const cropModalBackdrop = cropModal && cropModal.querySelector('.crop-modal-backdrop');
+    let cropModalTempUrl = null;
+    let cropModalCropper = null;
+
+    function openCropModal(objectUrl) {
+        if (!cropModal || !cropModalImg || typeof Cropper === 'undefined') return;
+        closeCropModal();
+        cropModalTempUrl = objectUrl;
+        cropModalImg.src = objectUrl;
+        cropModal.hidden = false;
+        cropModal.classList.add('is-open');
+        cropModalImg.onload = function onCropImgLoad() {
+            cropModalImg.onload = null;
+            if (cropModalCropper) {
+                cropModalCropper.destroy();
+                cropModalCropper = null;
+            }
+            cropModalCropper = new Cropper(cropModalImg, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.8,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: true,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false
+            });
+        };
+    }
+
+    function closeCropModal() {
+        if (cropModalCropper) {
+            cropModalCropper.destroy();
+            cropModalCropper = null;
+        }
+        if (cropModalTempUrl) {
+            URL.revokeObjectURL(cropModalTempUrl);
+            cropModalTempUrl = null;
+        }
+        if (cropModalImg) cropModalImg.removeAttribute('src');
+        if (cropModal) {
+            cropModal.hidden = true;
+            cropModal.classList.remove('is-open');
+        }
+    }
+
+    function handleProfilePhotoFile(inputEl, wrap, previewEl, placeholderEl) {
+        const file = inputEl && inputEl.files && inputEl.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+        const tempUrl = URL.createObjectURL(file);
+        inputEl.value = '';
+        openCropModal(tempUrl);
+    }
+
+    if (joinBtn) {
+        joinBtn.addEventListener('click', () => {
+            if (joinModal) {
+                joinModal.hidden = false;
+                joinModal.classList.add('is-open');
+                applyProfilePhotoToWrap(joinPhotoWrap, joinPhotoPreview, joinPhotoPlaceholder, networkingProfilePhotoUrl);
+                applyNamecardColor(networkingNamecardColor);
+            }
+        });
+    }
+
+    if (cropModalCloseBtn) cropModalCloseBtn.addEventListener('click', closeCropModal);
+    if (cropModalBackdrop) cropModalBackdrop.addEventListener('click', closeCropModal);
+    if (cropModalConfirmBtn) {
+        cropModalConfirmBtn.addEventListener('click', function onCropConfirm() {
+            if (!cropModalCropper) return;
+            const canvas = cropModalCropper.getCroppedCanvas({ maxWidth: 1024, maxHeight: 1024 });
+            if (!canvas) return;
+            canvas.toBlob(function (blob) {
+                if (!blob) return;
+                if (networkingProfilePhotoUrl) URL.revokeObjectURL(networkingProfilePhotoUrl);
+                networkingProfilePhotoUrl = URL.createObjectURL(blob);
+                applyProfilePhotoToWrap(joinPhotoWrap, joinPhotoPreview, joinPhotoPlaceholder, networkingProfilePhotoUrl);
+                applyProfilePhotoToWrap(editPhotoWrap, editPhotoPreview, editPhotoPlaceholder, networkingProfilePhotoUrl);
+                closeCropModal();
+            }, 'image/jpeg', 0.92);
+        });
+    }
+
+    if (joinPhotoWrap && joinPhotoInput) {
+        const joinUploadBtn = joinPhotoWrap.querySelector('.networking-join-upload');
+        if (joinUploadBtn) joinUploadBtn.addEventListener('click', () => joinPhotoInput.click());
+        joinPhotoInput.addEventListener('change', () => handleProfilePhotoFile(joinPhotoInput, joinPhotoWrap, joinPhotoPreview, joinPhotoPlaceholder));
+    }
+
+    function closeJoinModal() {
+        if (!joinModal) return;
+        joinModal.hidden = true;
+        joinModal.classList.remove('is-open');
+    }
+
+    if (joinClose) joinClose.addEventListener('click', closeJoinModal);
+    if (joinBackdrop) joinBackdrop.addEventListener('click', closeJoinModal);
+    if (joinCancel) joinCancel.addEventListener('click', closeJoinModal);
+    const beforeJoin = screen.querySelector('#networking-before-join');
+    const afterJoin = screen.querySelector('#networking-after-join');
+    const listAfter = screen.querySelector('#networking-list-after');
+    const afterJoinCountEl = afterJoin && afterJoin.querySelector('.networking-count');
+    const afterJoinSearchInput = afterJoin && afterJoin.querySelector('.networking-search-input');
+
+    function getSearchableText(card) {
+        var nameEl = card.querySelector('.networking-profile-name');
+        var roleEl = card.querySelector('.networking-profile-role');
+        var introEl = card.querySelector('.networking-profile-intro');
+        var tagsEl = card.querySelector('.networking-profile-tags');
+        var name = nameEl ? nameEl.textContent.replace(/\s*\(나\)\s*/g, '').replace(/\s*verified\s*/gi, '').trim() : '';
+        var role = roleEl ? roleEl.textContent.trim() : '';
+        var intro = introEl ? introEl.textContent.trim() : '';
+        var tags = tagsEl ? tagsEl.textContent.trim() : '';
+        var dataStr = (card.dataset.affiliation || '') + ' ' + (card.dataset.title || '') + ' ' + (card.dataset.department || '') + ' ' + (card.dataset.career || '') + ' ' + (card.dataset.jobs || '');
+        return (name + ' ' + role + ' ' + intro + ' ' + tags + ' ' + dataStr).toLowerCase();
+    }
+
+    function filterListAfterBySearch() {
+        if (!listAfter || !afterJoinSearchInput) return;
+        var query = (afterJoinSearchInput.value || '').trim().toLowerCase();
+        var cards = listAfter.querySelectorAll('.networking-profile-card');
+        cards.forEach(function (card) {
+            var searchable = getSearchableText(card);
+            var match = !query || searchable.indexOf(query) !== -1;
+            card.style.display = match ? '' : 'none';
+        });
+    }
+
+    if (afterJoinSearchInput) {
+        afterJoinSearchInput.addEventListener('input', filterListAfterBySearch);
+        afterJoinSearchInput.addEventListener('search', filterListAfterBySearch);
+    }
+
+    function getJoinFormData() {
+        if (!joinModal) return null;
+        const nameEl = joinModal.querySelector('.networking-join-team');
+        const name = nameEl ? (nameEl.childNodes[0] && nameEl.childNodes[0].nodeType === Node.TEXT_NODE ? nameEl.childNodes[0].textContent : nameEl.textContent).replace(/\s*verified\s*/gi, '').trim() : '참가자';
+        const bodyInner = joinModal.querySelector('.networking-join-body-inner');
+        const rows = bodyInner ? bodyInner.querySelectorAll('.networking-join-row') : [];
+        const affiliationInput = rows[0] ? rows[0].querySelectorAll('.networking-join-input')[0] : null;
+        const titleInput = rows[0] ? rows[0].querySelectorAll('.networking-join-input')[1] : null;
+        const affiliation = affiliationInput ? affiliationInput.value.trim() : '';
+        const title = titleInput ? titleInput.value.trim() : '';
+        const role = affiliation + (title ? ' / ' + title : '');
+        const introEl = joinModal.querySelector('.networking-join-textarea');
+        const intro = introEl ? introEl.value.trim() : '';
+        const selectedTags = joinModal.querySelectorAll('.networking-join-job-tag.is-selected .networking-join-job-text');
+        const tags = Array.from(selectedTags).map(function (t) { return t.textContent.trim(); }).filter(Boolean);
+        const avatarLetter = name ? name.charAt(0) : '?';
+        const deptInput = rows[1] ? rows[1].querySelectorAll('.networking-join-input')[0] : null;
+        const careerWrap = rows[1] ? rows[1].querySelector('.networking-join-select-wrap') : null;
+        const career = careerWrap && careerWrap.querySelector('span') ? careerWrap.querySelector('span').textContent.trim() : '';
+        const linkInputs = bodyInner ? bodyInner.querySelectorAll('input[type="url"]') : [];
+        const linkedin = linkInputs[0] ? linkInputs[0].value.trim() : '';
+        const remember = linkInputs[1] ? linkInputs[1].value.trim() : '';
+        return { name: name || '참가자', role, intro, tags, avatarLetter, affiliation, title, department: deptInput ? deptInput.value.trim() : '', career, linkedin, remember };
+    }
+
+    function addMyCardToTop() {
+        if (!listAfter) return;
+        const data = getJoinFormData();
+        if (!data) return;
+        const existingMe = listAfter.querySelector('.networking-profile-card.is-me');
+        if (existingMe) existingMe.remove();
+        const avatarEl = document.createElement('div');
+        avatarEl.className = 'networking-profile-avatar';
+        if (networkingProfilePhotoUrl) {
+            avatarEl.classList.add('has-photo');
+            avatarEl.style.backgroundImage = 'url("' + networkingProfilePhotoUrl.replace(/"/g, '\\"') + '")';
+            avatarEl.style.backgroundSize = 'cover';
+            avatarEl.style.backgroundPosition = 'center';
+            avatarEl.textContent = '';
+            avatarEl.classList.remove('networking-profile-avatar-no-photo');
+        } else {
+            avatarEl.classList.add('networking-profile-avatar-no-photo');
+            avatarEl.textContent = data.avatarLetter;
+            avatarEl.style.backgroundImage = '';
+        }
+        const tagsHtml = data.tags.length ? '<div class="networking-profile-tags">' + data.tags.map(function (t) { return '<span class="networking-tag">' + escapeHtml(t) + '</span>'; }).join('') + '</div>' : '';
+        const li = document.createElement('li');
+        li.className = 'networking-profile-card is-me';
+        li.dataset.affiliation = data.affiliation || '';
+        li.dataset.title = data.title || '';
+        li.dataset.department = data.department || '';
+        li.dataset.career = data.career || '';
+        li.dataset.jobs = (data.tags || []).join(', ');
+        li.dataset.linkedin = data.linkedin || '';
+        li.dataset.remember = data.remember || '';
+        li.dataset.color = networkingNamecardColor || '#178263';
+        li.dataset.photo = networkingProfilePhotoUrl || '';
+        li.innerHTML =
+            '<div class="networking-profile-body">' +
+            '<p class="networking-profile-name">' + escapeHtml(data.name) + ' <span class="networking-profile-badge">(나)</span></p>' +
+            '<p class="networking-profile-role">' + escapeHtml(data.role) + '</p>' +
+            (data.intro ? '<p class="networking-profile-intro">' + escapeHtml(data.intro) + '</p>' : '') +
+            tagsHtml +
+            '</div>';
+        li.insertBefore(avatarEl, li.firstChild);
+        listAfter.insertBefore(li, listAfter.firstChild);
+        if (afterJoinCountEl) afterJoinCountEl.textContent = listAfter.children.length + '명 참여중';
+        filterListAfterBySearch();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    if (joinSubmit) {
+        joinSubmit.addEventListener('click', () => {
+            closeJoinModal();
+            if (beforeJoin) beforeJoin.hidden = true;
+            if (afterJoin) afterJoin.hidden = false;
+            addMyCardToTop();
+        });
+    }
+
+    /* 참가자 상세 정보 모달 */
+    const participantDetailModal = screen.querySelector('#participant-detail-modal');
+    const participantDetailBackdrop = participantDetailModal && participantDetailModal.querySelector('.participant-detail-backdrop');
+    const participantDetailClose = participantDetailModal && participantDetailModal.querySelector('.participant-detail-close');
+    const participantDetailHeader = participantDetailModal && participantDetailModal.querySelector('.participant-detail-header');
+    const participantDetailPhoto = participantDetailModal && participantDetailModal.querySelector('#participant-detail-photo');
+    const participantDetailPhotoWrap = participantDetailModal && participantDetailModal.querySelector('.participant-detail-photo-wrap');
+    const participantDetailPhotoPlaceholder = participantDetailModal && participantDetailModal.querySelector('#participant-detail-photo-placeholder');
+    const participantDetailName = participantDetailModal && participantDetailModal.querySelector('#participant-detail-name');
+    const participantDetailRole = participantDetailModal && participantDetailModal.querySelector('#participant-detail-role');
+    const participantDetailIntro = participantDetailModal && participantDetailModal.querySelector('#participant-detail-intro');
+    const participantDetailAffiliation = participantDetailModal && participantDetailModal.querySelector('#participant-detail-affiliation');
+    const participantDetailTitle = participantDetailModal && participantDetailModal.querySelector('#participant-detail-title');
+    const participantDetailDepartment = participantDetailModal && participantDetailModal.querySelector('#participant-detail-department');
+    const participantDetailCareer = participantDetailModal && participantDetailModal.querySelector('#participant-detail-career');
+    const participantDetailJobs = participantDetailModal && participantDetailModal.querySelector('#participant-detail-jobs');
+    const participantDetailLinkedin = participantDetailModal && participantDetailModal.querySelector('#participant-detail-linkedin');
+    const participantDetailRemember = participantDetailModal && participantDetailModal.querySelector('#participant-detail-remember');
+
+    function openParticipantDetail(card) {
+        if (!participantDetailModal || !card) return;
+        const nameEl = card.querySelector('.networking-profile-name');
+        const roleEl = card.querySelector('.networking-profile-role');
+        const introEl = card.querySelector('.networking-profile-intro');
+        const name = nameEl ? nameEl.textContent.replace(/\s*\(나\)\s*/g, '').replace(/\s*verified\s*/gi, '').trim() : '';
+        const role = roleEl ? roleEl.textContent.trim() : '';
+        const intro = introEl ? introEl.textContent.trim() : '';
+        const affiliation = card.dataset.affiliation || '';
+        const title = card.dataset.title || '';
+        const department = card.dataset.department || '';
+        const career = card.dataset.career || '';
+        const jobs = card.dataset.jobs || '';
+        const linkedin = card.dataset.linkedin || '';
+        const remember = card.dataset.remember || '';
+        const color = card.dataset.color || '#178263';
+        const avatarEl = card.querySelector('.networking-profile-avatar');
+        let photoUrl = card.dataset.photo || '';
+        if (!photoUrl && avatarEl && avatarEl.style.backgroundImage) {
+            photoUrl = avatarEl.style.backgroundImage.replace(/^url\(["']?|["']?\)$/g, '');
+        }
+        if (participantDetailHeader) participantDetailHeader.style.backgroundColor = color;
+        if (participantDetailPhotoWrap) participantDetailPhotoWrap.classList.toggle('has-image', !!photoUrl);
+        if (participantDetailPhotoPlaceholder) participantDetailPhotoPlaceholder.textContent = name ? name.charAt(0) : '';
+        if (participantDetailPhoto) {
+            if (photoUrl) {
+                participantDetailPhoto.src = photoUrl;
+                participantDetailPhoto.alt = name;
+            } else {
+                participantDetailPhoto.removeAttribute('src');
+            }
+        }
+        if (participantDetailName) {
+            participantDetailName.innerHTML = escapeHtml(name) + ' <span class="material-icons participant-detail-verified" aria-hidden="true" title="인증됨">verified</span>';
+        }
+        if (participantDetailRole) participantDetailRole.textContent = role;
+        if (participantDetailIntro) participantDetailIntro.textContent = intro || '—';
+        if (participantDetailAffiliation) participantDetailAffiliation.textContent = affiliation || '—';
+        if (participantDetailTitle) participantDetailTitle.textContent = title || '—';
+        if (participantDetailDepartment) participantDetailDepartment.textContent = department || '—';
+        if (participantDetailCareer) participantDetailCareer.textContent = career || '—';
+        if (participantDetailJobs) participantDetailJobs.textContent = jobs || '—';
+        if (participantDetailLinkedin) {
+            if (linkedin) {
+                participantDetailLinkedin.innerHTML = '<a href="' + escapeHtml(linkedin) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(linkedin) + '</a>';
+            } else {
+                participantDetailLinkedin.textContent = '없음';
+            }
+        }
+        if (participantDetailRemember) {
+            if (remember) {
+                participantDetailRemember.innerHTML = '<a href="' + escapeHtml(remember) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(remember) + '</a>';
+            } else {
+                participantDetailRemember.textContent = '없음';
+            }
+        }
+        participantDetailModal.hidden = false;
+        participantDetailModal.classList.add('is-open');
+    }
+
+    function closeParticipantDetail() {
+        if (!participantDetailModal) return;
+        participantDetailModal.hidden = true;
+        participantDetailModal.classList.remove('is-open');
+    }
+
+    if (participantDetailClose) participantDetailClose.addEventListener('click', closeParticipantDetail);
+    if (participantDetailBackdrop) participantDetailBackdrop.addEventListener('click', closeParticipantDetail);
+    if (listAfter) {
+        listAfter.addEventListener('click', function (e) {
+            const card = e.target.closest('.networking-profile-card');
+            if (!card) return;
+            openParticipantDetail(card);
+        });
+    }
+
+    joinJobTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            tag.classList.toggle('is-selected');
+        });
+    });
+
+    /* 내 정보 수정하기 버튼 → 수정 모달 열기 */
+    const editMyinfoBtn = screen.querySelector('.networking-edit-myinfo-btn');
+    const editModal = screen.querySelector('#networking-edit-modal');
+    const editClose = screen.querySelector('.networking-edit-close');
+    const editBackdrop = editModal && editModal.querySelector('.networking-join-backdrop');
+    const editCancel = screen.querySelector('.networking-edit-cancel');
+    const editSave = screen.querySelector('.networking-edit-save');
+    const editJobTags = screen.querySelectorAll('.networking-edit-jobs .networking-join-job-tag');
+
+    function closeEditModal() {
+        if (!editModal) return;
+        editModal.hidden = true;
+        editModal.classList.remove('is-open');
+    }
+
+    const editPhotoWrap = editModal && editModal.querySelector('.networking-join-photo-wrap');
+    const editPhotoInput = editModal && editModal.querySelector('.networking-join-photo-input');
+    const editPhotoPreview = editPhotoWrap && editPhotoWrap.querySelector('.networking-join-photo-preview');
+    const editPhotoPlaceholder = editPhotoWrap && editPhotoWrap.querySelector('.networking-join-photo-placeholder');
+
+    /** 네임카드 배경색: 세션 동안 유지, 참여하기 시 전달용 */
+    let networkingNamecardColor = '#178263';
+    const joinProfile = joinModal && joinModal.querySelector('.networking-join-profile');
+    const editProfile = editModal && editModal.querySelector('.networking-join-profile');
+    const joinColorField = joinModal && joinModal.querySelector('.networking-join-color-field');
+    const editColorField = editModal && editModal.querySelector('.networking-join-color-field');
+
+    function applyNamecardColor(hex) {
+        if (joinProfile) joinProfile.style.backgroundColor = hex;
+        if (editProfile) editProfile.style.backgroundColor = hex;
+        [joinColorField, editColorField].forEach(function (field) {
+            if (!field) return;
+            const swatch = field.querySelector('.networking-join-color-swatch');
+            const valueEl = field.querySelector('.networking-join-color-value');
+            if (swatch) swatch.style.backgroundColor = hex;
+            if (valueEl) valueEl.textContent = hex;
+        });
+    }
+
+    function hexToHsl(hex) {
+        hex = hex.replace(/^#/, '');
+        if (hex.length !== 6) return { h: 164, s: 70, l: 30 };
+        const r = parseInt(hex.slice(0, 2), 16) / 255;
+        const g = parseInt(hex.slice(2, 4), 16) / 255;
+        const b = parseInt(hex.slice(4, 6), 16) / 255;
+        const max = Math.max(r, g, b), min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        if (max === min) {
+            h = s = 0;
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+            else if (max === g) h = (b - r) / d + 2;
+            else h = (r - g) / d + 4;
+            h /= 6;
+        }
+        return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+    function hslToHex(h, s, l) {
+        h = h / 360; s = s / 100; l = l / 100;
+        let r, g, b;
+        if (s === 0) {
+            r = g = b = l;
+        } else {
+            const hue2rgb = function (p, q, t) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+        return '#' + [r, g, b].map(function (x) {
+            const n = Math.round(x * 255);
+            return (n < 16 ? '0' : '') + n.toString(16);
+        }).join('');
+    }
+
+    function initColorPicker(field, profileEl) {
+        if (!field || !profileEl) return;
+        const panel = field.querySelector('.networking-join-color-picker-panel');
+        const wrap = field.querySelector('.networking-join-color-wrap');
+        const palette = field.querySelector('.color-picker-palette');
+        const paletteHandle = field.querySelector('.color-picker-palette-handle');
+        const hueEl = field.querySelector('.color-picker-hue');
+        const hueHandle = field.querySelector('.color-picker-hue-handle');
+        const hexInput = field.querySelector('.color-picker-hex');
+        const confirmBtn = field.querySelector('.color-picker-confirm');
+        if (!panel || !wrap || !palette || !paletteHandle || !hueEl || !hueHandle || !hexInput || !confirmBtn) return;
+
+        let h = 164, s = 70, l = 30;
+        let paletteDragging = false, hueDragging = false;
+
+        function syncFromHsl() {
+            const hex = hslToHex(h, s, l);
+            palette.style.setProperty('--picker-hue', String(h));
+            paletteHandle.style.left = (s) + '%';
+            paletteHandle.style.top = (100 - l) + '%';
+            hueHandle.style.top = (100 - (h / 360) * 100) + '%';
+            hexInput.value = hex;
+            if (profileEl) profileEl.style.backgroundColor = hex;
+        }
+        function openPanel() {
+            const hsl = hexToHsl(networkingNamecardColor);
+            h = hsl.h; s = hsl.s; l = hsl.l;
+            hexInput.value = networkingNamecardColor;
+            panel.hidden = false;
+            wrap.setAttribute('aria-expanded', 'true');
+            syncFromHsl();
+        }
+        function closePanel() {
+            panel.hidden = true;
+            wrap.setAttribute('aria-expanded', 'false');
+        }
+
+        wrap.addEventListener('click', function () {
+            if (panel.hidden) openPanel();
+            else closePanel();
+        });
+
+        function onPaletteMove(clientX, clientY) {
+            const rect = palette.getBoundingClientRect();
+            const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            const y = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+            s = Math.round(x * 100);
+            l = Math.round((1 - y) * 100);
+            syncFromHsl();
+        }
+        function onHueMove(clientY) {
+            const rect = hueEl.getBoundingClientRect();
+            const y = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+            h = Math.round((1 - y) * 360);
+            syncFromHsl();
+        }
+        function onPointerUp() {
+            paletteDragging = false;
+            hueDragging = false;
+            document.removeEventListener('mousemove', onDocMove);
+            document.removeEventListener('mouseup', onPointerUp);
+            document.removeEventListener('touchmove', onDocTouch, { passive: false });
+            document.removeEventListener('touchend', onPointerUp);
+        }
+        function onDocMove(e) {
+            if (paletteDragging) onPaletteMove(e.clientX, e.clientY);
+            if (hueDragging) onHueMove(e.clientY);
+        }
+        function onDocTouch(e) {
+            if (e.touches.length === 0) return;
+            if (paletteDragging) onPaletteMove(e.touches[0].clientX, e.touches[0].clientY);
+            if (hueDragging) onHueMove(e.touches[0].clientY);
+            e.preventDefault();
+        }
+        palette.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            paletteDragging = true;
+            onPaletteMove(e.clientX, e.clientY);
+            document.addEventListener('mousemove', onDocMove);
+            document.addEventListener('mouseup', onPointerUp);
+        });
+        palette.addEventListener('touchstart', function (e) {
+            if (e.touches.length === 0) return;
+            paletteDragging = true;
+            onPaletteMove(e.touches[0].clientX, e.touches[0].clientY);
+            document.addEventListener('touchmove', onDocTouch, { passive: false });
+            document.addEventListener('touchend', onPointerUp);
+        });
+        hueEl.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            hueDragging = true;
+            onHueMove(e.clientY);
+            document.addEventListener('mousemove', onDocMove);
+            document.addEventListener('mouseup', onPointerUp);
+        });
+        hueEl.addEventListener('touchstart', function (e) {
+            if (e.touches.length === 0) return;
+            hueDragging = true;
+            onHueMove(e.touches[0].clientY);
+            document.addEventListener('touchmove', onDocTouch, { passive: false });
+            document.addEventListener('touchend', onPointerUp);
+        });
+        hexInput.addEventListener('input', function () {
+            let hex = hexInput.value.trim();
+            if (hex && !hex.startsWith('#')) hex = '#' + hex;
+            if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+                const hsl = hexToHsl(hex);
+                h = hsl.h; s = hsl.s; l = hsl.l;
+                syncFromHsl();
+            }
+        });
+        confirmBtn.addEventListener('click', function () {
+            let hex = hexInput.value.trim();
+            if (hex && !hex.startsWith('#')) hex = '#' + hex;
+            if (!/^#[0-9A-Fa-f]{6}$/.test(hex)) hex = hslToHex(h, s, l);
+            networkingNamecardColor = hex;
+            applyNamecardColor(hex);
+            closePanel();
+        });
+    }
+    initColorPicker(joinColorField, joinProfile);
+    initColorPicker(editColorField, editProfile);
+
+    if (editMyinfoBtn) {
+        editMyinfoBtn.addEventListener('click', () => {
+            if (editModal) {
+                editModal.hidden = false;
+                editModal.classList.add('is-open');
+                applyProfilePhotoToWrap(editPhotoWrap, editPhotoPreview, editPhotoPlaceholder, networkingProfilePhotoUrl);
+                applyNamecardColor(networkingNamecardColor);
+            }
+        });
+    }
+    if (editPhotoWrap && editPhotoInput) {
+        const editUploadBtn = editPhotoWrap.querySelector('.networking-join-upload');
+        if (editUploadBtn) editUploadBtn.addEventListener('click', () => editPhotoInput.click());
+        editPhotoInput.addEventListener('change', () => handleProfilePhotoFile(editPhotoInput, editPhotoWrap, editPhotoPreview, editPhotoPlaceholder));
+    }
+    if (editClose) editClose.addEventListener('click', closeEditModal);
+    if (editBackdrop) editBackdrop.addEventListener('click', closeEditModal);
+    if (editCancel) editCancel.addEventListener('click', closeEditModal);
+    if (editSave) editSave.addEventListener('click', closeEditModal);
+
+    editJobTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            tag.classList.toggle('is-selected');
+        });
+    });
+}
+
+/** 내정보 화면 내 서브탭(QR, 내정보, 참여기록) 전환 */
+function initMyinfoTabs() {
+    const screen = document.getElementById('myinfo-screen');
+    if (!screen) return;
+    const tabs = screen.querySelectorAll('.myinfo-tab');
+    const panels = screen.querySelectorAll('.myinfo-panel');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const key = tab.getAttribute('data-myinfo-tab');
+            tabs.forEach(t => {
+                t.classList.toggle('is-active', t === tab);
+                t.setAttribute('aria-selected', t === tab);
+            });
+            panels.forEach(panel => {
+                const id = panel.id;
+                const isActive = id === 'myinfo-panel-' + key;
+                panel.classList.toggle('is-active', isActive);
+                panel.hidden = !isActive;
+            });
+        });
+    });
+}
+
+function initMyinfoPdfModal() {
+    const modal = document.getElementById('myinfo-pdf-modal');
+    const openBtn = document.querySelector('.myinfo-pdf-btn');
+    const cancelBtn = document.getElementById('myinfo-pdf-modal-cancel');
+    const submitBtn = document.getElementById('myinfo-pdf-modal-submit');
+    const backdrop = modal && modal.querySelector('.myinfo-pdf-modal-backdrop');
+
+    function openPdfModal() {
+        if (!modal) return;
+        modal.hidden = false;
+        modal.classList.add('is-open');
+    }
+
+    function closePdfModal() {
+        if (!modal) return;
+        modal.hidden = true;
+        modal.classList.remove('is-open');
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openPdfModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closePdfModal);
+    if (submitBtn) submitBtn.addEventListener('click', () => {
+        closePdfModal();
+        // 데모: 실제 내보내기 없음
+    });
+    if (backdrop) backdrop.addEventListener('click', closePdfModal);
+}
+
+// 영상 오버레이 비활성화 (HubSpot 랜딩과 동일)
 function scheduleQnaVideoOverlay() {
-    const videoWrapper = document.getElementById('qna-video');
-    if (!videoWrapper) return;
-
-    const delay = parseInt(videoWrapper.dataset.overlayDelay || '4000', 10);
-    if (videoWrapper.dataset.overlayTimerId) {
-        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
-    }
-    if (videoWrapper.dataset.fadeTimerId) {
-        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
-    }
-
-    videoWrapper.classList.remove('is-dimmed');
-    resetQnaVideoTyping();
-    const timerId = setTimeout(() => {
-        videoWrapper.classList.add('is-dimmed');
-        startQnaVideoTyping();
-        const totalDuration = getQnaVideoTypingDuration() + TEXT_HOLD_MS;
-        const fadeTimerId = setTimeout(() => {
-            videoWrapper.classList.remove('is-dimmed');
-            resetQnaVideoTyping();
-        }, Math.max(0, totalDuration));
-        videoWrapper.dataset.fadeTimerId = String(fadeTimerId);
-    }, Math.max(0, delay));
-
-    videoWrapper.dataset.overlayTimerId = String(timerId);
+    return;
 }
 
 function resetQnaVideoOverlay() {
@@ -677,7 +1534,7 @@ function initQnaVideoPlayback() {
     const video = videoWrapper?.querySelector('video');
     if (!videoWrapper || !video) return;
 
-    video.playbackRate = 1.5;
+    video.playbackRate = 1;
     video.loop = false;
     video.addEventListener('ended', () => {
         if (!updateQnaVideoVisibility.wasActive) return;
@@ -690,96 +1547,72 @@ function initQnaVideoPlayback() {
     });
 }
 
-function playInfoGif() {
-    const gifWrapper = document.getElementById('info-gif');
-    if (!gifWrapper) return;
-
-    const img = gifWrapper.querySelector('img');
-    if (!img) return;
-
-    const src = gifWrapper.dataset.src || img.src;
-    const duration = parseInt(gifWrapper.dataset.durationMs || '4000', 10);
-    const loops = parseInt(gifWrapper.dataset.loops || '2', 10);
-    const totalDuration = Math.max(1, duration) * Math.max(1, loops);
-
-    img.dataset.staticFrame = '';
-    img.addEventListener('load', () => {
-        if (img.dataset.staticFrame) return;
-        try {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.naturalWidth || img.width;
-            canvas.height = img.naturalHeight || img.height;
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                ctx.drawImage(img, 0, 0);
-                img.dataset.staticFrame = canvas.toDataURL('image/png');
-            }
-        } catch (e) {
-            // ignore
-        }
-    }, { once: true });
-    img.src = `${src}${src.includes('?') ? '&' : '?'}t=${Date.now()}`;
-
-    if (gifWrapper.dataset.timerId) {
-        clearTimeout(parseInt(gifWrapper.dataset.timerId, 10));
-    }
-    const timerId = setTimeout(() => {
-        if (img.dataset.staticFrame) {
-            img.src = img.dataset.staticFrame;
-        }
-    }, totalDuration);
-    gifWrapper.dataset.timerId = String(timerId);
+// 영상 오버레이 비활성화 (HubSpot 랜딩과 동일)
+function scheduleInfoVideoOverlay() {
+    return;
 }
 
-function scheduleInfoGifOverlay() {
-    const gifWrapper = document.getElementById('info-gif');
-    if (!gifWrapper) return;
-    const delay = parseInt(gifWrapper.dataset.overlayDelay || '4000', 10);
+function resetInfoVideoOverlay() {
+    const videoWrapper = document.getElementById('info-video');
+    if (!videoWrapper) return;
 
-    if (gifWrapper.dataset.overlayTimerId) {
-        clearTimeout(parseInt(gifWrapper.dataset.overlayTimerId, 10));
+    if (videoWrapper.dataset.overlayTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.overlayTimerId, 10));
+        videoWrapper.dataset.overlayTimerId = '';
     }
-
-    gifWrapper.classList.remove('is-dimmed');
-    resetInfoGifTyping();
-    const timerId = setTimeout(() => {
-        gifWrapper.classList.add('is-dimmed');
-        startInfoGifTyping();
-    }, Math.max(0, delay));
-
-    gifWrapper.dataset.overlayTimerId = String(timerId);
+    if (videoWrapper.dataset.fadeTimerId) {
+        clearTimeout(parseInt(videoWrapper.dataset.fadeTimerId, 10));
+        videoWrapper.dataset.fadeTimerId = '';
+    }
+    videoWrapper.classList.remove('is-dimmed');
+    resetInfoVideoTyping();
 }
 
-function resetInfoGifTyping() {
-    const overlay = document.querySelector('#info-gif .info-gif-overlay');
+function resetInfoVideoTyping() {
+    const overlay = document.querySelector('#info-video .info-video-overlay');
     if (!overlay) return;
     overlay.classList.remove('is-typing');
-    const lines = overlay.querySelectorAll('.info-gif-line');
+    const lines = overlay.querySelectorAll('.info-video-line');
     lines.forEach(line => {
         line.style.animationDelay = '0ms';
     });
 }
 
-function startInfoGifTyping() {
-    const overlay = document.querySelector('#info-gif .info-gif-overlay');
+function startInfoVideoTyping() {
+    const overlay = document.querySelector('#info-video .info-video-overlay');
     if (!overlay) return;
-    const lines = overlay.querySelectorAll('.info-gif-line');
+    const lines = overlay.querySelectorAll('.info-video-line');
     lines.forEach((line, index) => {
-        line.style.animationDelay = `${index * 1000}ms`;
+        line.style.animationDelay = `${index * TEXT_LINE_INTERVAL_MS}ms`;
     });
     overlay.classList.add('is-typing');
 }
 
-document.addEventListener('click', (event) => {
-    const gifWrapper = document.getElementById('info-gif');
-    if (!gifWrapper || !gifWrapper.classList.contains('is-visible')) return;
-    const img = gifWrapper.querySelector('img');
-    if (!img) return;
-    if (event.target.closest('#info-gif')) {
-        playInfoGif();
-        scheduleInfoGifOverlay();
-    }
-});
+function getInfoVideoTypingDuration() {
+    const overlay = document.querySelector('#info-video .info-video-overlay');
+    if (!overlay) return 0;
+    const lineCount = overlay.querySelectorAll('.info-video-line').length;
+    if (lineCount === 0) return 0;
+    return (lineCount - 1) * TEXT_LINE_INTERVAL_MS + 800;
+}
+
+function initInfoVideoPlayback() {
+    const videoWrapper = document.getElementById('info-video');
+    const video = videoWrapper?.querySelector('video');
+    if (!videoWrapper || !video) return;
+
+    video.playbackRate = 1;
+    video.loop = false;
+    video.addEventListener('ended', () => {
+        if (!updateInfoVideoVisibility.wasActive) return;
+        video.currentTime = 0;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+        scheduleInfoVideoOverlay();
+    });
+}
 
 // 말풍선 표시 함수
 function showBalloon(balloonId, delay) {
@@ -1822,10 +2655,28 @@ function initIconEdit() {
     });
 }
 
+/** 스크롤 시에만 우측 스크롤바 활성화 (.is-scrolling 토글) */
+function initScrollbarOnScroll() {
+    const SCROLLBAR_HIDE_MS = 1200;
+    const scrollContainers = document.querySelectorAll('.phone-screen-inner, .networking-scroll-area');
+    scrollContainers.forEach(el => {
+        let hideTimer = null;
+        el.addEventListener('scroll', () => {
+            el.classList.add('is-scrolling');
+            if (hideTimer) clearTimeout(hideTimer);
+            hideTimer = setTimeout(() => {
+                el.classList.remove('is-scrolling');
+                hideTimer = null;
+            }, SCROLLBAR_HIDE_MS);
+        }, { passive: true });
+    });
+}
+
 // 초기화
 document.addEventListener('DOMContentLoaded', () => {
     // 데모 화면 초기화 (등록 없이 바로 접속)
     initDemoScreen();
+    initScrollbarOnScroll();
     restoreActiveScreen();
     
     initFormValidation();
@@ -1846,15 +2697,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initIconSelector();
     initIconEdit();
     initNoticeToggle(); // 공지사항 토글 기능 초기화
+    initInfoVideoPlayback();
     initQnaVideoPlayback();
     initMainVideoPlayback();
     initSurveyVideoPlayback();
+    initLotteryVideoPlayback();
     initMobileHeaderMenus();
     initMobileMenu();
-    updateInfoGifVisibility(ScreenManager.currentScreen);
+    initBottomNav();
+    initNetworkingTabs();
+    initMyinfoTabs();
+    initMyinfoPdfModal();
+    updateInfoVideoVisibility(ScreenManager.currentScreen);
     updateQnaVideoVisibility(ScreenManager.currentScreen);
     updateMainVideoVisibility(ScreenManager.currentScreen);
     updateSurveyVideoVisibility(ScreenManager.currentScreen);
+    updateLotteryVideoVisibility(ScreenManager.currentScreen);
     
     // 로그인 링크 클릭 (간단한 처리)
     const loginLink = document.getElementById('login-link');

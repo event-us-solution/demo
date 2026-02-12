@@ -1,0 +1,38 @@
+<!--
+  HubSpot에 그대로 붙여넣기 위한 최소 템플릿
+  head / body 구성 + 필수 태그 포함
+  → solution-demo.html 전체를 이 내용으로 바꾼 뒤,
+    "본문 자리" 부분을 demo-page.html 의 본문으로 바꾸시면 됩니다.
+-->
+<!--
+    templateType: page
+    isAvailableForNewContent: true
+    label: 이벤터스 솔루션 데모 페이지
+-->
+
+{% set file_base = '여기에_파일매니저_URL_복사_예시_https://22319584.fs1.hubspotusercontent-na1.net/hubfs/22319584/solution-demo' %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4A90E2">
+    <title>솔루션 체험 페이지 - 이벤터스</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ file_base }}/css/style.css">
+    {{ standard_header_includes }}
+</head>
+<body>
+
+    <!-- ========== 본문 자리: 아래 한 줄을 지우고, demo-page.html 의 본문(배경~모바일관리자패널)을 여기 붙여넣으세요 ========== -->
+    <p style="padding:20px;">본문 자리입니다. 로컬 파일 hubspot/templates/demo-page.html 을 열어서, &lt;div class="background-image"&gt; 부터 &lt;div id="mobile-admin-panel"&gt; 블록 끝까지 복사해 여기 붙여넣으세요.</p>
+
+    <script src="{{ file_base }}/js/data.js"></script>
+    <script src="{{ file_base }}/js/main.js"></script>
+    {{ standard_footer_includes }}
+</body>
+</html>

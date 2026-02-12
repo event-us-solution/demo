@@ -10,7 +10,6 @@
 .qna-form-select,
 .qna-form-option,
 .detail-header-action,
-.main-profile-btn,
 .section-btn,
 .section-header,
 .section-toggle,
@@ -93,7 +92,8 @@ body {
     width: 100%;
     height: 72px;
     padding: 16px 23px 16px 41px;
-    background: #6A5ACD;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 
@@ -103,22 +103,28 @@ body {
 }
 
 .logo-container {
-    margin-top: 5px;
     margin-right: 16px;
-    margin-bottom: 4px;
     object-fit: contain;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .logo-link {
     display: block;
 }
 
+.header-logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+}
+
 .header-title {
     width: auto;
     height: 20px;
-    margin: 10px 0;
-    color: var(--white);
+    margin: 0;
+    color: #5d3fbf;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 15px;
     font-weight: 600;
@@ -276,20 +282,20 @@ body {
     padding: 24px 12px;
 }
 .header-button {
-    background: rgba(255, 255, 255, 0.15);
+    background: #5d3fbf;
     height: 44px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(93, 63, 191, 0.2);
     border-radius: 12px;
     padding: 12px 20px;
     cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: none;
     transition: all 0.2s ease;
     text-decoration: none;
     color: inherit;
 }
 
 .header-button:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: #4a32a0;
 }
 
 .header-button-text {
@@ -298,7 +304,7 @@ body {
     font-size: 13px;
     font-weight: 500;
     line-height: 1.23;
-    color: var(--white);
+    color: #ffffff;
     letter-spacing: -0.01em;
 }
 
@@ -309,7 +315,7 @@ body {
     display: flex;
     margin-top: 0;
     width: 100%;
-    padding: 140px 0;
+    padding: 40px 0;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 60px;
@@ -319,30 +325,32 @@ body {
     overflow-y: visible;
 }
 
-.info-gif {
+.info-video {
     position: absolute;
-    top: 50px;
+    top: 20px;
     left: calc(150px + 428px);
     width: min(1100px, calc(100vw - (150px + 428px) - 40px));
     aspect-ratio: 16 / 9;
     display: none;
 }
 
-.info-gif img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.info-video.is-visible {
     display: block;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
-.info-gif.is-visible {
+.info-video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
     display: block;
+    background: #000;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
 }
 
 .qna-video {
     position: absolute;
-    top: 50px;
+    top: 20px;
     left: calc(150px + 428px);
     width: min(1100px, calc(100vw - (150px + 428px) - 40px));
     aspect-ratio: 16 / 9;
@@ -365,7 +373,7 @@ body {
 
 .main-video {
     position: absolute;
-    top: 50px;
+    top: 20px;
     left: calc(150px + 428px);
     width: min(1100px, calc(100vw - (150px + 428px) - 40px));
     aspect-ratio: 16 / 9;
@@ -423,12 +431,12 @@ body {
 }
 
 .main-video-overlay.is-typing .main-video-line {
-    animation: info-gif-line-in 0.8s ease forwards;
+    animation: line-fade-in 0.8s ease forwards;
 }
 
 .survey-video {
     position: absolute;
-    top: 50px;
+    top: 20px;
     left: calc(150px + 428px);
     width: min(1100px, calc(100vw - (150px + 428px) - 40px));
     aspect-ratio: 16 / 9;
@@ -486,7 +494,71 @@ body {
 }
 
 .survey-video-overlay.is-typing .survey-video-line {
-    animation: info-gif-line-in 0.8s ease forwards;
+    animation: line-fade-in 0.8s ease forwards;
+}
+
+/* 경품추첨 영상 */
+.lottery-video {
+    position: absolute;
+    top: 20px;
+    left: calc(150px + 428px);
+    width: min(1100px, calc(100vw - (150px + 428px) - 40px));
+    aspect-ratio: 16 / 9;
+    display: none;
+}
+
+.lottery-video.is-visible {
+    display: block;
+}
+
+.lottery-video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #000;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.lottery-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(24, 16, 48, 0.62);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    border-radius: 8px;
+}
+
+.lottery-video.is-dimmed .lottery-video-overlay {
+    opacity: 1;
+}
+
+.lottery-video-text {
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+.lottery-video-line {
+    margin: 0 0 10px;
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.lottery-video-line:last-child {
+    margin-bottom: 0;
+}
+
+.lottery-video-overlay.is-typing .lottery-video-line {
+    animation: line-fade-in 0.8s ease forwards;
 }
 
 .qna-video-overlay {
@@ -526,10 +598,10 @@ body {
 }
 
 .qna-video-overlay.is-typing .qna-video-line {
-    animation: info-gif-line-in 0.8s ease forwards;
+    animation: line-fade-in 0.8s ease forwards;
 }
 
-.info-gif-overlay {
+.info-video-overlay {
     position: absolute;
     inset: 0;
     background: rgba(24, 16, 48, 0.62);
@@ -541,34 +613,35 @@ body {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
+    border-radius: 8px;
 }
 
-.info-gif.is-dimmed .info-gif-overlay {
+.info-video.is-dimmed .info-video-overlay {
     opacity: 1;
 }
 
-.info-gif-text {
+.info-video-text {
     color: #ffffff;
     font-size: 22px;
     line-height: 1.5;
     font-weight: 600;
 }
 
-.info-gif-line {
+.info-video-line {
     margin: 0 0 10px;
     opacity: 0;
     transform: translateY(6px);
 }
 
-.info-gif-line:last-child {
+.info-video-line:last-child {
     margin-bottom: 0;
 }
 
-.info-gif-overlay.is-typing .info-gif-line {
-    animation: info-gif-line-in 0.8s ease forwards;
+.info-video-overlay.is-typing .info-video-line {
+    animation: line-fade-in 0.8s ease forwards;
 }
 
-@keyframes info-gif-line-in {
+@keyframes line-fade-in {
     from {
         opacity: 0;
         transform: translateY(6px);
@@ -579,7 +652,7 @@ body {
     }
 }
 
-/* 핸드폰 디바이스 (왼쪽) */
+/* 핸드폰 디바이스 (왼쪽) - 영상 윗선(top: 20px)과 맞춤 */
 .device-container {
     margin-left: 150px;
     margin-right: 0;
@@ -605,7 +678,7 @@ body {
     display: flex;
     justify-content: flex-start;
     flex: 1;
-    margin-top: 200px;
+    margin-top: 100px;
     transform: scale(0.9);
     transform-origin: top left;
 }
@@ -853,18 +926,45 @@ body {
     width: 3px;
 }
 
-/* 핸드폰 화면 내부 */
+/* 핸드폰 화면 내부 - 스크롤바: 테두리까지 마진 없이, 평소 숨김·스크롤 시 활성화 */
 .phone-screen-inner {
     display: none;
     width: 100%;
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     background: var(--white);
     flex-direction: column;
+    padding-right: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+.phone-screen-inner.is-scrolling {
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+.phone-screen-inner::-webkit-scrollbar {
+    width: 4px;
+}
+.phone-screen-inner::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 0;
+}
+.phone-screen-inner::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 2px;
+}
+.phone-screen-inner.is-scrolling::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+}
+.phone-screen-inner.is-scrolling::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.28);
 }
 
 #demo-screen {
     position: relative;
+    overflow: hidden;
 }
 
 .phone-screen-inner.active {
@@ -933,8 +1033,7 @@ body {
 }
 
 .detail-header.has-status .detail-title,
-.detail-header.has-status .detail-header-action,
-.detail-header.has-status .main-profile-btn {
+.detail-header.has-status .detail-header-action {
     margin-top: 35px;
 }
 
@@ -1051,24 +1150,6 @@ body {
     display: none;
 }
 
-.main-profile-btn {
-    margin-left: auto;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.main-profile-btn .material-icons {
-    font-size: 18px;
-}
-
 .back-btn {
     width: 40px;
     height: 40px;
@@ -1125,9 +1206,9 @@ body {
 }
 
 .info-title {
-    font-size: 18px;
+    font-size: calc(18px - 2pt);
     font-weight: 700;
-    margin-top: 4px;
+    margin-top: 14px;
     margin-bottom: 40px;
 }
 
@@ -1283,7 +1364,7 @@ body {
 
 .qna-content {
     margin: -16px;
-    min-height: calc(100vh - 56px);
+    min-height: 0;
     background: var(--white);
     display: flex;
     flex-direction: column;
@@ -1292,7 +1373,7 @@ body {
 
 .qna-form-content {
     margin: -16px;
-    min-height: calc(100vh - 56px);
+    min-height: 0;
     background: var(--white);
     font-family: var(--qna-font);
 }
@@ -1318,6 +1399,7 @@ body {
 
 #qna-screen {
     position: relative;
+    overflow: hidden;
 }
 
 .qna-form-select {
@@ -1799,6 +1881,7 @@ body {
 /* 앱 콘텐츠 영역 */
 .app-content {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
     padding: 16px;
     background: var(--white);
@@ -2206,8 +2289,7 @@ body {
     }
 
     .detail-header.has-status .detail-title,
-    .detail-header.has-status .detail-header-action,
-    .detail-header.has-status .main-profile-btn {
+    .detail-header.has-status .detail-header-action {
         margin-top: 0;
     }
 
@@ -2219,17 +2301,19 @@ body {
         display: none;
     }
 
-    .info-gif,
+    .info-video,
     .qna-video,
     .main-video,
-    .survey-video {
+    .survey-video,
+    .lottery-video {
         display: none !important;
     }
 
-    .mobile-admin-panel .info-gif,
+    .mobile-admin-panel .info-video,
     .mobile-admin-panel .qna-video,
     .mobile-admin-panel .main-video,
-    .mobile-admin-panel .survey-video {
+    .mobile-admin-panel .survey-video,
+    .mobile-admin-panel .lottery-video {
         position: static;
         width: 100%;
         max-width: 100%;
@@ -2565,7 +2649,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100%;
+    min-height: 0;
 }
 
 /* 로딩 화면 */
@@ -2608,4 +2692,2067 @@ body {
     color: #ffffff;
     line-height: 1;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 하단 탭 네비게이션 (세션/기능, 내정보, 설정) - 구분선을 위로 올려 아이콘 위 여백 확보 */
+.bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 61px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: #ffffff;
+    border-top: 0.5px solid #e5e5e5;
+    z-index: 50;
+    padding: 5px 8px 0;
+    box-sizing: border-box;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    padding: 6px 0;
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    transition: color 0.2s ease;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* 하단 탭 아이콘: Material Symbols 선 두께·스타일 고정 (wght 300 = 얇고 세련된 선) */
+.bottom-nav-item .material-icons,
+.bottom-nav-item .material-symbols-outlined {
+    font-size: 24px;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+/* 네트워킹 아이콘(diversity_3): 채우기 없이 외곽선만 */
+.bottom-nav-item[data-tab="networking"] .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+.bottom-nav-item.is-active,
+.bottom-nav-item.is-active .material-symbols-outlined,
+.bottom-nav-item.is-active .material-icons,
+.bottom-nav-item.is-active .bottom-nav-label {
+    color: #6366f1;
+    font-weight: 400;
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item:focus {
+    color: #6366f1;
+    outline: none;
+}
+
+.bottom-nav-item:hover .material-symbols-outlined,
+.bottom-nav-item:hover .material-icons,
+.bottom-nav-item:hover .bottom-nav-label,
+.bottom-nav-item:focus .material-symbols-outlined,
+.bottom-nav-item:focus .material-icons,
+.bottom-nav-item:focus .bottom-nav-label {
+    color: #6366f1;
+}
+
+/* demo-screen에서 앱 콘텐츠가 하단 탭 위에 오도록 패딩 */
+#demo-screen .app-content {
+    padding-bottom: 72px;
+}
+
+/* 내정보·설정 화면: 하단 탭 위치 기준 */
+#myinfo-screen,
+#settings-screen {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 내정보, 설정, 네트워킹 탭: 우측 상단 세션 이동 텍스트·아이콘 숨김 */
+#myinfo-screen .detail-header-action,
+#settings-screen .detail-header-action,
+#networking-screen .detail-header-action {
+    display: none !important;
+}
+
+/* 내정보 화면 */
+
+.myinfo-page-title {
+    margin: 0;
+    padding: 16px 16px 12px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #111;
+    text-align: left;
+    background: #fff;
+    border-bottom: none;
+}
+
+.myinfo-tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: 22px;
+    border-bottom: 1px solid #e6e6e6;
+    background: #fff;
+    padding: 0 16px;
+    margin-left: 10px;
+}
+
+.myinfo-tab {
+    flex: 0 0 auto;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    color: #8c8c8c;
+    font-weight: 500;
+    position: relative;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.myinfo-tab.is-active {
+    color: #5c3fbf;
+    font-weight: 400;
+}
+
+.myinfo-tab.is-active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 48px;
+    height: 2px;
+    margin-left: -24px;
+    background: #5c3fbf;
+    border-radius: 2px;
+}
+
+.myinfo-content {
+    padding-bottom: 72px;
+}
+
+.myinfo-panel {
+    display: none;
+    padding: 20px 16px;
+}
+
+/* 내정보 탭: 첫 행 텍스트를 QR 탭과 동일한 상단 위치에 맞춤 (구분선 없음) */
+#myinfo-panel-info {
+    padding-top: 20px;
+}
+
+#myinfo-panel-info .myinfo-field-row:first-child {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+.myinfo-panel.is-active {
+    display: block;
+}
+
+.myinfo-panel[hidden] {
+    display: none !important;
+}
+
+/* QR 탭 */
+.myinfo-qr-guide {
+    text-align: center;
+    font-size: 13px;
+    color: #8c8c8c;
+    margin: 0 0 20px;
+}
+
+/* QR: 가로 기준 핸드폰 화면 50%, 중앙 정렬 */
+.myinfo-qr-image-wrap {
+    width: 50%;
+    aspect-ratio: 1;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+.myinfo-qr-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.myinfo-qr-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    color: #111;
+    margin: 0 0 4px;
+}
+
+.myinfo-qr-code {
+    text-align: center;
+    font-size: 13px;
+    color: #8c8c8c;
+    margin: 0;
+}
+
+/* 내정보 탭 - 필드 목록 */
+/* 내정보 탭 - 항목별 두 줄 (라벨 / 값), 나머지 행은 위로 올림 */
+.myinfo-field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ededed;
+    font-size: 14px;
+}
+
+.myinfo-field-label {
+    color: #8c8c8c;
+    font-weight: 400;
+}
+
+.myinfo-field-value {
+    color: #111;
+    font-weight: 400;
+}
+
+/* 참여기록 탭 */
+.myinfo-pdf-btn {
+    display: block;
+    margin-left: auto;
+    padding: 8px 14px;
+    border: 1px solid #5c3fbf;
+    background: #fff;
+    color: #5c3fbf;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    margin-bottom: 20px;
+}
+
+.myinfo-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.myinfo-stat-card {
+    flex: 1;
+    padding: 13px 10px;
+    background: transparent;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+}
+
+.myinfo-stat-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: #8c8c8c;
+    margin-bottom: 2px;
+}
+
+.myinfo-stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.myinfo-stat-unit {
+    display: inline;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+}
+
+.myinfo-history-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: #111;
+    margin: 0 0 12px;
+}
+
+/* 출석 / 세션 접속 기록: 볼드 */
+#myinfo-panel-history .myinfo-history-title:first-of-type {
+    font-weight: 600;
+}
+
+/* 기능별 활동 기록: 볼드, 상단 마진 15px */
+#myinfo-panel-history .myinfo-history-title:nth-of-type(2) {
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.myinfo-history-list {
+    list-style: none;
+    padding: 5px 10px;
+    margin: 0;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.myinfo-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid #ededed;
+    font-size: 14px;
+    color: #333;
+}
+
+.myinfo-history-item:last-child {
+    border-bottom: none;
+}
+
+.myinfo-history-item span:last-child {
+    color: #8c8c8c;
+    font-size: 13px;
+}
+
+/* 설정 화면 (이미지 레이아웃) */
+.settings-page-title {
+    margin: 0;
+    padding: 16px 16px 12px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #111;
+    text-align: left;
+    background: #fff;
+}
+
+.settings-content {
+    padding-bottom: 72px;
+}
+
+.settings-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    font-size: 14px;
+}
+
+.settings-block-label {
+    color: #8c8c8c;
+    font-weight: 400;
+}
+
+.settings-block-value {
+    color: #111;
+    font-weight: 400;
+}
+
+.settings-divider {
+    height: 1px;
+    background: #ededed;
+    margin: 0 16px;
+}
+
+.settings-logout-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #111;
+    font-weight: 400;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+}
+
+.settings-logout-row .material-icons {
+    font-size: 20px;
+    color: #8c8c8c;
+}
+
+.settings-footer {
+    margin: 0;
+    padding: 40px 16px 20px;
+    font-size: 14px;
+    color: #8c8c8c;
+    font-weight: 400;
+    text-align: center;
+}
+
+#settings-screen .app-content {
+    padding-bottom: 72px;
+}
+
+/* 네트워킹 화면 (모바일 기준) - 참가 전 목록 + 필터 */
+.networking-page-title {
+    margin: 0;
+    padding: 16px 16px 12px;
+    font-size: 18px;
+    font-weight: 400;
+    color: #111;
+    text-align: left;
+    background: #fff;
+}
+
+.networking-content {
+    padding: 0 0 72px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#networking-before-join {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* 참여 전 뷰: 검색창·카운트·리스트·참여하기 버튼 마진 */
+#networking-before-join .networking-search-wrap {
+    margin: 0 15px;
+}
+#networking-before-join .networking-meta {
+    margin-left: 15px;
+}
+#networking-before-join .networking-list {
+    margin-left: 15px;
+}
+#networking-before-join .networking-join-btn {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+/* 참여 확정 후: 참여하기 이전 뷰(가려진 목록 + 참여하기 버튼) 완전 비노출 */
+#networking-before-join[hidden] {
+    display: none !important;
+}
+
+/* 리스트 영역: 스크롤바 숨김 (영상처럼 보이지 않게) */
+.networking-scroll-area {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+.networking-scroll-area::-webkit-scrollbar {
+    display: none;
+}
+
+.networking-top-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 12px;
+}
+
+.networking-search-wrap {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 12px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    min-width: 0;
+    box-shadow: none;
+}
+
+.networking-search-wrap:focus-within {
+    background: #F8FAFB;
+    border-color: #e0e0e0;
+}
+
+.networking-search-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #111;
+    font-family: inherit;
+    text-align: left;
+}
+
+.networking-search-input::placeholder {
+    color: #b0b0b0;
+}
+
+.networking-search-input:focus {
+    outline: none;
+}
+/* 검색창 우측 X(지우기) 버튼 숨김 */
+.networking-search-input::-webkit-search-cancel-button {
+    display: none;
+    -webkit-appearance: none;
+}
+.networking-search-input::-webkit-search-decoration {
+    display: none;
+}
+
+.networking-search-wrap:focus-within .networking-search-input {
+    color: #111;
+}
+
+.networking-search-wrap:focus-within .networking-search-input::placeholder {
+    color: #b0b0b0;
+}
+
+.networking-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    flex-shrink: 0;
+}
+
+.networking-count {
+    font-size: 13px;
+    font-weight: 400;
+    color: #59534E;
+    white-space: nowrap;
+    text-align: left;
+    font-family: var(--qna-font), 'SUIT Variable', 'SUIT', sans-serif;
+}
+
+.networking-search-divider {
+    height: 1px;
+    background: #e8e8e8;
+    margin: 10px 0 0;
+    width: 100%;
+}
+
+.networking-join-divider {
+    height: 1px;
+    background: #e8e8e8;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.networking-filter-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: #59534E;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+/* 우측 검색필터 아이콘: Material Symbols Outlined tune */
+.networking-filter-btn .material-symbols-outlined {
+    font-size: 22px;
+    color: #B4B8BB;
+    transform: rotate(90deg);
+}
+
+.networking-list {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.networking-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.networking-card:last-child {
+    border-bottom: none;
+}
+
+.networking-card-photo {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: #e5e5e5;
+    flex-shrink: 0;
+}
+
+.networking-card-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.networking-card-name {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #111;
+    line-height: 1.3;
+}
+
+.networking-card-role {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.3;
+}
+
+.networking-card-msg {
+    margin: 0;
+    font-size: 12px;
+    color: #8c8c8c;
+    line-height: 1.4;
+}
+
+.networking-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 23px;
+    margin-bottom: 50px;
+}
+
+.networking-pagination-prev,
+.networking-pagination-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 29px;
+    height: 29px;
+    border: none;
+    background: #F2F4F5;
+    color: #CED3D6;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.networking-pagination-prev .material-icons,
+.networking-pagination-next .material-icons {
+    font-size: 19px;
+}
+
+.networking-pagination-current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 29px;
+    height: 29px;
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+    background: #8D71DD;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* 참가 전/참여 후 전환: 참여 후 뷰는 참여 완료 전까지 완전히 숨김 */
+#networking-after-join[hidden] {
+    display: none !important;
+}
+
+#networking-after-join {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#networking-after-join .networking-after-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#networking-after-join .networking-after-scroll::-webkit-scrollbar {
+    display: none;
+}
+#networking-after-join .networking-after-scroll {
+    scrollbar-width: none;
+}
+
+/* 참여 후: 김이벤(나) 카드 배경색 + 보라색 구분선 위·아래만 */
+#networking-after-join .networking-profile-card.is-me {
+    background: #F5F2FF;
+    border-top: 2px solid #B3A6E2;
+    border-bottom: 2px solid #B3A6E2;
+}
+#networking-after-join .networking-profile-card.is-me:last-child {
+    border-bottom: 2px solid #B3A6E2; /* 마지막이어도 나 카드는 보라색 하단선 유지 */
+}
+
+/* 참여 후: 상하 구분선 색상 #B3A6E2, 볼드(2px), 좌우 끝까지 */
+/* 참여 확정 후 뷰: 검색창·참여인원에만 마진 */
+#networking-after-join .networking-top-row {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+#networking-after-join .networking-join-divider {
+    margin: 0;
+    width: 100%;
+    height: 1px;
+    background: #eee;
+    padding: 0;
+    flex-shrink: 0;
+    box-sizing: content-box;
+}
+
+/* 참여 후: 카드 구분선 1px #f0f0f0, 좌우는 컨테이너에 맞춤 */
+#networking-after-join .networking-profile-card {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    box-sizing: content-box;
+}
+#networking-after-join .networking-profile-card:last-child {
+    border-bottom: none;
+}
+
+/* 참여 후: 내 정보 수정하기 레이아웃 = 네트워킹 참여하기와 동일 (divider + 버튼) */
+#networking-after-join .networking-edit-myinfo-btn {
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    flex-shrink: 0;
+    padding: 11px 16px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* ===== 참가자 상세 정보 모달 (박현우 예시 동일 디자인) ===== */
+.participant-detail-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 130;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+}
+.participant-detail-modal[hidden] {
+    display: none !important;
+}
+.participant-detail-modal.is-open {
+    pointer-events: auto;
+    display: flex;
+}
+.participant-detail-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+.participant-detail-panel {
+    position: relative;
+    width: 100%;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.15);
+}
+.participant-detail-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+.participant-detail-close .material-icons {
+    font-size: 24px;
+}
+/* 상단 프로필: 참여하기 모달과 동일 레이아웃(색상 선택 없음), 배경색은 참가자별(data-color) */
+.participant-detail-header {
+    position: relative;
+    flex-shrink: 0;
+    padding: 20px;
+    margin: -12px 0 20px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+.participant-detail-profile-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: none;
+}
+.participant-detail-photo-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    aspect-ratio: 2.2 / 1;
+    background: #F5F2FF;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    overflow: hidden;
+}
+.participant-detail-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+    display: none;
+}
+.participant-detail-photo-wrap.has-image .participant-detail-photo {
+    display: block;
+}
+.participant-detail-photo-wrap.has-image .participant-detail-photo-placeholder {
+    visibility: hidden;
+}
+.participant-detail-photo-placeholder {
+    font-size: 18pt;
+    font-weight: 600;
+    color: #333;
+    line-height: 1;
+}
+.participant-detail-profile-info {
+    text-align: left;
+    margin: 20px;
+    padding: 18px 18px 18px 15px;
+    background: #fff;
+}
+.participant-detail-name {
+    margin: 0 0 6px;
+    font-size: 14pt;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.participant-detail-verified {
+    font-size: 20px !important;
+    color: #5c3fbf;
+    flex-shrink: 0;
+}
+.participant-detail-role {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #8c8c8c;
+    line-height: 1.3;
+}
+.participant-detail-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 16px 24px;
+    scrollbar-width: none;
+}
+.participant-detail-body::-webkit-scrollbar {
+    display: none;
+}
+/* 구분선 좌우 끝까지: 마이너스 마진으로 선만 패널 폭 100% */
+.participant-detail-item {
+    margin-left: -16px;
+    margin-right: -16px;
+    margin-bottom: 0;
+    padding: 20px 16px 24px 16px;
+    border-bottom: 1px solid #eee;
+    box-sizing: content-box;
+}
+.participant-detail-item:last-child {
+    border-bottom: none;
+}
+/* 레이블: 아주 연한 회색, 작게 */
+.participant-detail-label {
+    display: block;
+    font-size: 11px;
+    color: #c0c0c0;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+/* 데이터: 검은색, 레이블 바로 아래, 넉넉한 간격 */
+.participant-detail-value {
+    margin: 0;
+    font-size: 15px;
+    color: #111;
+    line-height: 1.45;
+}
+.participant-detail-value a {
+    color: #4A90E2;
+    text-decoration: underline;
+}
+.participant-detail-value a:hover {
+    color: #3a7bc8;
+}
+
+#networking-before-join .networking-join-btn {
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+#networking-before-join .networking-join-divider {
+    margin: 0;
+    padding: 0;
+}
+
+.networking-join-btn {
+    display: block;
+    width: 100%;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #6937F6;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* 네트워킹 필터 모달: 화면 전체 너비, 상단 네비까지 전체 높이 */
+.networking-filter-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    pointer-events: none;
+    padding: 0;
+    margin: 0;
+}
+
+.networking-filter-modal[hidden] {
+    display: none !important;
+}
+
+.networking-filter-modal.is-open {
+    pointer-events: auto;
+    display: flex;
+}
+
+.networking-filter-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.networking-filter-modal.is-open .networking-filter-backdrop {
+    opacity: 1;
+}
+
+.networking-filter-panel {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    margin: 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.12);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.networking-filter-modal.is-open .networking-filter-panel {
+    transform: translateX(0);
+}
+
+.networking-filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    flex-shrink: 0;
+}
+
+.networking-filter-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #7c7c9e;
+}
+
+.networking-filter-reset {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: #9ca3af;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.networking-filter-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px 20px;
+    font-weight: 400;
+}
+
+.networking-filter-label {
+    margin: 0 0 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #111;
+}
+
+.networking-filter-sort {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.networking-sort-option {
+    padding: 9px 14px;
+    border: 1px solid #EEEEEE;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 13px;
+    color: #333;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.networking-sort-option.is-active {
+    border: 1px solid #5c3fbf;
+    background: #fff;
+    color: #5c3fbf;
+    font-weight: 500;
+}
+
+.networking-filter-jobs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.networking-job-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border: 1px solid #EEEEEE;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 11px;
+    color: #333;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.networking-job-tag-emoji {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.networking-job-tag-text {
+    line-height: 1.3;
+}
+
+.networking-job-tag.is-selected {
+    border-color: #5c3fbf;
+    background: #fff;
+    color: #5c3fbf;
+}
+
+.networking-job-tag.is-selected .networking-job-tag-emoji {
+    opacity: 1;
+}
+
+.networking-filter-career {
+    margin-bottom: 20px;
+}
+
+.networking-career-range {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: #b8b8b8;
+}
+
+.networking-career-slider-wrap {
+    position: relative;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+/* 비활성 트랙: 연한 보라/회색 */
+.networking-career-track-bg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    background: #e8e4f4;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+/* 활성 트랙: 두 핸들 사이만 보라색 */
+.networking-career-track-fill {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    width: 100%;
+    background: #6341f0;
+    border-radius: 3px;
+    pointer-events: none;
+    transition: left 0.05s ease, width 0.05s ease;
+}
+
+.networking-career-slider-wrap input[type="range"] {
+    position: absolute;
+    width: 100%;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    pointer-events: none;
+}
+
+.networking-career-slider-wrap input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    background: transparent;
+    border-radius: 3px;
+}
+
+.networking-career-slider-wrap input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 2px solid #6341f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    pointer-events: auto;
+    margin-top: -7px;
+}
+
+.networking-career-slider-wrap input[type="range"]:active::-webkit-slider-thumb {
+    box-shadow: 0 2px 6px rgba(99, 65, 240, 0.35);
+}
+
+.networking-career-slider-wrap input[type="range"]::-moz-range-track {
+    height: 6px;
+    background: transparent;
+    border-radius: 3px;
+}
+
+.networking-career-slider-wrap input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 2px solid #6341f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.networking-career-slider-wrap input[type="range"]:active::-moz-range-thumb {
+    box-shadow: 0 2px 6px rgba(99, 65, 240, 0.35);
+}
+
+.networking-career-slider-wrap .networking-career-min {
+    pointer-events: auto;
+}
+
+.networking-career-slider-wrap .networking-career-max {
+    pointer-events: auto;
+}
+
+.networking-career-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #b8b8b8;
+}
+
+.networking-filter-apply-wrap {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 16px 0 20px;
+    margin: 0;
+    border-top: 1px solid #eeeeee;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+.networking-filter-apply {
+    display: block;
+    width: calc(100% - 32px);
+    max-width: 100%;
+    margin: 0 16px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #6341f0;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+#networking-screen .app-content {
+    padding-bottom: 72px;
+}
+
+/* 참여 후 네트워킹: 전체 프로필 목록 */
+.networking-list-after {
+    margin-bottom: 20px;
+}
+
+.networking-profile-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.networking-profile-card:last-child {
+    border-bottom: none;
+}
+
+.networking-profile-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #5c3fbf 0%, #7b5de8 100%);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.networking-profile-avatar.has-photo {
+    color: transparent;
+}
+/* 김이벤(나): 업로드 없을 때 연보라색 박스 */
+.networking-profile-card.is-me .networking-profile-avatar.networking-profile-avatar-no-photo {
+    background: #E8E0F5;
+    color: #5c3fbf;
+}
+
+.networking-profile-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.networking-profile-name {
+    margin: 0 0 4px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #111;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.networking-profile-badge {
+    font-size: 13px;
+    font-weight: 400;
+    color: #5c3fbf;
+}
+
+.networking-profile-icon {
+    display: inline-flex;
+    color: #4A90E2;
+}
+
+.networking-profile-icon .material-icons {
+    font-size: 16px;
+}
+
+.networking-profile-role {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.3;
+}
+
+.networking-profile-intro {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.45;
+}
+
+.networking-profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.networking-tag {
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #f0eef8;
+    color: #5c3fbf;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.networking-edit-myinfo-btn {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #6937F6;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* 네트워킹 참여하기 모달 */
+.networking-join-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 110;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.networking-join-modal[hidden] {
+    display: none !important;
+}
+
+.networking-join-modal.is-open {
+    pointer-events: auto;
+    display: flex;
+}
+
+.networking-join-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.networking-join-panel {
+    position: relative;
+    width: 100%;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 이미지 잘라내기 모달 (크롭) */
+.crop-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 120;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    padding: 16px;
+    box-sizing: border-box;
+}
+.crop-modal[hidden] {
+    display: none !important;
+}
+.crop-modal.is-open {
+    pointer-events: auto;
+    display: flex;
+}
+.crop-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+.crop-modal-panel {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+.crop-modal-title {
+    margin: 0;
+    padding: 16px 16px 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+}
+.crop-modal-body {
+    flex: 1;
+    min-height: 0;
+    padding: 0;
+}
+.crop-modal-crop-wrap {
+    position: relative;
+    width: 100%;
+    height:  min(70vh, 400px);
+    min-height: 280px;
+    background: #333;
+    overflow: hidden;
+}
+.crop-modal-crop-wrap .cropper-container {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+.crop-modal-crop-wrap .cropper-wrap-box,
+.crop-modal-crop-wrap .cropper-view-box {
+    border-radius: 0;
+}
+.crop-modal-img {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.crop-modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 16px;
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+}
+.crop-modal-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.crop-modal-close {
+    background: #fff;
+    color: #333;
+    border-color: #ccc;
+}
+.crop-modal-close:hover {
+    background: #f5f5f5;
+}
+.crop-modal-confirm {
+    background: #6B4EAA;
+    color: #fff;
+    border-color: #6B4EAA;
+}
+.crop-modal-confirm:hover {
+    background: #5a4190;
+}
+
+.networking-join-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+}
+
+.networking-join-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #111;
+}
+
+.networking-join-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.networking-join-close .material-icons {
+    font-size: 24px;
+}
+
+.networking-join-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 12px 0 16px 0;
+    /* 스크롤바 숨김 → 차지하는 영역 제거, 터치·휠 스크롤은 그대로 동작 */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.networking-join-body::-webkit-scrollbar {
+    display: none;
+}
+
+/* body 내 폼 영역만 좌우 패딩 (초록 박스는 패딩 없이 가득 차게) */
+.networking-join-body-inner {
+    padding: 0 16px;
+}
+
+/* ===== Box-in-Box 프로필 영역 (원본 디자인) ===== */
+
+/* 1. 배경 — 모달 상단 짙은 초록(#178263), 내부 패딩 20px */
+.networking-join-profile {
+    background: #178263;
+    border-radius: 0;
+    padding: 20px;
+    margin: -12px 0 20px 0;
+    width: 100%;
+    min-height: 448px;
+    box-sizing: border-box;
+}
+
+/* 2. 카드 — 초록 위 흰색 라운드 카드 (padding 적용) */
+.networking-join-profile-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: none;
+}
+
+/* 기본 파일 입력창 완전 숨김 — 디자인된 '업로드' 버튼 클릭 시 JS로 trigger */
+input[type="file"].networking-join-photo-input,
+.networking-join-photo-input {
+    display: none !important;
+}
+
+/* 3. 프로필 박스 — 연보라(Lavender) 직사각형 */
+.networking-join-photo-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    aspect-ratio: 2.2 / 1;
+    background: #F5F2FF;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* 성(예: 김) — 이미지 박스 안 18pt */
+.networking-join-photo-placeholder {
+    font-size: 18pt;
+    font-weight: 600;
+    color: #333;
+    line-height: 1;
+}
+
+.networking-join-photo-preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+    display: none;
+}
+
+.networking-join-photo-wrap.has-image .networking-join-photo-placeholder {
+    visibility: hidden;
+}
+
+/* 4. 업로드 버튼 — 연보라 박스 배경색 그대로, 모서리 곡률 반(8px) */
+.networking-join-upload {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 14px;
+    border: 1px solid #7952F3;
+    border-radius: 8px;
+    background: #F5F2FF;
+    font-size: 12px;
+    color: #7952F3;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    z-index: 2;
+}
+
+.networking-join-upload .material-icons {
+    font-size: 16px;
+    color: #7952F3;
+}
+
+/* 5. 네임카드(김이벤 들어가는 하얀색 박스) — 위 마진 반, 김이벤 왼쪽 15px */
+.networking-join-profile-info {
+    text-align: left;
+    margin: 20px;
+    padding: 8px 18px 18px 15px;
+    background: #fff;
+}
+
+.networking-join-team {
+    margin: 0 0 6px;
+    font-size: 14pt;
+    font-weight: 700;
+    color: #111;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 이름 옆 회색 체크 아이콘(인증 마크) */
+.networking-join-info {
+    font-size: 14pt !important;
+    color: #8c8c8c;
+}
+
+.networking-join-affiliation {
+    margin: 0;
+    font-size: 14px;
+    color: #8c8c8c;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.networking-join-field {
+    margin-bottom: 16px;
+}
+
+.networking-join-label {
+    display: block;
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.networking-join-color-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: #333;
+}
+
+.networking-join-color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.networking-join-color-value {
+    flex: 1;
+}
+
+.networking-join-color-wrap .material-icons {
+    font-size: 20px;
+    color: #8c8c8c;
+}
+
+/* 색상 클릭 시 컬러 피커 패널 토글 */
+.networking-join-color-field .networking-join-color-wrap {
+    cursor: pointer;
+}
+.networking-join-color-picker-panel {
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid #178263;
+    border-radius: 8px;
+    background: #fff;
+    box-sizing: border-box;
+}
+.networking-join-color-picker-panel[hidden] {
+    display: none !important;
+}
+.color-picker-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.color-picker-row {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+}
+.color-picker-palette-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+}
+.color-picker-hue-wrap {
+    position: relative;
+    width: 24px;
+    flex-shrink: 0;
+}
+/* 사각형 팔레트: 가로=채도, 세로=명도 (JS에서 --picker-hue 로 배경 갱신) */
+.color-picker-palette {
+    width: 100%;
+    height: 180px;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,1) 100%),
+                linear-gradient(to right, #fff 0%, hsl(var(--picker-hue, 164), 100%, 50%) 100%);
+    background-blend-mode: multiply;
+    touch-action: none;
+    cursor: crosshair;
+}
+.color-picker-palette-handle {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.3);
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+/* 우측 세로 Hue 슬라이더 (무지개 스펙트럼) */
+.color-picker-hue {
+    width: 24px;
+    height: 180px;
+    border-radius: 6px;
+    background: linear-gradient(to bottom,
+        #ff0000 0%, #ff00ff 16.67%, #0000ff 33.33%, #00ffff 50%,
+        #00ff00 66.67%, #ffff00 83.33%, #ff0000 100%);
+    touch-action: none;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.color-picker-hue-handle {
+    position: absolute;
+    right: 0;
+    width: 24px;
+    height: 12px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.3);
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+.color-picker-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.color-picker-hex {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background: #f5f5f5;
+    font-size: 14px;
+    color: #111;
+    font-family: monospace;
+    box-sizing: border-box;
+}
+.color-picker-confirm {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    background: #4A90E2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.color-picker-confirm:hover {
+    background: #3a7bc8;
+}
+
+.networking-join-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: #111;
+    font-family: inherit;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.networking-join-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.networking-join-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: #111;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.networking-join-select-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: #111;
+}
+
+.networking-join-select-wrap .material-icons {
+    font-size: 20px;
+    color: #8c8c8c;
+}
+
+.networking-join-notice {
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    background: #fffde7;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.networking-join-jobs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.networking-join-job-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 13px;
+    color: #333;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.networking-join-job-emoji {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.networking-join-job-text {
+    line-height: 1.3;
+}
+
+.networking-join-job-tag.is-selected {
+    border-color: #5c3fbf;
+    background: #fff;
+    color: #5c3fbf;
+}
+
+.networking-join-footer {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+}
+
+.networking-join-cancel {
+    flex: 1;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.networking-join-submit {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #6341f0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* 내정보 - PDF 내보내기 모달 */
+.myinfo-pdf-modal {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.myinfo-pdf-modal[hidden] {
+    display: none !important;
+}
+
+.myinfo-pdf-modal.is-open {
+    display: flex;
+}
+
+.myinfo-pdf-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.myinfo-pdf-modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.myinfo-pdf-modal-title {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #111;
+}
+
+.myinfo-pdf-modal-desc {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: #666;
+}
+
+.myinfo-pdf-modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.myinfo-pdf-modal-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.myinfo-pdf-modal-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #5c3fbf;
+    cursor: pointer;
+}
+
+.myinfo-pdf-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.myinfo-pdf-modal-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.myinfo-pdf-modal-cancel {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+.myinfo-pdf-modal-submit {
+    background: #5c3fbf;
+    border: none;
+    color: #fff;
 }

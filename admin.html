@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>말풍선 관리 - 이벤터스</title>
+    <title>관리자 페이지 - 이벤터스</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -17,7 +18,7 @@
         }
 
         body {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
             background: #f5f5f5;
             padding: 40px 20px;
         }
@@ -47,6 +48,46 @@
         .admin-header p {
             color: #666;
             font-size: 14px;
+        }
+
+        /* 탭 네비게이션 */
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0;
+        }
+
+        .admin-tab {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        .admin-tab:hover {
+            color: #5d3fbf;
+        }
+
+        .admin-tab.active {
+            color: #5d3fbf;
+            border-bottom-color: #5d3fbf;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .balloon-edit-section {
@@ -241,9 +282,348 @@
         .save-message.show {
             display: flex;
         }
+
+        /* 미디어 관리 스타일 */
+        .media-edit-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 24px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .media-edit-card h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .media-edit-card .card-desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .media-upload-area {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .media-preview {
+            flex: 0 0 400px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-preview video,
+        .media-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .media-preview-placeholder {
+            color: #666;
+            text-align: center;
+        }
+
+        .media-preview-placeholder .material-icons {
+            font-size: 48px;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .upload-controls {
+            flex: 1;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .file-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: #5d3fbf;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        .file-upload-btn:hover {
+            background: #4a32a0;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .current-file {
+            margin-top: 12px;
+            padding: 12px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #2e7d32;
+        }
+
+        .text-lines-editor {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .text-lines-editor h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .text-line-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .text-line-item .line-number {
+            flex: 0 0 30px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+        }
+
+        .text-line-item input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Pretendard', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .text-line-item input:focus {
+            outline: none;
+            border-color: #5d3fbf;
+        }
+
+        .text-line-item .remove-line {
+            flex: 0 0 32px;
+            height: 32px;
+            border: none;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .text-line-item .remove-line:hover {
+            background: #ffcdd2;
+        }
+
+        .add-line-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #e3f2fd;
+            color: #1565c0;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+            font-family: 'Pretendard', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .add-line-btn:hover {
+            background: #bbdefb;
+        }
+
+        .speed-control {
+            margin-top: 16px;
+        }
+
+        .speed-control label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .speed-control select {
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Pretendard', sans-serif;
+            min-width: 150px;
+        }
+
+        .media-section-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 40px 0;
+        }
+
+        /* 로그인 화면 */
+        .admin-login-wrap {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .admin-login-box {
+            background: white;
+            border-radius: 12px;
+            padding: 48px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .admin-login-box h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .admin-login-box p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .admin-login-box .form-group {
+            margin-bottom: 20px;
+        }
+
+        .admin-login-box .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .admin-login-box .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        .admin-login-box .form-group input:focus {
+            outline: none;
+            border-color: #5d3fbf;
+        }
+
+        .admin-login-box .btn-login {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            background: #5d3fbf;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Pretendard', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .admin-login-box .btn-login:hover {
+            background: #4a32a0;
+        }
+
+        .admin-login-error {
+            margin-top: 16px;
+            padding: 12px;
+            background: #ffebee;
+            color: #c62828;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .admin-login-error.show {
+            display: block;
+        }
+
+        .admin-content-wrap {
+            display: none;
+        }
+
+        .admin-content-wrap.authenticated {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <!-- 로그인 화면 -->
+    <div class="admin-login-wrap" id="admin-login-wrap">
+        <div class="admin-login-box">
+            <h1>관리자 로그인</h1>
+            <p>이벤터스 관리자 페이지에 로그인합니다.</p>
+            <form id="admin-login-form" autocomplete="on">
+                <div class="form-group">
+                    <label for="admin-id">아이디</label>
+                    <input type="text" id="admin-id" name="admin-id" placeholder="아이디 입력" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="admin-pw">비밀번호</label>
+                    <input type="password" id="admin-pw" name="admin-pw" placeholder="비밀번호 입력" required autocomplete="current-password">
+                </div>
+                <div class="admin-login-error" id="admin-login-error">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+                <button type="submit" class="btn-login">로그인</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 로그인 후 표시할 관리자 콘텐츠 -->
+    <div class="admin-content-wrap" id="admin-content-wrap">
     <div class="admin-container">
         <a href="index.html" class="back-link">
             <span class="material-icons" style="font-size: 20px;">arrow_back</span>
@@ -251,10 +631,365 @@
         </a>
 
         <div class="admin-header">
-            <h1>말풍선 관리</h1>
-            <p>핸드폰 화면 좌측에 표시되는 말풍선의 텍스트와 아이콘을 수정할 수 있습니다.</p>
+            <h1>관리자 페이지</h1>
+            <p>영상, 텍스트, 말풍선 등 체험 페이지의 콘텐츠를 관리할 수 있습니다.</p>
         </div>
 
+        <!-- 탭 네비게이션 -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" data-tab="media">영상/미디어 관리</button>
+            <button class="admin-tab" data-tab="balloon">말풍선 관리</button>
+        </div>
+
+        <!-- 영상/미디어 관리 탭 -->
+        <div class="tab-content active" id="tab-media">
+            <!-- 메인 영상 -->
+            <div class="media-edit-card">
+                <h2>
+                    <span class="material-icons" style="color: #5d3fbf;">smart_display</span>
+                    메인 영상
+                </h2>
+                <p class="card-desc">메인 화면에서 표시되는 영상과 오버레이 텍스트를 관리합니다.</p>
+
+                <div class="media-upload-area">
+                    <div class="media-preview" id="preview-main">
+                        <video muted autoplay loop>
+                            <source src="assets/main/main_setting.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="upload-controls">
+                        <div class="file-upload-wrapper">
+                            <button class="file-upload-btn" onclick="document.getElementById('upload-main').click()">
+                                <span class="material-icons">upload</span>
+                                영상 업로드
+                            </button>
+                            <input type="file" id="upload-main" class="file-upload-input" accept="video/*" data-target="main">
+                            <div class="file-name" id="filename-main"></div>
+                        </div>
+                        <div class="current-file">현재 파일: assets/main/main_setting.mp4</div>
+                        <div class="speed-control">
+                            <label>재생 속도</label>
+                            <select id="speed-main">
+                                <option value="1">1배속</option>
+                                <option value="1.5" selected>1.5배속</option>
+                                <option value="2">2배속</option>
+                                <option value="2.5">2.5배속</option>
+                                <option value="3">3배속</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-lines-editor">
+                    <h3>오버레이 텍스트</h3>
+                    <div id="text-lines-main">
+                        <div class="text-line-item">
+                            <span class="line-number">1</span>
+                            <input type="text" value="주최자의 의도대로 설계하는 스마트 행사 운영 가이드">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">2</span>
+                            <input type="text" value="올인원 기능 배치: 행사 정보, Q&A, 설문 등 꼭 필요한 기능을 클릭 몇 번으로 배치하고 실시간으로 반영합니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">3</span>
+                            <input type="text" value="세션별 접근 설정: 각 세션의 공개 범위를 그룹별로 지정하여 유료 및 비공개 세션을 철저히 관리합니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                    </div>
+                    <button class="add-line-btn" onclick="addLine('text-lines-main')">
+                        <span class="material-icons">add</span>
+                        줄 추가
+                    </button>
+                </div>
+            </div>
+
+            <div class="media-section-divider"></div>
+
+            <!-- 행사정보 영상 -->
+            <div class="media-edit-card">
+                <h2>
+                    <span class="material-icons" style="color: #2196f3;">info</span>
+                    행사정보 영상
+                </h2>
+                <p class="card-desc">행사정보 화면에서 표시되는 영상과 오버레이 텍스트를 관리합니다.</p>
+
+                <div class="media-upload-area">
+                    <div class="media-preview" id="preview-info">
+                        <video muted autoplay loop>
+                            <source src="assets/info/information.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="upload-controls">
+                        <div class="file-upload-wrapper">
+                            <button class="file-upload-btn" onclick="document.getElementById('upload-info').click()">
+                                <span class="material-icons">upload</span>
+                                영상 업로드
+                            </button>
+                            <input type="file" id="upload-info" class="file-upload-input" accept="video/*" data-target="info">
+                            <div class="file-name" id="filename-info"></div>
+                        </div>
+                        <div class="current-file">현재 파일: assets/info/information.mp4</div>
+                        <div class="speed-control">
+                            <label>재생 속도</label>
+                            <select id="speed-info">
+                                <option value="1">1배속</option>
+                                <option value="1.5" selected>1.5배속</option>
+                                <option value="2">2배속</option>
+                                <option value="2.5">2.5배속</option>
+                                <option value="3">3배속</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-lines-editor">
+                    <h3>오버레이 텍스트</h3>
+                    <div id="text-lines-info">
+                        <div class="text-line-item">
+                            <span class="line-number">1</span>
+                            <input type="text" value="참가자에게 전달하고 싶은 모든 정보를 한번에 작성하세요.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">2</span>
+                            <input type="text" value="행사에 필요한 상세 안내부터 연사 정보, 관련 자료까지 한곳에 모을수 있습니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">3</span>
+                            <input type="text" value="텍스트, 파일 다운로드, 외부 링크 연결, 영상 시청까지 페이지 하나로 간편하게 해결할 수 있습니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                    </div>
+                    <button class="add-line-btn" onclick="addLine('text-lines-info')">
+                        <span class="material-icons">add</span>
+                        줄 추가
+                    </button>
+                </div>
+            </div>
+
+            <div class="media-section-divider"></div>
+
+            <!-- 질의응답 영상 -->
+            <div class="media-edit-card">
+                <h2>
+                    <span class="material-icons" style="color: #4caf50;">help_outline</span>
+                    질의응답 영상
+                </h2>
+                <p class="card-desc">질의응답 화면에서 표시되는 영상과 오버레이 텍스트를 관리합니다.</p>
+
+                <div class="media-upload-area">
+                    <div class="media-preview" id="preview-qna">
+                        <video muted autoplay loop>
+                            <source src="assets/qna/qna_demo.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="upload-controls">
+                        <div class="file-upload-wrapper">
+                            <button class="file-upload-btn" onclick="document.getElementById('upload-qna').click()">
+                                <span class="material-icons">upload</span>
+                                영상 업로드
+                            </button>
+                            <input type="file" id="upload-qna" class="file-upload-input" accept="video/*" data-target="qna">
+                            <div class="file-name" id="filename-qna"></div>
+                        </div>
+                        <div class="current-file">현재 파일: assets/qna/qna_demo.mp4</div>
+                        <div class="speed-control">
+                            <label>재생 속도</label>
+                            <select id="speed-qna">
+                                <option value="1">1배속</option>
+                                <option value="1.5">1.5배속</option>
+                                <option value="2" selected>2배속</option>
+                                <option value="2.5">2.5배속</option>
+                                <option value="3">3배속</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-lines-editor">
+                    <h3>오버레이 텍스트</h3>
+                    <div id="text-lines-qna">
+                        <div class="text-line-item">
+                            <span class="line-number">1</span>
+                            <input type="text" value="어떤 질문이 나올지 더 이상 불안해하지 마세요.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">2</span>
+                            <input type="text" value="복잡한 마이크 전달 없이 참가자들의 궁금증을 한곳에 모을 수 있습니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">3</span>
+                            <input type="text" value="운영진이 미리 질문을 확인하는 필터링 기능과 깨끗한 문장으로 다듬어주는 AI 서포트를 제공합니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">4</span>
+                            <input type="text" value="스크린에 질문을 띄우는 것만으로도 현장감 넘치는 소통이 시작됩니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                    </div>
+                    <button class="add-line-btn" onclick="addLine('text-lines-qna')">
+                        <span class="material-icons">add</span>
+                        줄 추가
+                    </button>
+                </div>
+            </div>
+
+            <div class="media-section-divider"></div>
+
+            <!-- 설문조사 영상 -->
+            <div class="media-edit-card">
+                <h2>
+                    <span class="material-icons" style="color: #9c27b0;">assignment</span>
+                    설문조사 영상
+                </h2>
+                <p class="card-desc">설문조사 화면에서 표시되는 영상과 오버레이 텍스트를 관리합니다.</p>
+
+                <div class="media-upload-area">
+                    <div class="media-preview" id="preview-survey">
+                        <video muted autoplay loop>
+                            <source src="assets/survey/survey.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="upload-controls">
+                        <div class="file-upload-wrapper">
+                            <button class="file-upload-btn" onclick="document.getElementById('upload-survey').click()">
+                                <span class="material-icons">upload</span>
+                                영상 업로드
+                            </button>
+                            <input type="file" id="upload-survey" class="file-upload-input" accept="video/*" data-target="survey">
+                            <div class="file-name" id="filename-survey"></div>
+                        </div>
+                        <div class="current-file">현재 파일: assets/survey/survey.mp4</div>
+                        <div class="speed-control">
+                            <label>재생 속도</label>
+                            <select id="speed-survey">
+                                <option value="1">1배속</option>
+                                <option value="1.5">1.5배속</option>
+                                <option value="2" selected>2배속</option>
+                                <option value="2.5">2.5배속</option>
+                                <option value="3">3배속</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-lines-editor">
+                    <h3>오버레이 텍스트</h3>
+                    <div id="text-lines-survey">
+                        <div class="text-line-item">
+                            <span class="line-number">1</span>
+                            <input type="text" value="핸드폰으로 설문에 참여합니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">2</span>
+                            <input type="text" value="제출 즉시 데이터를 확인해 별도의 정리과정이 사라집니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">3</span>
+                            <input type="text" value="설문 참여 가능시간을 통제할 수 있습니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">4</span>
+                            <input type="text" value="그리고! 경품추첨과 연동해 응답율을 높일수 있습니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                    </div>
+                    <button class="add-line-btn" onclick="addLine('text-lines-survey')">
+                        <span class="material-icons">add</span>
+                        줄 추가
+                    </button>
+                </div>
+            </div>
+
+            <div class="media-section-divider"></div>
+
+            <!-- 경품추첨 영상 -->
+            <div class="media-edit-card">
+                <h2>
+                    <span class="material-icons" style="color: #00bcd4;">card_giftcard</span>
+                    경품추첨 영상
+                </h2>
+                <p class="card-desc">경품추첨 화면에서 표시되는 영상과 오버레이 텍스트를 관리합니다.</p>
+
+                <div class="media-upload-area">
+                    <div class="media-preview" id="preview-lottery">
+                        <video muted autoplay loop>
+                            <source src="assets/lucky-draw/lucky-draw.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="upload-controls">
+                        <div class="file-upload-wrapper">
+                            <button class="file-upload-btn" onclick="document.getElementById('upload-lottery').click()">
+                                <span class="material-icons">upload</span>
+                                영상 업로드
+                            </button>
+                            <input type="file" id="upload-lottery" class="file-upload-input" accept="video/*" data-target="lottery">
+                            <div class="file-name" id="filename-lottery"></div>
+                        </div>
+                        <div class="current-file">현재 파일: assets/lucky-draw/lucky-draw.mp4</div>
+                        <div class="speed-control">
+                            <label>재생 속도</label>
+                            <select id="speed-lottery">
+                                <option value="1">1배속</option>
+                                <option value="1.5">1.5배속</option>
+                                <option value="2">2배속</option>
+                                <option value="2.5" selected>2.5배속</option>
+                                <option value="3">3배속</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-lines-editor">
+                    <h3>오버레이 텍스트</h3>
+                    <div id="text-lines-lottery">
+                        <div class="text-line-item">
+                            <span class="line-number">1</span>
+                            <input type="text" value="행사의 마무리 럭키드로우!">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">2</span>
+                            <input type="text" value="참여할 수 있는 그룹을 선택할 수 있습니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                        <div class="text-line-item">
+                            <span class="line-number">3</span>
+                            <input type="text" value="설문조사, 질의응답 등 특정 기능에 참여한 사람에게만 추첨번호를 받도록 설정할 수 있습니다.">
+                            <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                        </div>
+                    </div>
+                    <button class="add-line-btn" onclick="addLine('text-lines-lottery')">
+                        <span class="material-icons">add</span>
+                        줄 추가
+                    </button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-success" onclick="saveMediaSettings()">
+                    <span class="material-icons" style="font-size: 18px; vertical-align: middle;">save</span>
+                    저장하기
+                </button>
+                <button class="btn btn-secondary" onclick="resetMediaSettings()">
+                    <span class="material-icons" style="font-size: 18px; vertical-align: middle;">refresh</span>
+                    초기화
+                </button>
+            </div>
+        </div>
+
+        <!-- 말풍선 관리 탭 -->
+        <div class="tab-content" id="tab-balloon">
         <!-- 이벤트 참여하기 말풍선 -->
         <div class="balloon-edit-section">
             <div class="balloon-edit-card">
@@ -331,15 +1066,16 @@
             </div>
         </div>
 
-        <div class="button-group">
-            <button class="btn btn-success" onclick="saveBalloons()">
-                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">save</span>
-                저장하기
-            </button>
-            <button class="btn btn-secondary" onclick="resetBalloons()">
-                <span class="material-icons" style="font-size: 18px; vertical-align: middle;">refresh</span>
-                초기화
-            </button>
+            <div class="button-group">
+                <button class="btn btn-success" onclick="saveBalloons()">
+                    <span class="material-icons" style="font-size: 18px; vertical-align: middle;">save</span>
+                    저장하기
+                </button>
+                <button class="btn btn-secondary" onclick="resetBalloons()">
+                    <span class="material-icons" style="font-size: 18px; vertical-align: middle;">refresh</span>
+                    초기화
+                </button>
+            </div>
         </div>
     </div>
 
@@ -347,8 +1083,146 @@
         <span class="material-icons">check_circle</span>
         저장되었습니다!
     </div>
+    </div><!-- // .admin-content-wrap -->
 
     <script src="js/data.js"></script>
     <script src="js/admin.js"></script>
+    <script>
+        // 탭 전환 기능
+        document.querySelectorAll('.admin-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 모든 탭 비활성화
+                document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // 클릭한 탭 활성화
+                tab.classList.add('active');
+                const tabId = 'tab-' + tab.dataset.tab;
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // 텍스트 줄 추가
+        function addLine(containerId) {
+            const container = document.getElementById(containerId);
+            const lineCount = container.querySelectorAll('.text-line-item').length + 1;
+            
+            const lineItem = document.createElement('div');
+            lineItem.className = 'text-line-item';
+            lineItem.innerHTML = `
+                <span class="line-number">${lineCount}</span>
+                <input type="text" value="" placeholder="텍스트를 입력하세요">
+                <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+            `;
+            container.appendChild(lineItem);
+            updateLineNumbers(containerId);
+        }
+
+        // 텍스트 줄 삭제
+        function removeLine(button) {
+            const lineItem = button.closest('.text-line-item');
+            const container = lineItem.parentElement;
+            lineItem.remove();
+            updateLineNumbers(container.id);
+        }
+
+        // 줄 번호 업데이트
+        function updateLineNumbers(containerId) {
+            const container = document.getElementById(containerId);
+            container.querySelectorAll('.text-line-item').forEach((item, index) => {
+                item.querySelector('.line-number').textContent = index + 1;
+            });
+        }
+
+        // 파일 업로드 처리
+        document.querySelectorAll('.file-upload-input').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const target = this.dataset.target;
+                const filenameEl = document.getElementById('filename-' + target);
+                
+                if (file) {
+                    filenameEl.textContent = '선택된 파일: ' + file.name;
+                    
+                    // 미리보기 업데이트
+                    const preview = document.getElementById('preview-' + target);
+                    const url = URL.createObjectURL(file);
+                    
+                    if (file.type.startsWith('video/')) {
+                        preview.innerHTML = `<video muted autoplay loop><source src="${url}" type="${file.type}"></video>`;
+                    } else if (file.type === 'image/gif') {
+                        preview.innerHTML = `<img src="${url}" alt="미리보기">`;
+                    }
+                }
+            });
+        });
+
+        // 미디어 설정 저장
+        function saveMediaSettings() {
+            // 텍스트 데이터 수집
+            const mediaData = {};
+            ['main', 'info', 'qna', 'survey', 'lottery'].forEach(key => {
+                const container = document.getElementById('text-lines-' + key);
+                const lines = [];
+                container.querySelectorAll('.text-line-item input').forEach(input => {
+                    if (input.value.trim()) {
+                        lines.push(input.value.trim());
+                    }
+                });
+                mediaData[key] = {
+                    lines: lines,
+                    speed: document.getElementById('speed-' + key)?.value || '1'
+                };
+            });
+            
+            // localStorage에 저장
+            localStorage.setItem('mediaSettings', JSON.stringify(mediaData));
+            
+            // 저장 메시지 표시
+            const msg = document.getElementById('save-message');
+            msg.classList.add('show');
+            setTimeout(() => msg.classList.remove('show'), 2000);
+        }
+
+        // 미디어 설정 초기화
+        function resetMediaSettings() {
+            if (confirm('모든 미디어 설정을 초기화하시겠습니까?')) {
+                localStorage.removeItem('mediaSettings');
+                location.reload();
+            }
+        }
+
+        // 저장된 설정 불러오기
+        function loadMediaSettings() {
+            const saved = localStorage.getItem('mediaSettings');
+            if (saved) {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(key => {
+                    const container = document.getElementById('text-lines-' + key);
+                    if (container && data[key].lines) {
+                        container.innerHTML = '';
+                        data[key].lines.forEach((line, index) => {
+                            const lineItem = document.createElement('div');
+                            lineItem.className = 'text-line-item';
+                            lineItem.innerHTML = `
+                                <span class="line-number">${index + 1}</span>
+                                <input type="text" value="${line}">
+                                <button class="remove-line" onclick="removeLine(this)"><span class="material-icons">close</span></button>
+                            `;
+                            container.appendChild(lineItem);
+                        });
+                    }
+                    
+                    const speedSelect = document.getElementById('speed-' + key);
+                    if (speedSelect && data[key].speed) {
+                        speedSelect.value = data[key].speed;
+                    }
+                });
+            }
+        }
+
+        // 페이지 로드 시 설정 불러오기
+        document.addEventListener('DOMContentLoaded', loadMediaSettings);
+    </script>
 </body>
 </html>
